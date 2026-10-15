@@ -1,0 +1,116 @@
+/* Home.css */
+.home-container {
+  background-color: var(--bg-gray);
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+
+/* Hero Banner */
+.hero-banner {
+  width: 100%;
+  height: 400px;
+  background-color: #1a1a1a;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Menggunakan gambar placeholder gelap untuk meniru design */
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+  opacity: 0.4;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 72px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: 4px;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.hero-subtitle {
+  font-size: 96px;
+  font-weight: 800;
+  color: #ef4444;
+  line-height: 1;
+}
+
+/* Product Sections */
+.section-container {
+  max-width: 1400px;
+  margin: 40px auto;
+  padding: 0 40px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+}
+
+.section-title h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+
+.section-title p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.btn-view-all {
+  background: white;
+  border: 1px solid #e5e7eb;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-view-all:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+/* PRODUCT GRID - Diubah kepada 3 kolum supaya kad lebih lebar */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 Kolum = Kad Lebih Lebar */
+  gap: 24px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .hero-title { font-size: 56px; }
+  .hero-subtitle { font-size: 72px; }
+}
+
+@media (max-width: 768px) {
+  .section-container { padding: 0 20px; }
+  .product-grid {
+    grid-template-columns: 1fr; /* 1 Kolum untuk mobile */
+  }
+  .hero-title { font-size: 40px; }
+  .hero-subtitle { font-size: 56px; }
+}

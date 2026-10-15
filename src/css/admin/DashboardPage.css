@@ -1,0 +1,457 @@
+/* DashboardPage.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --admin-dash-primary: #5b3cc4;
+  --admin-dash-bg: #f4f5f7;
+  --admin-dash-text-main: #111827;
+  --admin-dash-text-muted: #6b7280;
+  --admin-dash-border: #e5e7eb;
+  --admin-dash-card-bg: #ffffff;
+}
+
+.admin-dash-layout {
+    position: relative;
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--admin-dash-bg);
+  font-family: 'Inter', sans-serif;
+  color: var(--admin-dash-text-main);
+}
+
+.admin-dash-main {
+  flex: 1;
+   margin-left: 35vh;
+  padding: 32px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+}
+
+/* Top Header */
+.admin-dash-top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.admin-dash-breadcrumbs {
+  font-size: 14px;
+  color: var(--admin-dash-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-dash-breadcrumbs span {
+  color: var(--admin-dash-text-main);
+  font-weight: 500;
+}
+
+.admin-dash-header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.admin-dash-badge {
+  background-color: #f3f0fa;
+  color: var(--admin-dash-primary);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin-dash-date {
+  font-size: 14px;
+  color: var(--admin-dash-text-muted);
+}
+
+/* Page Title */
+.admin-dash-title-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 8px;
+}
+
+.admin-dash-title h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.admin-dash-title p {
+  font-size: 14px;
+  color: var(--admin-dash-text-muted);
+}
+
+.admin-dash-filter-btn {
+  background: white;
+  border: 1px solid var(--admin-dash-border);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--admin-dash-text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+/* Stats Grid */
+.admin-dash-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.admin-dash-stat-card {
+  background-color: var(--admin-dash-card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  border: 1px solid #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-dash-stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.admin-dash-stat-label {
+  font-size: 14px;
+  color: var(--admin-dash-text-muted);
+  font-weight: 500;
+}
+
+.admin-dash-stat-icon {
+  color: var(--admin-dash-primary);
+  background-color: #f3f0fa;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-dash-stat-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.admin-dash-stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--admin-dash-text-main);
+}
+
+.admin-dash-stat-sub {
+  font-size: 12px;
+  color: var(--admin-dash-text-muted);
+}
+
+.admin-dash-stat-sub a {
+  color: var(--admin-dash-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Charts Grid */
+.admin-dash-charts-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.admin-dash-chart-card {
+  background-color: var(--admin-dash-card-bg);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  border: 1px solid #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-dash-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-dash-chart-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--admin-dash-text-main);
+}
+
+.admin-dash-chart-toggle {
+  display: flex;
+  background-color: #f3f4f6;
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.admin-dash-toggle-btn {
+  background: transparent;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--admin-dash-text-muted);
+  cursor: pointer;
+}
+
+.admin-dash-toggle-btn.active {
+  background: white;
+  color: var(--admin-dash-text-main);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.admin-dash-chart-wrapper {
+  width: 100%;
+  height: 300px;
+}
+
+/* Donut Chart Specifics */
+.admin-dash-donut-wrapper {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.admin-dash-donut-center {
+  position: absolute;
+  text-align: center;
+}
+
+.admin-dash-donut-center h3 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--admin-dash-text-main);
+  line-height: 1;
+}
+
+.admin-dash-donut-center p {
+  font-size: 12px;
+  color: var(--admin-dash-text-muted);
+}
+
+.admin-dash-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.admin-dash-legend-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.admin-dash-legend-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-dash-legend-color {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.admin-dash-legend-value {
+  font-weight: 600;
+  color: var(--admin-dash-text-main);
+}
+
+.admin-dash-info-box {
+  background-color: #fef7e0;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #b06000;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.5;
+  margin-top: auto;
+}
+
+.admin-dash-info-box svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Recent Orders Table */
+.admin-dash-table-card {
+  background-color: var(--admin-dash-card-bg);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  border: 1px solid #f3f4f6;
+}
+
+.admin-dash-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-dash-table-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--admin-dash-text-main);
+}
+
+.admin-dash-table-badge {
+  background-color: #f3f4f6;
+  color: var(--admin-dash-text-main);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin-dash-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-dash-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--admin-dash-text-muted);
+  border-bottom: 1px solid var(--admin-dash-border);
+}
+
+.admin-dash-table td {
+  padding: 16px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--admin-dash-border);
+  vertical-align: middle;
+}
+
+.admin-dash-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-dash-order-id {
+  color: var(--admin-dash-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.admin-dash-customer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-dash-customer-name {
+  font-weight: 600;
+  color: var(--admin-dash-text-main);
+}
+
+.admin-dash-customer-email {
+  font-size: 12px;
+  color: var(--admin-dash-text-muted);
+}
+
+/* Status Badges */
+.admin-dash-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin-dash-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-dibayar { background-color: #e8f0fe; color: #1a73e8; }
+.status-dibayar .admin-dash-status-dot { background-color: #1a73e8; }
+
+.status-disediakan { background-color: #fef7e0; color: #b06000; }
+.status-disediakan .admin-dash-status-dot { background-color: #b06000; }
+
+.status-menunggu { background-color: #f3f4f6; color: #6b7280; }
+.status-menunggu .admin-dash-status-dot { background-color: #6b7280; }
+
+.status-dihantar { background-color: #e8f0fe; color: #1a73e8; }
+.status-dihantar .admin-dash-status-dot { background-color: #1a73e8; }
+
+.status-selesai { background-color: #e6f4ea; color: #137333; }
+.status-selesai .admin-dash-status-dot { background-color: #137333; }
+
+.admin-dash-action-btn {
+  background: transparent;
+  border: none;
+  color: var(--admin-dash-text-muted);
+  cursor: pointer;
+  padding: 8px;
+}
+
+.admin-dash-action-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .admin-dash-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .admin-dash-charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-dash-main {
+    padding: 20px;
+  }
+  .admin-dash-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .admin-dash-table {
+    display: block;
+    overflow-x: auto;
+  }
+}

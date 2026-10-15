@@ -1,0 +1,211 @@
+/* OrderPage.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary-purple: #5b3cc4;
+  --bg-color: #f4f5f7;
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --card-bg: #ffffff;
+  --item-bg: #f4f5f7;
+}
+
+.order-page-container {
+ 
+  background-color: var(--bg-color);
+  min-height: 100vh;
+  /* padding: 40px 20px; */
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
+}
+
+.order-content {
+  max-width: 1000px;
+  margin: 0 auto;
+
+}
+
+/* Header Section */
+.page-header {
+  margin-bottom: 32px;
+}
+
+.page-title {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+/* Order Card */
+.order-card {
+  background-color: var(--card-bg);
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 10px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+/* Card Header */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.order-number {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* Status Colors */
+.status-completed {
+  background-color: #e6f4ea;
+  color: #137333;
+}
+.status-paid {
+  background-color: #fef7e0;
+  color: #b06000;
+}
+.status-shipped {
+  background-color: #e8f0fe;
+  color: #1a73e8;
+}
+.status-prepare-order {
+  background-color: #fef7e0;
+  color: #b06000;
+}
+
+.order-total {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary-purple);
+}
+
+/* Item List */
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-item {
+  background-color: var(--item-bg);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.item-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--text-main);
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.item-variant {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Tracking Info (Khas untuk status Shipped) */
+.tracking-box {
+  background-color: var(--item-bg);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.tracking-icon {
+  width: 32px;
+  height: 32px;
+  background-color: #e0e7ff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 16px;
+  color: var(--primary-purple);
+}
+
+.tracking-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.tracking-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tracking-number {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tracking-status {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Button Order Received */
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-received {
+  background-color: var(--primary-purple);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-received:hover {
+  background-color: #4a2fa8;
+}

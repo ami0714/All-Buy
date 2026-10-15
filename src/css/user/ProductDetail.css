@@ -1,0 +1,196 @@
+/* ProductDetail.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary-purple: #5b3cc4;
+  --bg-gray: #f4f5f7;
+  --text-dark: #111827;
+  --text-gray: #6b7280;
+  --border-color: #e5e7eb;
+}
+
+.product-detail__page {
+  background-color: var(--bg-gray);
+  min-height: 100vh;
+  padding: calc(20vh + 24px) 40px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+}
+
+.product-detail__card {
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+  display: flex;
+  flex-direction: row;
+  max-width: 1200px;
+  width: 100%;
+  overflow: hidden;
+  padding: 40px;
+  gap: 40px;
+}
+
+/* Left Side - Image */
+.product-detail__image-wrapper {
+  flex: 1 1 52%;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  min-height: 0;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
+}
+
+.product-detail__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.45s ease;
+
+}
+
+
+.product-detail__image-wrapper:hover .product-detail__image {
+  transform: scale(1.03);
+}
+
+/* Right Side - Info */
+.product-detail__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+}
+
+.product-detail__title {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 12px;
+}
+
+.product-detail__price {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary-purple);
+  margin-bottom: 24px;
+}
+
+.product-detail__description {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-dark);
+  margin-bottom: 32px;
+}
+
+.product-detail__divider {
+  height: 1px;
+  background-color: var(--border-color);
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+/* Options (Size & Color) */
+.product-detail__option-group {
+  margin-bottom: 28px;
+}
+
+.product-detail__option-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 16px;
+  display: block;
+}
+
+.product-detail__option-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.product-detail__option-button {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  color: var(--text-gray);
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.product-detail__option-button:hover {
+  border-color: var(--primary-purple);
+  color: var(--primary-purple);
+}
+
+.product-detail__option-button.is-selected {
+  border-color: var(--primary-purple);
+  color: var(--primary-purple);
+  background-color: rgba(91, 60, 196, 0.05);
+}
+
+/* Add to Cart Button */
+.product-detail__add-to-cart {
+  background-color: var(--primary-purple);
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 18px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  margin-top: auto; /* Mendorong butang ke bawah */
+  transition: background-color 0.2s ease;
+}
+
+.product-detail__add-to-cart:hover {
+  background-color: #4a2fa8;
+}
+
+.product-detail__cart-icon {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .product-detail__card {
+    flex-direction: column;
+    padding: 24px;
+  }
+  .product-detail__image-wrapper {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+  }
+  .product-detail__add-to-cart {
+    margin-top: 32px;
+  }
+}
+
+@media (max-width: 576px) {
+  .product-detail__page {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .product-detail__image-wrapper {
+    padding: 12px;
+  }
+}

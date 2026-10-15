@@ -1,0 +1,90 @@
+const BASE_URL = import.meta.env.VITE_BASE_URL; // Laravel API URL
+
+// Function to get common headers
+function getHeaders() {
+  const headers = {
+    'Content-Type': 'application/json'
+    // ,
+    // "ngrok-skip-browser-warning": "true"
+  };
+  const token = localStorage.getItem('token');
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
+}
+
+// Function to handle JSON responses and errors
+async function handleResponse(response) {
+  const data = await response.json();
+  if (!response.ok) {
+    const error = new Error(data.message || 'Something went wrong');
+    error.status = response.status;
+    error.errors = data.errors || null;
+    throw error;
+  }
+  return data;
+}
+
+// GET
+export async function get(path) {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: 'GET',
+    headers: getHeaders(), //ade token
+  });
+  return handleResponse(res);
+}
+
+// POST
+export async function post(path, body) {
+
+  if(body){
+    body = JSON.stringify(body)
+  }
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: body ,
+  });
+  return handleResponse(res);
+}
+
+// PUT
+export async function put(path, body) {
+  if (body) {
+    body = JSON.stringify(body);
+  }
+
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: 'PUT',
+    headers: getHeaders(),
+    body: body,
+  });
+  return handleResponse(res);
+}
+
+// DELETE
+export async function del(path) {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: 'DELETE',
+    headers: getHeaders(),
+  });
+  return handleResponse(res);
+}
+
+// Untuk upload file (multipart/form-data) - digunakan di edit profil
+export async function postFormData(path, formData) {
+  const headers = {
+  };
+  const token = localStorage.getItem('token');
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: 'POST',
+    headers:headers,// jangan set Content-Type, browser akan set dengan boundary
+    body: formData,
+  });
+  return handleResponse(res);
+}

@@ -1,0 +1,608 @@
+/* ShippingManagementPage.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --admin-ship-primary: #5b3cc4;
+  --admin-ship-primary-light: #f3f0fa;
+  --admin-ship-bg: #f4f5f7;
+  --admin-ship-text-main: #111827;
+  --admin-ship-text-muted: #6b7280;
+  --admin-ship-border: #e5e7eb;
+  --admin-ship-card-bg: #ffffff;
+  --admin-ship-success-bg: #e6f4ea;
+  --admin-ship-success-text: #137333;
+  --admin-ship-inactive-bg: #f3f4f6;
+  --admin-ship-inactive-text: #6b7280;
+}
+
+.admin-ship-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--admin-ship-bg);
+  font-family: 'Inter', sans-serif;
+  color: var(--admin-ship-text-main);
+}
+
+.admin-ship-main {
+  flex: 1;
+  padding: 32px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+  margin-left: 35vh;
+}
+
+/* Top Header */
+.admin-ship-top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.admin-ship-breadcrumbs {
+  font-size: 14px;
+  color: var(--admin-ship-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-ship-breadcrumbs span {
+  color: var(--admin-ship-text-main);
+  font-weight: 500;
+}
+
+.admin-ship-header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.admin-ship-badge {
+  background-color: var(--admin-ship-primary-light);
+  color: var(--admin-ship-primary);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin-ship-date {
+  font-size: 14px;
+  color: var(--admin-ship-text-muted);
+}
+
+/* Page Title Section */
+.admin-ship-title-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 8px;
+}
+
+.admin-ship-title h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.admin-ship-title p {
+  font-size: 14px;
+  color: var(--admin-ship-text-muted);
+}
+
+/* Stats Grid */
+.admin-ship-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.admin-ship-stat-card {
+  background-color: var(--admin-ship-card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  border: 1px solid #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-ship-stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.admin-ship-stat-label {
+  font-size: 14px;
+  color: var(--admin-ship-text-muted);
+  font-weight: 500;
+}
+
+.admin-ship-stat-icon {
+  color: var(--admin-ship-primary);
+  background-color: var(--admin-ship-primary-light);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-ship-stat-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.admin-ship-stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--admin-ship-text-main);
+}
+
+.admin-ship-stat-sub {
+  font-size: 12px;
+  color: var(--admin-ship-text-muted);
+}
+
+/* Main Grid Layout */
+.admin-ship-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  align-items: start;
+}
+
+.admin-ship-left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-ship-right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Cards */
+.admin-ship-card {
+  background-color: var(--admin-ship-card-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  border: 1px solid #f3f4f6;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-ship-card-header {
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--admin-ship-border);
+}
+
+.admin-ship-card-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.admin-ship-card-subtitle {
+  font-size: 13px;
+  color: var(--admin-ship-text-muted);
+  margin-top: 4px;
+}
+
+.admin-ship-badge-sm {
+  background-color: #f3f4f6;
+  color: var(--admin-ship-text-muted);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin-ship-btn-add {
+  background-color: var(--admin-ship-primary);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.admin-ship-btn-add:hover {
+  background-color: #4a2fa8;
+}
+
+.admin-ship-btn-add svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+/* Tables */
+.admin-ship-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-ship-table th {
+  text-align: left;
+  padding: 16px 24px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--admin-ship-text-muted);
+  background-color: #fafafa;
+  border-bottom: 1px solid var(--admin-ship-border);
+}
+
+.admin-ship-table td {
+  padding: 16px 24px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--admin-ship-border);
+  vertical-align: middle;
+}
+
+.admin-ship-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-ship-table tr:hover:not(.header-row) {
+  background-color: #f9fafb;
+}
+
+.admin-ship-courier-name {
+  font-weight: 600;
+  color: var(--admin-ship-text-main);
+}
+
+.admin-ship-code {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  color: var(--admin-ship-text-muted);
+}
+
+.admin-ship-url {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  color: var(--admin-ship-text-main);
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.admin-ship-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin-ship-status.active { color: var(--admin-ship-success-text); }
+.admin-ship-status.inactive { color: var(--admin-ship-inactive-text); }
+
+.admin-ship-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+/* Toggle Switch */
+.admin-ship-toggle {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.admin-ship-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.admin-ship-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 22px;
+}
+
+.admin-ship-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.admin-ship-toggle input:checked + .admin-ship-slider {
+  background-color: var(--admin-ship-primary);
+}
+
+.admin-ship-toggle input:checked + .admin-ship-slider:before {
+  transform: translateX(18px);
+}
+
+.admin-ship-table-footer {
+  padding: 16px 24px;
+  font-size: 13px;
+  color: var(--admin-ship-text-muted);
+  border-top: 1px solid var(--admin-ship-border);
+}
+
+/* Info Box */
+.admin-ship-info-box {
+  background-color: var(--admin-ship-primary-light);
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 16px;
+  color: var(--admin-ship-primary);
+}
+
+.admin-ship-info-box svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.admin-ship-info-content h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.admin-ship-info-content p {
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+/* Form Card */
+.admin-ship-form-card {
+  background-color: var(--admin-ship-card-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  border: 1px solid #f3f4f6;
+  padding: 24px;
+}
+
+.admin-ship-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.admin-ship-form-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.admin-ship-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--admin-ship-text-muted);
+  padding: 4px;
+}
+
+.admin-ship-close-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.admin-ship-form-subtitle {
+  font-size: 13px;
+  color: var(--admin-ship-text-muted);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.admin-ship-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.admin-ship-form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--admin-ship-text-main);
+}
+
+.admin-ship-form-group label span {
+  color: #ef4444;
+  margin-left: 4px;
+}
+
+.admin-ship-input,
+.admin-ship-textarea,
+.admin-ship-select {
+  padding: 10px 14px;
+  border: 1px solid var(--admin-ship-border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--admin-ship-text-main);
+  background-color: var(--admin-ship-card-bg);
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.admin-ship-textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+}
+
+.admin-ship-input:focus,
+.admin-ship-textarea:focus,
+.admin-ship-select:focus {
+  border-color: var(--admin-ship-primary);
+}
+
+.admin-ship-input-hint {
+  font-size: 12px;
+  color: var(--admin-ship-text-muted);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.admin-ship-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Toggle Box in Form */
+.admin-ship-toggle-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--admin-ship-border);
+}
+
+.admin-ship-toggle-text h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.admin-ship-toggle-text p {
+  font-size: 12px;
+  color: var(--admin-ship-text-muted);
+}
+
+.admin-ship-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.admin-ship-btn-cancel {
+  flex: 1;
+  background: white;
+  border: 1px solid var(--admin-ship-border);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--admin-ship-text-main);
+  transition: background 0.2s;
+}
+
+.admin-ship-btn-cancel:hover {
+  background: #f9fafb;
+}
+
+.admin-ship-btn-submit {
+  flex: 2;
+  background-color: var(--admin-ship-primary);
+  border: none;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.admin-ship-btn-submit:hover {
+  background-color: #4a2fa8;
+}
+
+.admin-ship-btn-submit svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.admin-ship-form-footer {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--admin-ship-text-muted);
+  text-align: center;
+}
+
+/* Footer */
+.admin-ship-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--admin-ship-text-muted);
+  margin-top: 20px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .admin-ship-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-ship-main {
+    padding: 20px;
+  }
+  .admin-ship-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .admin-ship-table {
+    display: block;
+    overflow-x: auto;
+  }
+}

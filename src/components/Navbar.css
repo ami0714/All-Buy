@@ -1,0 +1,130 @@
+/* Navbar.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.navbar,
+.navbar * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.navbar {
+  --primary-purple: #4f30b8;
+  --bg-gray: #f4f5f7;
+  --text-dark: #111827;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: var(--primary-purple);
+  color: white;
+  width: 100vw;
+  height: 20vh;
+  padding: 16px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 3px;
+}
+
+.navbar-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.user-btn {
+  background: white;
+  color: var(--primary-purple);
+  border: none;
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.navbar-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.category-btn {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.search-bar {
+  flex: 1;
+  max-width: 600px;
+  background: white;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  height: 40px;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 0 10px;
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+.search-bar input::placeholder {
+  color: #9ca3af;
+}
+
+/* Ikon SVG */
+.icon-svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
