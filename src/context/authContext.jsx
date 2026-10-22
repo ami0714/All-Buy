@@ -25,7 +25,7 @@ export default function AuthContextProvider({ children }) {
 
     try {
       const res = await get('/user');
-      return res ?? res;
+      return res.data ?? res.data;
     } catch (error) {
       localStorage.removeItem('token');
       return null;

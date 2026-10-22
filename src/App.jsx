@@ -1,5 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import AuthContextProvider from './context/authContext';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
+
 import Auth from './pages/auth';
 import Home from './pages/user/Home';
 import ProductDetail from './pages/user/ProductDetail';
@@ -21,7 +25,10 @@ import ShippingManagementPage from './pages/admin/ShippingManagementPage';
 import UserManagementPage from './pages/admin/UserManagementPage';
 
 function App() {
+  const queryclient = new QueryClient()
   return (
+      <QueryClientProvider client={queryclient} >
+    <AuthContextProvider >
     <Router>
       <Routes>
         
@@ -50,6 +57,8 @@ function App() {
         <Route path='admin/user-management' element={<UserManagementPage />} />
       </Routes>
     </Router>
+    </AuthContextProvider>
+    </QueryClientProvider>
   );
 }
 

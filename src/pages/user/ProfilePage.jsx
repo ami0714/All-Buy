@@ -1,43 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import {useNavigate} from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../../Components/Navbar';
 import '../../css/user/ProfilePage.css';
+import {useGetAddress} from '../../hook/useAddress'
+import {useEditUser} from '../../hook/useUser'
+import {useAuth} from '../../context/authContext'
 
-// ==========================================
-// DUMMY DATA (Berdasarkan db.sql)
-// ==========================================
-// Menggabungkan data dari jadual `users` dan `addresses`
-const dummyUser = {
-  uid: 10482,
-  username: "ainaahmad",
-  name: "Aina Ahmad",
-  email: "aina.ahmad@example.com",
-  phone: "+60 12-345 6789",
-  created_at: "12 Jan 2024, 10:24 AM",
-  avatar_initial: "A"
-};
 
-const dummyAddresses = [
-  {
-    id: 1,
-    label: "Rumah",
-    recipient_name: "Aina Ahmad",
-    phone: "+60 12-345 6789",
-    address_line1: "No. 14, Jalan Meru 2, Bandar Meru Raya, 41050 Klang, Selangor",
-    is_default: true,
-    type: "home"
-  },
-  {
-    id: 2,
-    label: "Pejabat",
-    recipient_name: "Aina Ahmad",
-    phone: "+60 12-345 6789",
-    address_line1: "Tingkat 8, Menara Sentral, Jalan Stesen Sentral 2, 50470 Kuala Lumpur",
-    is_default: false,
-    type: "office"
-  }
-];
 
 // Ikon SVG
 const HomeIcon = () => (
@@ -49,25 +20,56 @@ const OfficeIcon = () => (
 );
 
 const ProfilePage = () => {
+  const Navigate = useNavigate()
   const [isEditing, setIsEditing] = useState(false);
+  const {data:address,isLoading:isAdress} = useGetAddress();
+  const {user,isLoading} = useAuth();
+  const {mutate:editUserData,isPending} = useEditUser()
 
   // Setup React Hook Form
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues: {
-      username: dummyUser.username,
-      email: dummyUser.email,
-      phone: dummyUser.phone,
+      username: '',
+      email: '',
+      phone: '',
     }
   });
 
+  useEffect(() => {
+    
+     const setUserData = () =>{
+      reset({
+      username: user?.username,
+      email: user?.email,
+      phone: user?.phone,
+    })
+     }
+     setUserData()
+    
+  }, [isLoading])
+  
+  
+
   const onSubmit = (data) => {
-    console.log("Data disimpan:", data);
-    // Di sini anda akan panggil API untuk update database
-    setIsEditing(false); // Kembali ke mode paparan selepas simpan
+    try {
+       if(!data){
+        throw new Error("data kosong");
+        
+       }
+      editUserData(data);
+    } catch (error) {
+      alert('err'+error)
+    }
+    
+    setIsEditing(false);
   };
 
   const handleCancel = () => {
-    reset(); // Reset borang kepada nilai asal
+    reset({
+      username: user?.username,
+      email: user?.email,
+      phone: user?.phone,
+    }) // Reset borang kepada nilai asal
     setIsEditing(false);
   };
 
@@ -110,9 +112,9 @@ const ProfilePage = () => {
           <div className="profile-user-layout">
             {/* Left Side: Avatar & Name */}
             <div className="profile-user-left">
-              <div className="profile-avatar">{dummyUser.avatar_initial}</div>
-              <h2 className="profile-user-name">{dummyUser.name}</h2>
-              <span className="profile-user-id">ID Akaun: #{dummyUser.uid}</span>
+              <div className="profile-avatar">{isLoading ? 'U': user?.username?.split('')[0]}</div>
+              <h2 className="profile-user-name">{isLoading ? 'U': user?.username}</h2>
+              <span className="profile-user-id">ID Akaun: #{isLoading ? '0000':user?.uid}</span>
             </div>
 
             {/* Right Side: Form */}
@@ -152,7 +154,7 @@ const ProfilePage = () => {
                 <input 
                   type="text" 
                   className="profile-input" 
-                  value={dummyUser.created_at} 
+                  value={user?.created_at} 
                   disabled 
                   readOnly
                 />
@@ -216,7 +218,7 @@ const ProfilePage = () => {
               <h2>Buku Alamat</h2>
               <p>Tambah, edit dan tetapkan alamat sebagai lalai.</p>
             </div>
-            <button className="profile-btn-add">
+            <button onClick={()=> Navigate('/profile/address/add')} className="profile-btn-add">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -226,24 +228,24 @@ const ProfilePage = () => {
           </div>
 
           <div className="profile-address-list">
-            {dummyAddresses.map((address) => (
-              <div key={address.id} className="profile-address-item">
+            {address?.map((address,index) => (
+              <div key={index} className="profile-address-item">
                 <div className="profile-address-left">
                   <div className="profile-address-icon">
-                    {address.type === 'home' ? <HomeIcon /> : <OfficeIcon />}
+                    {address?.label === 'Home' ? <HomeIcon /> : <OfficeIcon />}
                   </div>
                   <div className="profile-address-details">
-                    <span className="profile-address-label">{address.label}</span>
-                    <span className="profile-address-sub">{address.recipient_name} • {address.phone}</span>
-                    <span className="profile-address-text">{address.address_line1}</span>
+                    <span className="profile-address-label">{address?.label}</span>
+                    <span className="profile-address-sub">{address?.recipient_name} • {address?.phone}</span>
+                    <span className="profile-address-text">{address?.address_line1}</span>
                   </div>
                 </div>
                 <div className="profile-address-right">
-                  {address.is_default ? (
+                  {address?.is_default ? (
                     <span className="profile-badge-default">Lalai</span>
                   ) : null}
-                  <button className="profile-btn-address-edit">Edit</button>
-                  {!address.is_default && (
+                  <button onClick={()=> Navigate('/profile/address/edit/'+address?.id)}  className="profile-btn-address-edit">Edit</button>
+                  {!address?.is_default && (
                     <button className="profile-btn-address-default">Jadikan lalai</button>
                   )}
                 </div>

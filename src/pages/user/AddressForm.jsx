@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
+import {useAddAddress,useEditAddress,useGetAddressById} from '../../hook/useAddress';
+import {useAuth} from '../../context/authContext';
 import '../../css/user/AddressForm.css';
 import Navbar from '../../Components/Navbar';
 
@@ -29,15 +31,23 @@ const dummyUser = {
 const AddressForm = () => {
   // 1. Dapatkan params dari URL (contoh: /address/edit/1)
   const { id } = useParams();
+  const {user,isLoading:isUser} = useAuth();
+  console.log(id)
   const navigate = useNavigate();
+//data untuk edit
+const {data:addressData,isLoading:isAddressLoad} = useGetAddressById(id);
+
+
+  const {mutate:newAddress,isPending:isAddPending} = useAddAddress()
+  const {mutate:editAddress,isPending:isEditPending} = useEditAddress()
 
   // 2. Tentukan mod Edit atau Tambah
   // Jika ada 'id' dalam URL, maka isEdit = true
   const isEdit = !!id; 
 
   // 3. Setup React Hook Form
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    defaultValues: isEdit ? dummyAddressData : {
+  const { register, handleSubmit,reset, formState: { errors } } = useForm({
+    defaultValues:  {
       label: '',
       recipient_name: '',
       phone: '',
@@ -50,15 +60,44 @@ const AddressForm = () => {
     }
   });
 
-  // Fungsi apabila borang dihantar
-  const onSubmit = (data) => {
-    console.log("Data dihantar:", data);
-    console.log("Mod:", isEdit ? "EDIT" : "TAMBAH");
+  useEffect(() => {
     
-    // Di sini anda akan panggil API untuk simpan ke database
-    // Selepas berjaya, redirect kembali ke halaman profil
-    // navigate('/profile');
-    alert(`Alamat berjaya ${isEdit ? 'dikemaskini' : 'ditambah'}!`);
+  const getAddressData = ()=>{
+      reset({
+        label:addressData?.label ,
+      recipient_name: addressData?.recipient_name,
+      phone: addressData?.phone,
+      address_line1: addressData?.address_line1,
+      address_line2: addressData?.address_line2,
+      city: addressData?.city,
+      state: addressData?.state,
+      postcode: addressData?.postcode,
+      is_default: addressData?.is_default
+      }
+      )
+  }
+getAddressData()
+  }, [isAddressLoad])
+  
+
+  // Fungsi apabila borang dihantar
+  const onSubmit = (body) => {
+    if(!isEdit){
+       newAddress(body,{
+        onSuccess:(res)=>{
+            navigate('/profile');
+        }
+       })
+    }
+
+    if(isEdit){
+      editAddress({body:body,id:id},{
+       onSuccess:(res)=>{
+            navigate('/profile');
+        }
+      })
+    }
+   
   };
 
   // Fungsi Batal
@@ -136,8 +175,8 @@ const AddressForm = () => {
 
             <div className="address-form-user-info">
               <span>Buku alamat untuk</span>
-              <strong>{dummyUser.name}</strong>
-              <span>{dummyUser.email}</span>
+              <strong>{user?.name}</strong>
+              <span>{user?.email}</span>
             </div>
 
             <div className="address-form-note">

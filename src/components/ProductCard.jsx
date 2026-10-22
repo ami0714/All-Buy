@@ -4,8 +4,8 @@ import './ProductCard.css';
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
-  const { title, price, image } = product;
-  const slug = title.toLowerCase().trim().replace(/\s+/g, '-');
+  const { name, slug: productSlug, default_price, image_url,max_price,min_price } = product;
+  const slug = productSlug 
   const productPath = `/product/${slug}`;
 
   return (
@@ -17,22 +17,22 @@ const ProductCard = ({ product }) => {
       >
         <div className="home-product-card__image-container">
           <img
-            src={image || "https://via.placeholder.com/300x400?text=Product+Image"}
-            alt={title}
+            src={image_url || "https://via.placeholder.com/300x400?text=Product+Image"}
+            alt={name}
             className="home-product-card__image"
           />
         </div>
         <div className="home-product-card__info">
-          <h3 className="home-product-card__title">{title}</h3>
+          <h3 className="home-product-card__title">{name}</h3>
           <div className="home-product-card__bottom">
-            <span className="home-product-card__price">{price}</span>
+            <span className="home-product-card__price">RM{!min_price && !max_price ? default_price : min_price +'-'+'RM'+ max_price }</span>
           </div>
         </div>
       </NavLink>
       <button
         className="home-product-card__add"
         type="button"
-        aria-label={`Lihat ${title}`}
+        aria-label={`Lihat ${name}`}
         onClick={() => navigate(productPath, { state: { product } })}
       >
         +

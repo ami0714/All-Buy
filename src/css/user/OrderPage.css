@@ -25,6 +25,64 @@
 
 }
 
+.payment-success-card {
+  max-width: 620px;
+  margin: 72px auto;
+  padding: 40px 32px;
+  border-radius: 16px;
+  background: var(--card-bg);
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(17, 24, 39, 0.08);
+}
+
+.payment-success-icon {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e6f4ea;
+  color: #137333;
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.payment-success-title {
+  margin: 0 0 12px;
+  color: var(--text-main);
+  font-size: 28px;
+}
+
+.payment-success-message,
+.payment-success-reference {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.payment-success-reference {
+  overflow-wrap: anywhere;
+}
+
+.payment-success-reference strong {
+  color: var(--text-main);
+}
+
+.payment-success-link {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  background: var(--primary-purple);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.payment-success-link:hover {
+  background: #4a2fa8;
+}
+
 /* Header Section */
 .page-header {
   margin-bottom: 32px;
@@ -208,4 +266,11 @@
 
 .btn-received:hover {
   background-color: #4a2fa8;
+}
+
+@media (max-width: 640px) {
+  .payment-success-card {
+    margin: 40px 16px;
+    padding: 32px 20px;
+  }
 }

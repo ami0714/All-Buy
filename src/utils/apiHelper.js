@@ -3,9 +3,8 @@ const BASE_URL = import.meta.env.VITE_BASE_URL; // Laravel API URL
 // Function to get common headers
 function getHeaders() {
   const headers = {
-    'Content-Type': 'application/json'
-    // ,
-    // "ngrok-skip-browser-warning": "true"
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true'
   };
   const token = localStorage.getItem('token');
   if (token) {
@@ -63,6 +62,20 @@ export async function put(path, body) {
   return handleResponse(res);
 }
 
+// PATCH
+export async function patch(path, body) {
+  if (body) {
+    body = JSON.stringify(body);
+  }
+
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: 'PATCH',
+    headers: getHeaders(),
+    body: body,
+  });
+  return handleResponse(res);
+}
+
 // DELETE
 export async function del(path) {
   const res = await fetch(`${BASE_URL}${path}`, {
@@ -75,6 +88,7 @@ export async function del(path) {
 // Untuk upload file (multipart/form-data) - digunakan di edit profil
 export async function postFormData(path, formData) {
   const headers = {
+    'ngrok-skip-browser-warning': 'true'
   };
   const token = localStorage.getItem('token');
   if (token) {

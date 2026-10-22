@@ -354,6 +354,11 @@
   background-color: var(--primary-purple-hover);
 }
 
+.checkout-btn-place-order:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .checkout-shipping-layout {

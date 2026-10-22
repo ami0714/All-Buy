@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import {useNavigate} from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion';
 import '../css/user/Auth.css'; 
+import {useLogin,useRegister} from '../hook/useAuth'
 
 // ==========================================
 // KOMPONEN HEADER
@@ -18,9 +20,29 @@ const Header = () => (
 // ==========================================
 const LoginForm = ({ onSwitchToRegister }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const {mutate,isPending} = useLogin()
+  const navigate = useNavigate()
 
   const onSubmit = (data) => {
-    console.log('Login Data:', data);
+     if(!data){
+      alert('error')
+     }
+     try {
+      mutate(data,{
+        onSuccess:(res)=>{
+          if(res.user.role === 'user'){
+            navigate('/home')
+          }
+          if(res.user.role === 'admin'){
+            navigate('/admin.dashboard')
+          }
+        }
+      })
+     } catch (error) {
+      alert(error)
+     }
+
+    
   };
 
   return (
@@ -59,7 +81,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
           {errors.password && <span style={{color: 'red', fontSize: '12px'}}>Kata laluan diperlukan</span>}
         </div>
 
-        <button type="submit" className="btn-submit">Log masuk</button>
+        <button style={{cursor:isPending ? 'not-allowed':'pointer'}} type="submit" className="btn-submit">Log masuk</button>
       </form>
 
       <div className="auth-footer">
@@ -78,10 +100,25 @@ const LoginForm = ({ onSwitchToRegister }) => {
 // ==========================================
 const RegisterForm = ({ onSwitchToLogin }) => {
   const { register, handleSubmit, formState: { errors }, watch } = useForm();
+  const {mutate,isPending} = useRegister()
   const password = watch("password", "");
+  const navigate = useNavigate()
 
   const onSubmit = (data) => {
-    console.log('Register Data:', data);
+    if(!data){
+      alert('error')
+    }
+    try {
+      mutate(data,{
+        onSuccess:(res)=>{
+          if(res.status == true){
+            navigate('/')
+          }
+        }
+      })
+    } catch (error) {
+      alert(error)
+    }
   };
 
   return (
@@ -122,6 +159,16 @@ const RegisterForm = ({ onSwitchToLogin }) => {
           </div>
 
           <div className="form-group">
+            <label className="form-label">phone</label>
+            <input 
+              type="text" 
+              className="form-input" 
+              placeholder="phone"
+              {...register("phone", { required: true })}
+            />
+          </div>
+
+          <div className="form-group">
             <label className="form-label">Password</label>
             <input 
               type="password" 
@@ -137,7 +184,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
               type="password" 
               className="form-input" 
               placeholder="ulang kata laluan"
-              {...register("confirmPassword", { 
+              {...register("password_confirmation", { 
                 required: true,
                 validate: value => value === password || "Kata laluan tidak sepadan"
               })}

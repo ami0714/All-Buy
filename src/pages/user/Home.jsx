@@ -4,6 +4,7 @@ import ProductCard from '../../components/ProductCard';
 import Navbar from '../../Components/Navbar';
 import Footer from '../../Components/Footer';
 import '../../css/user/Home.css';
+import {useGetAllProduct} from '../../hook/useProducts'
 
 // Data dummy untuk produk 
 const dummyProducts = [
@@ -35,6 +36,7 @@ const itemVariants = {
 };
 
 const Home = () => {
+ const {data:products,isLoading:isProductsLoad} = useGetAllProduct()
   return (
     <div className="home-container">
         <Navbar />
@@ -68,7 +70,7 @@ const Home = () => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
         >
-          {dummyProducts.map((product) => (
+          {isProductsLoad ? <p>...loading</p> : products?.map((product) => (
             <motion.div key={product.id} variants={itemVariants}>
               <ProductCard product={product} />
             </motion.div>
@@ -77,7 +79,7 @@ const Home = () => {
       </div>
 
       {/* Produk Terkini Section 2 (Duplicate untuk memenuhi design) */}
-      <div className="section-container">
+      {/* <div className="section-container">
         <div className="section-header">
           <div className="section-title">
             <h2>Produk Terkini</h2>
@@ -99,7 +101,7 @@ const Home = () => {
             </motion.div>
           ))}
         </motion.div>
-      </div>
+      </div> */}
       <Footer />
     </div>
   );

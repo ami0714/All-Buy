@@ -140,6 +140,39 @@
   background-color: rgba(91, 60, 196, 0.05);
 }
 
+.product-detail__quantity-group {
+  margin-bottom: 28px;
+}
+
+.product-detail__quantity-control {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.product-detail__quantity-control button {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  background: transparent;
+  color: var(--text-dark);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.product-detail__quantity-control button:disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.product-detail__quantity-control output {
+  min-width: 42px;
+  text-align: center;
+  font-weight: 600;
+}
+
 /* Add to Cart Button */
 .product-detail__add-to-cart {
   background-color: var(--primary-purple);
