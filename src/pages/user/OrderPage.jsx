@@ -1,5 +1,5 @@
 import React,{useEffect} from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import '../../css/user/OrderPage.css';
 import {useGetAllOrder} from '../../hook/useOrder';
@@ -24,7 +24,6 @@ const OrderPage = () => {
     error: ordersError
   } = useGetAllOrder();
   const paymentStatus = searchParams.get('status')?.toLowerCase();
-  const paymentReference = searchParams.get('reference');
   const isPaymentCompleted = paymentStatus === 'completed';
   const orderList = Array.isArray(orders) ? orders : [];
 
@@ -50,33 +49,12 @@ const OrderPage = () => {
   };
 
   return (
+    isPaymentCompleted ? (
+      <Navigate to={`/payment-success?${searchParams.toString()}`} replace />
+    ) : (
     <div className="order-page-container">
         <Navbar />
       <div className="order-content">
-        {isPaymentCompleted ? (
-          <motion.section
-            className="payment-success-card"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            aria-live="polite"
-          >
-            <div className="payment-success-icon" aria-hidden="true">✓</div>
-            <h1 className="payment-success-title">Pembayaran Berjaya</h1>
-            <p className="payment-success-message">
-              Terima kasih. Pembayaran anda telah berjaya diproses.
-            </p>
-            {paymentReference && (
-              <p className="payment-success-reference">
-                Reference: <strong>{paymentReference}</strong>
-              </p>
-            )}
-            <Link className="payment-success-link" to="/orders" replace>
-              Lihat senarai pesanan
-            </Link>
-          </motion.section>
-        ) : (
-          <>
         {/* Header */}
         <motion.div 
           className="page-header"
@@ -184,10 +162,9 @@ const OrderPage = () => {
             );
           })}
         </motion.div>
-          </>
-        )}
       </div>
     </div>
+    )
   );
 };
 

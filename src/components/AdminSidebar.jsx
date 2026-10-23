@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './AdminSidebar.css';
+import { useAuth } from "../context/authContext";
 
 // Ikon SVG untuk Sidebar
 const DashboardIcon = () => (
@@ -27,6 +28,7 @@ const LogoutIcon = () => (
 
 const AdminSidebar = ({ activePage = 'dashboard' }) => {
   const navigate = useNavigate();
+  const {user,isLoading} = useAuth();
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', path: '/admin/dashboard', icon: <DashboardIcon /> },
     { id: 'products', label: 'Produk', path: '/admin/product-management', icon: <ProductsIcon /> },
@@ -64,10 +66,10 @@ const AdminSidebar = ({ activePage = 'dashboard' }) => {
       {/* Footer Section */}
       <div className="admin-sidebar-footer">
         <div className="admin-sidebar-user">
-          <div className="admin-sidebar-avatar">NA</div>
+          <div className="admin-sidebar-avatar">{user?.username?.split('')[0]}</div>
           <div className="admin-sidebar-user-info">
-            <span className="admin-sidebar-user-name">Nur Aina</span>
-            <span className="admin-sidebar-user-role">Pentadbir kedai</span>
+            <span className="admin-sidebar-user-name">{user?.username}</span>
+            <span className="admin-sidebar-user-role">{user?.role}</span>
           </div>
         </div>
         <button className="admin-sidebar-logout" aria-label="Log keluar" title="Log keluar" onClick={() => navigate('/')}>

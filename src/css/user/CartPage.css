@@ -11,6 +11,7 @@
 }
 
 .cart-page-container {
+  position: relative;
   background-color: var(--bg-color);
   min-height: 100vh;
   padding: 40px 20px;
@@ -173,14 +174,19 @@
 
 /* Checkout Footer Section */
 .checkout-footer {
+  position: fixed;
+  bottom: 4vh;
   background-color: var(--card-bg);
   border: 1px solid var(--primary-purple);
   border-radius: 12px;
-  padding: 24px;
+  padding: 30px;
+  width: 90vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 20px;
+  left:20px;
+  right: 20px;
+  margin-inline:auto ;
 }
 
 .total-section {

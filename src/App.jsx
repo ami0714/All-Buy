@@ -8,6 +8,7 @@ import Auth from './pages/auth';
 import Home from './pages/user/Home';
 import ProductDetail from './pages/user/ProductDetail';
 import OrderPage from './pages/user/OrderPage';
+import PaymentSuccess from './pages/user/PaymentSuccess';
 import CartPage from './pages/user/CartPage';
 import ProfilePage from './pages/user/ProfilePage';
 import AddressForm from './pages/user/AddressForm';
@@ -36,6 +37,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/product/:slug" element={<ProductDetail />} />
         <Route path="/orders" element={<OrderPage />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/profile/address/add" element={<AddressForm />} />

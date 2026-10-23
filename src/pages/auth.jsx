@@ -34,7 +34,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
             navigate('/home')
           }
           if(res.user.role === 'admin'){
-            navigate('/admin.dashboard')
+            navigate('/admin/dashboard')
           }
         }
       })

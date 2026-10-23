@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
@@ -6,6 +6,8 @@ import {
   PieChart, Pie, Cell
 } from 'recharts';
 import '../../css/admin/DashboardPage.css';
+import {useGetState,useGetChart,useGetStatusOrder} from '../../hook/admin/useDashboard'
+import {useAuth} from '../../context/authContext'
 import AdminSidebar from '../../components/AdminSidebar'; // Import komponen Sidebar yang dibuat tadi
 
 // ==========================================
@@ -13,15 +15,38 @@ import AdminSidebar from '../../components/AdminSidebar'; // Import komponen Sid
 // ==========================================
 
 // Data untuk Carta Prestasi Jualan
-const salesData = [
-  { name: 'Isn', sales: 200 },
-  { name: 'Sel', sales: 300 },
-  { name: 'Rab', sales: 250 },
-  { name: 'Kha', sales: 400 },
-  { name: 'Jum', sales: 350 },
-  { name: 'Sab', sales: 380 },
-  { name: 'Ahd', sales: 420 },
-];
+const salesData = {
+  weekly: [
+    { name: 'Isn', sales: 200 },
+    { name: 'Sel', sales: 300 },
+    { name: 'Rab', sales: 250 },
+    { name: 'Kha', sales: 400 },
+    { name: 'Jum', sales: 350 },
+    { name: 'Sab', sales: 380 },
+    { name: 'Ahd', sales: 420 },
+  ],
+  monthly: [
+    { name: 'Jan', sales: 2400 },
+    { name: 'Feb', sales: 2100 },
+    { name: 'Mac', sales: 2800 },
+    { name: 'Apr', sales: 2600 },
+    { name: 'Mei', sales: 3200 },
+    { name: 'Jun', sales: 3000 },
+    { name: 'Jul', sales: 3500 },
+    { name: 'Ogo', sales: 3300 },
+    { name: 'Sep', sales: 3800 },
+    { name: 'Okt', sales: 3600 },
+    { name: 'Nov', sales: 4100 },
+    { name: 'Dis', sales: 4400 },
+  ],
+  yearly: [
+    { name: '2021', sales: 28000 },
+    { name: '2022', sales: 34000 },
+    { name: '2023', sales: 39000 },
+    { name: '2024', sales: 46000 },
+    { name: '2025', sales: 52000 },
+  ],
+};
 
 // Data untuk Status Pesanan (Donut Chart)
 const orderStatusData = [
@@ -42,6 +67,13 @@ const recentOrders = [
 ];
 
 const DashboardPage = () => {
+  const [salesPeriod, setSalesPeriod] = useState('monthly');
+  const {user,isLoading} = useAuth
+  const {data:stats,isLoading:isStateLoad} = useGetState(); 
+  const {data:chart,isLoading:isChartLoad} = useGetChart(salesPeriod);
+  const {data:orderStatus,isLoading:isOrderStatus} = useGetStatusOrder()
+  const totalOrder = orderStatus?.reduce((acc,val) => acc + val.value,0)
+  
   // Animasi Framer Motion
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -80,12 +112,8 @@ const DashboardPage = () => {
         <motion.div className="admin-dash-title-section" variants={cardVariants}>
           <div className="admin-dash-title">
             <h1>Dashboard Utama</h1>
-            <p>Selamat kembali, Aina. Ini ringkasan operasi kedai anda.</p>
+            <p>Selamat kembali, {user?.username}. Ini ringkasan operasi kedai anda.</p>
           </div>
-          <button className="admin-dash-filter-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-            1–12 Okt 2026
-          </button>
         </motion.div>
 
         {/* Stats Grid */}
@@ -96,7 +124,7 @@ const DashboardPage = () => {
               <span className="admin-dash-stat-label">Jumlah hasil</span>
               <div className="admin-dash-stat-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg></div>
             </div>
-            <div className="admin-dash-stat-value">RM12,840</div>
+            <div className="admin-dash-stat-value">RM{stats?.total_revenue ?? 'loading'}</div>
             <div className="admin-dash-stat-sub">paid • prepare order • shipped • completed</div>
           </div>
 
@@ -106,8 +134,8 @@ const DashboardPage = () => {
               <span className="admin-dash-stat-label">Pesanan perlu tindakan</span>
               <div className="admin-dash-stat-icon"><svg viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
             </div>
-            <div className="admin-dash-stat-value">42</div>
-            <div className="admin-dash-stat-sub">24 dibayar • 18 sedang disediakan</div>
+            <div className="admin-dash-stat-value">{stats?.total_orders}</div>
+            <div className="admin-dash-stat-sub">{stats?.paid_orders} dibayar • {stats?.preparing_orders} sedang disediakan</div>
             <div className="admin-dash-stat-sub" style={{ marginTop: '4px' }}><NavLink to="/admin/order-management">Sediakan pesanan untuk penghantaran</NavLink></div>
           </div>
 
@@ -117,7 +145,7 @@ const DashboardPage = () => {
               <span className="admin-dash-stat-label">Pengguna berdaftar</span>
               <div className="admin-dash-stat-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg></div>
             </div>
-            <div className="admin-dash-stat-value">386</div>
+            <div className="admin-dash-stat-value">{stats?.registered_users}</div>
             <div className="admin-dash-stat-sub">Jumlah akaun pelanggan</div>
           </div>
 
@@ -127,8 +155,8 @@ const DashboardPage = () => {
               <span className="admin-dash-stat-label">Produk aktif</span>
               <div className="admin-dash-stat-icon"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg></div>
             </div>
-            <div className="admin-dash-stat-value">10</div>
-            <div className="admin-dash-stat-sub">2 produk tidak aktif</div>
+            <div className="admin-dash-stat-value">{stats?.active_products}</div>
+            <div className="admin-dash-stat-sub">{stats?.inactive_products} produk tidak aktif</div>
           </div>
         </motion.div>
 
@@ -140,13 +168,35 @@ const DashboardPage = () => {
             <div className="admin-dash-chart-header">
               <span className="admin-dash-chart-title">Prestasi jualan</span>
               <div className="admin-dash-chart-toggle">
-                <button className="admin-dash-toggle-btn active">Mingguan</button>
-                <button className="admin-dash-toggle-btn">Bulanan</button>
+                <button
+                  className={`admin-dash-toggle-btn${salesPeriod === 'weekly' ? ' active' : ''}`}
+                  type="button"
+                  aria-pressed={salesPeriod === 'weekly'}
+                  onClick={() => setSalesPeriod('weekly')}
+                >
+                  Mingguan
+                </button>
+                <button
+                  className={`admin-dash-toggle-btn${salesPeriod === 'monthly' ? ' active' : ''}`}
+                  type="button"
+                  aria-pressed={salesPeriod === 'monthly'}
+                  onClick={() => setSalesPeriod('monthly')}
+                >
+                  Bulanan
+                </button>
+                <button
+                  className={`admin-dash-toggle-btn${salesPeriod === 'yearly' ? ' active' : ''}`}
+                  type="button"
+                  aria-pressed={salesPeriod === 'yearly'}
+                  onClick={() => setSalesPeriod('yearly')}
+                >
+                  Tahunan
+                </button>
               </div>
             </div>
             <div className="admin-dash-chart-wrapper">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={salesData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                <LineChart data={chart} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6b7280' }} dy={10} />
                   <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6b7280' }} tickFormatter={(value) => `RM${value}`} />
@@ -171,14 +221,13 @@ const DashboardPage = () => {
           <div className="admin-dash-chart-card">
             <div className="admin-dash-chart-header">
               <span className="admin-dash-chart-title">Status pesanan</span>
-              <span className="admin-dash-date">Oktober</span>
             </div>
             
             <div className="admin-dash-donut-wrapper">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={orderStatusData}
+                    data={orderStatus}
                     cx="50%"
                     cy="50%"
                     innerRadius={60}
@@ -187,26 +236,27 @@ const DashboardPage = () => {
                     dataKey="value"
                     stroke="none"
                   >
-                    {orderStatusData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    //bulatan donat
+                    {orderStatus?.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry?.color} />
                     ))}
                   </Pie>
                 </PieChart>
               </ResponsiveContainer>
               <div className="admin-dash-donut-center">
-                <h3>240</h3>
+                <h3>{totalOrder}</h3>
                 <p>pesanan</p>
               </div>
             </div>
 
             <div className="admin-dash-legend">
-              {orderStatusData.map((item, index) => (
+              {orderStatus?.map((item, index) => (
                 <div key={index} className="admin-dash-legend-item">
                   <div className="admin-dash-legend-left">
-                    <span className="admin-dash-legend-color" style={{ backgroundColor: item.color }}></span>
-                    <span>{item.name}</span>
+                    <span className="admin-dash-legend-color" style={{ backgroundColor: item?.color }}></span>
+                    <span>{item?.status}</span>
                   </div>
-                  <span className="admin-dash-legend-value">{item.value}</span>
+                  <span className="admin-dash-legend-value">{item?.value}</span>
                 </div>
               ))}
             </div>
