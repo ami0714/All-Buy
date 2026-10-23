@@ -1,72 +1,39 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import '../../css/user/OrderPage.css';
+import {useGetAllOrder} from '../../hook/useOrder';
+import {useQueryClient} from '@tanstack/react-query';
 import Navbar from '../../Components/Navbar';
-
-// ==========================================
-// DUMMY DATA (Berdasarkan db.sql)
-// ==========================================
-// Menggabungkan data dari jadual `orders`, `order_items`, dan `shipments`
-const dummyOrders = [
-  {
-    id: 1,
-    order_number: "ORD-12345-6789",
-    status: "completed", // Enum: 'pending','paid','prepare order','shipped','completed'
-    total_amount: 60.00,
-    items: [
-      { id: 1, product_name_at_purchase: "Kemeja Lelaki", variant_info_at_purchase: "size:L Color:Blue" },
-      { id: 2, product_name_at_purchase: "Kemeja Lelaki", variant_info_at_purchase: "size:L Color:Blue" },
-      { id: 3, product_name_at_purchase: "Kemeja Lelaki", variant_info_at_purchase: "size:L Color:Blue" }
-    ]
-  },
-  {
-    id: 2,
-    order_number: "ORD-98765-4321",
-    status: "paid",
-    total_amount: 60.00,
-    items: [
-      { id: 1, product_name_at_purchase: "Kemeja Lelaki", variant_info_at_purchase: "size:L Color:Blue" },
-      { id: 2, product_name_at_purchase: "Kemeja Lelaki", variant_info_at_purchase: "size:L Color:Blue" },
-      { id: 3, product_name_at_purchase: "Kemeja Lelaki", variant_info_at_purchase: "size:L Color:Blue" }
-    ]
-  },
-  {
-    id: 3,
-    order_number: "ORD-45678-1234",
-    status: "shipped",
-    total_amount: 60.00,
-    tracking_number: "2314214234",
-    tracking_status: "Pesanan sedang dalam perjalanan",
-    items: [
-      { id: 1, product_name_at_purchase: "Kemeja Lelaki", variant_info_at_purchase: "size:L Color:Blue" },
-      { id: 2, product_name_at_purchase: "Kemeja Lelaki", variant_info_at_purchase: "size:L Color:Blue" },
-      { id: 3, product_name_at_purchase: "Kemeja Lelaki", variant_info_at_purchase: "size:L Color:Blue" }
-    ]
-  },
-  {
-    id: 4,
-    order_number: "ORD-11223-4455",
-    status: "prepare order",
-    total_amount: 60.00,
-    items: [
-      { id: 1, product_name_at_purchase: "Kemeja Lelaki", variant_info_at_purchase: "size:L Color:Blue" },
-      { id: 2, product_name_at_purchase: "Kemeja Lelaki", variant_info_at_purchase: "size:L Color:Blue" },
-      { id: 3, product_name_at_purchase: "Kemeja Lelaki", variant_info_at_purchase: "size:L Color:Blue" }
-    ]
-  }
-];
 
 // Helper untuk format status badge
 const formatStatus = (status) => {
-  return status.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  return String(status || 'unknown')
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 };
 
 const OrderPage = () => {
+  const queryclient = useQueryClient();
   const [searchParams] = useSearchParams();
+  const {
+    data: orders,
+    isLoading: isOrdersLoad,
+    isError: isOrdersError,
+    error: ordersError
+  } = useGetAllOrder();
   const paymentStatus = searchParams.get('status')?.toLowerCase();
   const paymentReference = searchParams.get('reference');
   const isPaymentCompleted = paymentStatus === 'completed';
+  const orderList = Array.isArray(orders) ? orders : [];
+
+  useEffect(()=>{
+    const invalidated = ()=>{
+      queryclient.invalidateQueries({queryKey:['all-order-user']});
+    }
+    invalidated()
+  },[]);
 
   // Animasi Framer Motion
   const containerVariants = {
@@ -127,27 +94,45 @@ const OrderPage = () => {
           initial="hidden"
           animate="visible"
         >
-          {dummyOrders.map((order) => (
+          {isOrdersLoad ? (
+            <p className="order-message">Loading orders...</p>
+          ) : isOrdersError ? (
+            <p className="order-message order-message-error">
+              {ordersError?.message || 'Gagal mendapatkan senarai pesanan.'}
+            </p>
+          ) : typeof orders === 'string' ? (
+            <p className="order-message order-message-error">{orders}</p>
+          ) : orders?.status === false ? (
+            <p className="order-message order-message-error">
+              {orders.message || 'Gagal mendapatkan senarai pesanan.'}
+            </p>
+          ) : orderList.length === 0 ? (
+            <p className="order-message">Tiada pesanan untuk dipaparkan.</p>
+          ) : orderList.map((order) => {
+            const status = String(order?.order_status || 'unknown').toLowerCase();
+            const items = Array.isArray(order?.product_item) ? order?.product_item : [];
+            const totalAmount = Number(order?.total_amount) || 0;
+
+            return (
             <motion.div 
-              key={order.id} 
+              key={order?.order_id}
               className="order-card"
               variants={cardVariants}
             >
               {/* Card Header */}
               <div className="card-header">
                 <div className="header-left">
-                  <span className="order-number">{order.order_number}</span>
-                  <span className={`status-badge status-${order.status.replace(' ', '-')}`}>
-                    {formatStatus(order.status)}
+                  <span className="order-number">{order?.order_number}</span>
+                  <span className={`status-badge status-${status.replaceAll(' ', '-')}`}>
+                    {formatStatus(status)}
                   </span>
                 </div>
                 <div className="order-total">
-                  Order Total: RM{order.total_amount.toFixed(0)}
+                  Order Total: RM{totalAmount.toFixed(2)}
                 </div>
               </div>
 
-              {/* Tracking Info (Hanya untuk status Shipped) */}
-              {order.status === 'shipped' && order.tracking_number && (
+              {status === 'shipped' && (
                 <div className="tracking-box">
                   <div className="tracking-icon">
                     <svg viewBox="0 0 24 24">
@@ -155,34 +140,49 @@ const OrderPage = () => {
                     </svg>
                   </div>
                   <div className="tracking-details">
-                    <span className="tracking-number">Tracking no:{order.tracking_number}</span>
-                    <span className="tracking-status">{order.tracking_status}</span>
+                    <span className="tracking-number">
+                      Tracking no: {order.tracking_number || 'Belum tersedia'}
+                    </span>
+                    {order.shipping_status && (
+                      <span className="tracking-status">{formatStatus(order.shipping_status)}</span>
+                    )}
                   </div>
                 </div>
               )}
 
               {/* Item List */}
               <div className="item-list">
-                {order.items.map((item, index) => (
-                  <div key={index} className="order-item">
+                {items?.map((item, index) => (
+                  <div key={`${order?.order_id}-${item?.variant_id}-${index}`} className="order-item">
                     <div className="item-bullet"></div>
                     <div className="item-info">
-                      <span className="item-name">{item.product_name_at_purchase}</span>
-                      <span className="item-variant">{item.variant_info_at_purchase}</span>
+                      <span className="item-name">{item?.product_name}</span>
+                      <span className="item-variant">
+                        {item?.variant_info} · Qty: {item?.quantity} · RM{(Number(item?.subtotal) || 0).toFixed(2)}
+                      </span>
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Card Footer (Hanya untuk status Shipped) */}
-              {order.status === 'shipped' && (
+              {(status === 'pending' && order?.checkout_url) || status === 'shipped' ? (
                 <div className="card-footer">
-                  <button className="btn-received">Order Received</button>
+                  {status === 'pending' && order?.checkout_url && (
+                    <a className="btn-pay" href={order.checkout_url}>
+                      Pay now
+                    </a>
+                  )}
+                  {status === 'shipped' && (
+                    <button className="btn-received" type="button">
+                      Received
+                    </button>
+                  )}
                 </div>
-              )}
+              ) : null}
 
             </motion.div>
-          ))}
+            );
+          })}
         </motion.div>
           </>
         )}
