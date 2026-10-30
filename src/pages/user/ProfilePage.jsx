@@ -7,6 +7,7 @@ import '../../css/user/ProfilePage.css';
 import {useGetAddress} from '../../hook/useAddress'
 import {useEditUser} from '../../hook/useUser'
 import {useAuth} from '../../context/authContext'
+import { getDirtyValues } from '../../utils/form';
 
 
 
@@ -27,7 +28,7 @@ const ProfilePage = () => {
   const {mutate:editUserData,isPending} = useEditUser()
 
   // Setup React Hook Form
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+  const { register, handleSubmit, reset, formState: { errors, dirtyFields } } = useForm({
     defaultValues: {
       username: '',
       email: '',
@@ -50,18 +51,24 @@ const ProfilePage = () => {
   
   
 
-  const onSubmit = (data) => {
+  const onSubmit = (allData) => {
     try {
-       if(!data){
+       if(!allData){
         throw new Error("data kosong");
         
        }
-      editUserData(data);
+      const changed = getDirtyValues(allData, dirtyFields);
+      if (Object.keys(changed).length === 0) {
+        alert('Tiada perubahan');
+        return;
+      }
+
+      editUserData(changed, {
+        onSuccess: () => setIsEditing(false),
+      });
     } catch (error) {
       alert('err'+error)
     }
-    
-    setIsEditing(false);
   };
 
   const handleCancel = () => {

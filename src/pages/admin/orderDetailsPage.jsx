@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import '../../css/admin/OrderDetailsPage.css';
 import AdminSidebar from '../../components/AdminSidebar'; 
+import { getDirtyValues } from '../../utils/form';
 
 // ==========================================
 // DUMMY DATA (Berdasarkan db.sql)
@@ -84,7 +85,7 @@ const ExternalLinkIcon = () => (
 const AdminOrderDetailsPage = () => {
   const navigate = useNavigate();
   // Setup React Hook Form untuk Status & Shipment
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, formState: { dirtyFields } } = useForm({
     defaultValues: {
       orderStatus: dummyOrderDetails.order_status,
       courier: dummyOrderDetails.shipment.courier,
@@ -92,8 +93,14 @@ const AdminOrderDetailsPage = () => {
     }
   });
 
-  const onSubmit = (data) => {
-    console.log("Status & Shipment disimpan:", data);
+  const onSubmit = (allData) => {
+    const changed = getDirtyValues(allData, dirtyFields);
+    if (Object.keys(changed).length === 0) {
+      alert('Tiada perubahan');
+      return;
+    }
+
+    console.log("Status & Shipment disimpan:", changed);
     alert("Status & Shipment berjaya dikemas kini!");
   };
 

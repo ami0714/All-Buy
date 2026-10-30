@@ -4,75 +4,56 @@ import { get, post,patch,del } from '../utils/apiHelper'
 export async function addToCart(body){
 
     if(!body){
-        return {
-            status:false,
-            message: 'pastikan ade data'
-        }
+        throw new Error('Data produk diperlukan untuk menambah ke troli.');
     }
 
-    const response  = await post('/user/cart/add',body)
+    const response  = await post('/user/cart/add',body);
 
-    if(response.status === false){
-        return response.message
+    if (response?.status === true) {
+        return response.message ?? response;
     }
 
-    if(response.status === true){
-        return response.message
-    }
+    throw new Error(response?.message || 'Gagal menambah produk ke troli.');
 }
 
 
 export async function getUserCart() {
     const response = await get('/user/cart')
 
-    if(response.status === true){
+    if (response?.status === true && Array.isArray(response.data)) {
         return response.data
     }
 
-    if(response.status === false){
-        return response.message
-    }
-
-    return {
-        status: false,
-        message: "gagal fetch"
-    }
-    
+    throw new Error(response?.message || 'Format respons troli tidak sah.');
 }
 
 export async function changeQuantityeCartItem(cartId,payload){
-
-     const response = await patch(`/user/cart/${cartId}`,payload)
-
-    if(response.status === true){
-        return response.message
+    if (cartId === null || cartId === undefined || cartId === '') {
+        throw new Error('ID item troli tidak sah.');
+    }
+    if (!payload) {
+        throw new Error('Data kuantiti diperlukan.');
     }
 
-    if(response.status === false){
-        return response.message
+     const response = await patch(`/user/cart/${encodeURIComponent(cartId)}`,payload)
+
+    if (response?.status === true) {
+        return response.message ?? response;
     }
 
-    return {
-        status: false,
-        message: "gagal tukar quantity"
-    }
+    throw new Error(response?.message || 'Gagal mengemas kini kuantiti item troli.');
 }
 
 export async function deleteCartItem(cartId){
-
-     const response = await del(`/user/cart/${cartId}`)
-
-    if(response.status === true){
-        return response.message
+    if (cartId === null || cartId === undefined || cartId === '') {
+        throw new Error('ID item troli tidak sah.');
     }
 
-    if(response.status === false){
-        return response.message
+     const response = await del(`/user/cart/${encodeURIComponent(cartId)}`)
+
+    if (response?.status === true) {
+        return response.message ?? response;
     }
 
-    return {
-        status: false,
-        message: "gagal delete"
-    }
+    throw new Error(response?.message || 'Gagal memadam item troli.');
 }
-

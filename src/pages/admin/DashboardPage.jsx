@@ -6,7 +6,7 @@ import {
   PieChart, Pie, Cell
 } from 'recharts';
 import '../../css/admin/DashboardPage.css';
-import {useGetState,useGetChart,useGetStatusOrder} from '../../hook/admin/useDashboard'
+import {useGetState,useGetChart,useGetStatusOrder,useGetRecentOrders} from '../../hook/admin/useDashboard'
 import {useAuth} from '../../context/authContext'
 import AdminSidebar from '../../components/AdminSidebar'; // Import komponen Sidebar yang dibuat tadi
 
@@ -56,15 +56,7 @@ const orderStatusData = [
   { name: 'Selesai', value: 158, color: '#5b3cc4' },
 ];
 
-// Data untuk Jadual Pesanan Terkini
-const recentOrders = [
-  { id: "AB-1028", customer: "Aina Ahmad", email: "aina.ahmad@example.com", date: "12 Okt, 10:42", amount: "RM60.00", status: "Dibayar" },
-  { id: "AB-1027", customer: "Muhammad Hakim", email: "hakim.m@example.com", date: "12 Okt, 10:18", amount: "RM40.00", status: "Disediakan" },
-  { id: "AB-1026", customer: "Siti Nurhaliza", email: "siti.nur@example.com", date: "12 Okt, 09:56", amount: "RM22.00", status: "Menunggu" },
-  { id: "AB-1025", customer: "Daniel Lim", email: "daniel.lim@example.com", date: "12 Okt, 09:32", amount: "RM80.00", status: "Dihantar" },
-  { id: "AB-1024", customer: "Nur Farah", email: "farah.nur@example.com", date: "11 Okt, 17:24", amount: "RM44.00", status: "Selesai" },
-  { id: "AB-1023", customer: "Amir Roslan", email: "amir.r@example.com", date: "11 Okt, 16:50", amount: "RM20.00", status: "Dibayar" },
-];
+
 
 const DashboardPage = () => {
   const [salesPeriod, setSalesPeriod] = useState('monthly');
@@ -72,6 +64,7 @@ const DashboardPage = () => {
   const {data:stats,isLoading:isStateLoad} = useGetState(); 
   const {data:chart,isLoading:isChartLoad} = useGetChart(salesPeriod);
   const {data:orderStatus,isLoading:isOrderStatus} = useGetStatusOrder()
+  const{data:recentOrders,isLoading:isOrdersLoad}=useGetRecentOrders()
   const totalOrder = orderStatus?.reduce((acc,val) => acc + val.value,0)
   
   // Animasi Framer Motion
@@ -272,7 +265,7 @@ const DashboardPage = () => {
         <motion.div className="admin-dash-table-card" variants={cardVariants}>
           <div className="admin-dash-table-header">
             <span className="admin-dash-table-title">Pesanan terkini</span>
-            <span className="admin-dash-table-badge">6 pesanan</span>
+            <span className="admin-dash-table-badge">{recentOrders?.length} pesanan</span>
           </div>
           
           <table className="admin-dash-table">
@@ -287,25 +280,25 @@ const DashboardPage = () => {
               </tr>
             </thead>
             <tbody>
-              {recentOrders.map((order, index) => (
+              {recentOrders?.map((order, index) => (
                 <tr key={index}>
-                  <td><NavLink to={`/admin/order/detail/${encodeURIComponent(order.id)}`} className="admin-dash-order-id">{order.id}</NavLink></td>
+                  <td><NavLink to={`/admin/order/detail/${encodeURIComponent(order?.order_number)}`} className="admin-dash-order-id">{order?.order_number}</NavLink></td>
                   <td>
                     <div className="admin-dash-customer-info">
-                      <span className="admin-dash-customer-name">{order.customer}</span>
-                      <span className="admin-dash-customer-email">{order.email}</span>
+                      <span className="admin-dash-customer-name">{order?.username}</span>
+                      <span className="admin-dash-customer-email">{order?.email}</span>
                     </div>
                   </td>
-                  <td>{order.date}</td>
-                  <td>{order.amount}</td>
+                  <td>{order?.order_date}</td>
+                  <td>{order?.total_amount}</td>
                   <td>
-                    <span className={`admin-dash-status status-${order.status.toLowerCase().replace(' ', '')}`}>
+                    <span className={`admin-dash-status status-${order?.status.toLowerCase().replace(' ', '')}`}>
                       <span className="admin-dash-status-dot"></span>
-                      {order.status}
+                      {order?.status}
                     </span>
                   </td>
                   <td>
-                    <NavLink to={`/admin/order/detail/${encodeURIComponent(order.id)}`} className="admin-dash-action-btn" aria-label={`Lihat pesanan ${order.id}`}>
+                    <NavLink to={`/admin/order/detail/${encodeURIComponent(order?.order_number)}`} className="admin-dash-action-btn" aria-label={`Lihat pesanan ${order?.order_number}`}>
                       <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                     </NavLink>
                   </td>

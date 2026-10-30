@@ -1,6 +1,4 @@
-import {get } from '../utils/apiHelper';
-
-import { post,del } from "../utils/apiHelper";
+import { post } from "../utils/apiHelper";
 
 export function logUser(dataUser){
       
@@ -25,12 +23,13 @@ export async function getEmail(email){
         email:email
     }
      
-try {
     const res = await post('/forgot-password',body)
-    return res.status
-} catch (error) {
-    console.log(error)
-}
+
+    if (res?.status === true) {
+        return res.status;
+    }
+
+    throw new Error(res?.message || 'Gagal menghantar pautan tetapan semula kata laluan.');
 }
 
 
@@ -42,10 +41,10 @@ export async function SetNewPass(token,email, password,password_confirmation){
         password_confirmation:password_confirmation
     }
 
-    try {
     const res = await post('/reset-password',body)
-    return res.status
-} catch (error) {
-    console.log(error)
-}
+
+    if (res?.status === true) {
+        return res.status;
+    }
+    throw new Error(res?.message || 'Gagal menetapkan kata laluan baharu.');
 }

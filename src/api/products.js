@@ -3,42 +3,25 @@ import { get } from "../utils/apiHelper";
 
 export async function getAllProduct(){
 
-    try {
-        const res =  await get('/products');
+    const res = await get('/products');
 
-        if (res.status == false){
-            return res
-        } 
-        if(res.status == true){
-            return res.data;
-        }
-
-
-    } catch (error) {
-        return {
-            status: false,
-            message: "error"
-        }
+    if (res?.status === true && Array.isArray(res.data)) {
+        return res.data;
     }
+
+    throw new Error(res?.message || 'Format respons senarai produk tidak sah.');
 }
 
 export async function getDetailProduct(slug){
-
-    try {
-        const res =  await get(`/products/${slug}`);
-
-        if (res.status == false){
-            return res
-        } 
-        if(res.status == true){
-            return res.data;
-        }
-
-
-    } catch (error) {
-        return {
-            status: false,
-            message: "error"
-        }
+    if (slug === null || slug === undefined || slug === '') {
+        throw new Error('Slug produk tidak sah.');
     }
+
+    const res = await get(`/products/${encodeURIComponent(slug)}`);
+
+    if (res?.status === true && res.data && typeof res.data === 'object') {
+        return res.data;
+    }
+
+    throw new Error(res?.message || 'Format respons detail produk tidak sah.');
 }

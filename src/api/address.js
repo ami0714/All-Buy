@@ -2,77 +2,59 @@ import {get,patch,post } from '../utils/apiHelper';
 
 
 export async function getUserAddress() {
-    const response = await get('/user/address')
+    const response = await get('/user/address');
 
-    if(response.status === true){
-        return response.data
+    if (response?.status === true && Array.isArray(response.data)) {
+        return response.data;
     }
 
-    if(response.status === false){
-        return response.message
-    }
-
-    return {
-        status: false,
-        message: "gagal fetch"
-    }
-    
+    throw new Error(response?.message || 'Format respons alamat pengguna tidak sah.');
 }
 
 export async function getUserAddressByid(addressId) {
-    const response = await get(`/user/address/${addressId}`)
-
-    if(response.status === true){
-        return response.data
+    if (addressId === null || addressId === undefined || addressId === '') {
+        throw new Error('ID alamat tidak sah.');
     }
 
-    if(response.status === false){
-        return response.message
+    const response = await get(`/user/address/${encodeURIComponent(addressId)}`);
+
+    if (response?.status === true && response.data && typeof response.data === 'object') {
+        return response.data;
     }
 
-    return {
-        status: false,
-        message: "gagal fetch"
-    }
-    
+    throw new Error(response?.message || 'Format respons detail alamat tidak sah.');
 }
 
 export async function addAddress(body){
 
     if(!body){
-        return {
-            status:false,
-            message: 'pastikan ade data'
-        }
+        throw new Error('Data alamat diperlukan.');
     }
 
-    const response  = await post('/user/address/add',body)
+    const response  = await post('/user/address/add',body);
 
-    if(response.status === false){
-        return response.message
+    if (response?.status === true) {
+        return response.message ?? response;
     }
 
-    if(response.status === true){
-        return response.message
-    }
+    throw new Error(response?.message || 'Gagal menambah alamat.');
 }
 
 export async function editAddress(body,AddressId){
 
-    if(!body){
-        return {
-            status:false,
-            message: 'pastikan ade data'
-        }
+    if (!body) {
+        throw new Error('Data alamat diperlukan.');
     }
 
-    const response  = await patch(`/user/address/edit/${AddressId}`,body)
-
-    if(response.status === false){
-        return response.message
+    if (AddressId === null || AddressId === undefined || AddressId === '') {
+        throw new Error('ID alamat tidak sah.');
     }
 
-    if(response.status === true){
-        return response.message
+    const response  = await patch(`/user/address/edit/${encodeURIComponent(AddressId)}`,body);
+
+    if (response?.status === true) {
+        return response.message ?? response;
     }
+
+    throw new Error(response?.message || 'Gagal mengemas kini alamat.');
 }

@@ -4,20 +4,14 @@ import {patch} from '../utils/apiHelper';
 export async function editUser(body){
 
     if(!body){
-        return {
-            status:false,
-            message: 'pastikan ade data'
-        }
+        throw new Error('Data pengguna diperlukan.');
     }
 
     const response  = await patch('/user',body)
 
-    if(response.status === false){
-        return response.message
+    if (response?.status === true) {
+        return response.message ?? response;
     }
 
-    if(response.status === true){
-        return response.message
-    }
-
+    throw new Error(response?.message || 'Gagal mengemas kini maklumat pengguna.');
 }

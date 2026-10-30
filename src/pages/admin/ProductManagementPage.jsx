@@ -2,26 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../../css/admin/ProductManagementPage.css';
-import AdminSidebar from '../../components/AdminSidebar'; // Pastikan komponen ini wujud
-
-// ==========================================
-// DUMMY DATA (Berdasarkan db.sql)
-// ==========================================
-// Menggabungkan data dari jadual `products`, `product_variants`, dan `categories`
-const initialProducts = [
-  { id: 1, name: "Kemeja Lelaki Biru", sku: "PRD-001", variants: 6, category: "Kemeja", price: 20.00, is_active: true, image_url: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" },
-  { id: 2, name: "Kemeja Lelaki Putih", sku: "PRD-002", variants: 3, category: "Kemeja", price: 20.00, is_active: true, image_url: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" },
-  { id: 3, name: "Kemeja Lelaki Hitam", sku: "PRD-003", variants: 3, category: "Kemeja", price: 20.00, is_active: true, image_url: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" },
-  { id: 4, name: "Kemeja Lelaki Merah", sku: "PRD-004", variants: 3, category: "Kemeja", price: 20.00, is_active: true, image_url: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" },
-  { id: 5, name: "Kemeja Lelaki Kuning", sku: "PRD-005", variants: 3, category: "Kemeja", price: 20.00, is_active: false, image_url: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" },
-  { id: 6, name: "Kemeja Lelaki Hijau", sku: "PRD-006", variants: 3, category: "Kemeja", price: 20.00, is_active: true, image_url: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" },
-  { id: 7, name: "Kemeja Lelaki Ungu", sku: "PRD-007", variants: 3, category: "Kemeja", price: 20.00, is_active: true, image_url: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" },
-  { id: 8, name: "Kemeja Lelaki Kelabu", sku: "PRD-008", variants: 3, category: "Kemeja", price: 20.00, is_active: false, image_url: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" },
-  { id: 9, name: "Kemeja Lelaki Coklat", sku: "PRD-009", variants: 3, category: "Kemeja", price: 20.00, is_active: true, image_url: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" },
-  { id: 10, name: "Kemeja Lelaki Oren", sku: "PRD-010", variants: 3, category: "Kemeja", price: 20.00, is_active: true, image_url: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" },
-  { id: 11, name: "Kemeja Lelaki Perak", sku: "PRD-011", variants: 3, category: "Kemeja", price: 20.00, is_active: true, image_url: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" },
-  { id: 12, name: "Kemeja Lelaki Emas", sku: "PRD-012", variants: 3, category: "Kemeja", price: 20.00, is_active: true, image_url: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" },
-];
+import AdminSidebar from '../../components/AdminSidebar'; 
+import {useGetProductList,useUpdateStatus} from '../../hook/admin/useProduct';
 
 // Ikon SVG
 const BoxIcon = () => (
@@ -47,51 +29,75 @@ const TrashIcon = () => (
 );
 
 const ProductManagementPage = () => {
+ 
   const navigate = useNavigate();
-  const [products, setProducts] = useState(initialProducts);
+ 
   const [activeTab, setActiveTab] = useState('all');
+  const { data: products = [], isLoading, isError, error } = useGetProductList(activeTab);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  // Fungsi untuk toggle status aktif/tidak aktif
-  const handleToggleStatus = (id) => {
-    setProducts(products.map(p => 
-      p.id === id ? { ...p, is_active: !p.is_active } : p
-    ));
-  };
-
   // Logik Penapisan (Filtering)
-  //gantikan guna tasntak query untuk change category
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
-      const matchesTab = 
-        activeTab === 'all' ? true :
-        activeTab === 'active' ? product.is_active :
-        !product.is_active;
-      
+      const name = product?.name ?? '';
+      const slug = product?.slug ?? '';
+      const id = String(product?.id ?? '');
       const matchesSearch = 
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.sku.toLowerCase().includes(searchTerm.toLowerCase());
+        name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        id.includes(searchTerm);
 
-      return matchesTab && matchesSearch;
+      return matchesSearch;
     });
-  }, [products, activeTab, searchTerm]);
+  }, [products, searchTerm]);
 
   // Logik Pagination
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
+  const [currentItems, setCurrentItems] = useState(() => (
+    filteredProducts.slice(indexOfFirstItem, indexOfLastItem)
+  ));
+
+   const {mutate:updateStatus} = useUpdateStatus();
+  const handleToggleStatus = (product) => {
+
+    updateStatus({statusVal:product?.is_active,product_id:product?.id});
+    //dalam kurungan currentItems tu amik nilai semasa dan mapping yang mreturn nilai,dan cek jika id sama maka return nilai
+    //baru yang ditukarkan
+    setCurrentItems((currentItems) => currentItems.map((item) => (
+      item.id === product.id
+        ? {
+          ...item,
+          is_active: item.is_active === true || item.is_active === 1 ? 0 : 1,
+          status: item.is_active === true || item.is_active === 1 ? 'inactive' : 'active',
+        }
+        : item
+    )));
+     
+      
+    
+  };
 
   // Reset ke halaman 1 apabila tab atau carian berubah
   React.useEffect(() => {
     setCurrentPage(1);
   }, [activeTab, searchTerm]);
 
+  React.useEffect(() => {
+    setCurrentItems(filteredProducts.slice(indexOfFirstItem, indexOfLastItem));
+  }, [filteredProducts, indexOfFirstItem, indexOfLastItem]);
+
   // Kiraan Statistik
   const totalProducts = products.length;
-  const activeProducts = products.filter(p => p.is_active).length;
+  const activeProducts = products.filter((product) => {
+    const displayedProduct = currentItems.find((item) => item.id === product.id);
+    return displayedProduct
+      ? displayedProduct.is_active === true || displayedProduct.is_active === 1
+      : product.is_active === true || product.is_active === 1 || product.status === 'active';
+  }).length;
   const inactiveProducts = totalProducts - activeProducts;
 
   // Animasi Framer Motion
@@ -179,19 +185,19 @@ const ProductManagementPage = () => {
               className={`admin-prod-tab ${activeTab === 'all' ? 'active' : ''}`}
               onClick={() => setActiveTab('all')}
             >
-              Semua produk ({totalProducts})
+              Semua produk 
             </div>
             <div 
               className={`admin-prod-tab ${activeTab === 'active' ? 'active' : ''}`}
               onClick={() => setActiveTab('active')}
             >
-              Aktif ({activeProducts})
+              Aktif 
             </div>
             <div 
               className={`admin-prod-tab ${activeTab === 'inactive' ? 'active' : ''}`}
               onClick={() => setActiveTab('inactive')}
             >
-              Tidak aktif ({inactiveProducts})
+              Tidak aktif 
             </div>
           </div>
 
@@ -207,15 +213,6 @@ const ProductManagementPage = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <select className="admin-prod-filter-select">
-              <option>Semua kategori</option>
-              <option>Kemeja</option>
-            </select>
-            <select className="admin-prod-filter-select">
-              <option>Semua status</option>
-              <option>Aktif</option>
-              <option>Tidak aktif</option>
-            </select>
           </div>
 
           {/* Table */}
@@ -231,7 +228,16 @@ const ProductManagementPage = () => {
             </thead>
             <tbody>
               <AnimatePresence>
-                {currentItems.map((product) => (
+                {isLoading ? (
+                  <tr><td colSpan="5">Memuatkan produk...</td></tr>
+                ) : isError ? (
+                  <tr><td colSpan="5">{error.message}</td></tr>
+                ) : currentItems.length === 0 ? (
+                  <tr><td colSpan="5">Tiada produk ditemui.</td></tr>
+                ) : currentItems.map((product) => {
+                  const price = Number(product.default_price ?? product.price);
+
+                  return (
                   <motion.tr 
                     key={product.id}
                     variants={rowVariants}
@@ -246,24 +252,25 @@ const ProductManagementPage = () => {
                         </div>
                         <div className="admin-prod-item-details">
                           <span className="admin-prod-item-name">{product.name}</span>
-                          <span className="admin-prod-item-sku">{product.sku} · {product.variants} variasi</span>
+                          <span className="admin-prod-item-sku">ID: {product.id} · {product.variant_count ?? product.variants ?? 0} variasi</span>
                         </div>
                       </div>
                     </td>
-                    <td>{product.category}</td>
-                    <td>RM{product.price.toFixed(2)}</td>
+                    <td>{product.category ?? '-'}</td>
+                    <td>{Number.isFinite(price) ? `RM${price.toFixed(2)}` : '-'}</td>
                     <td>
                       <div className="admin-prod-toggle-wrapper">
                         <label className="admin-prod-toggle">
                           <input 
                             type="checkbox" 
-                            checked={product.is_active}
-                            onChange={() => handleToggleStatus(product.id)}
+                            checked={product.is_active === true || product.is_active === 1}
+                            onChange={() => handleToggleStatus(product)}
+                            aria-label={`Status produk ${product.name}`}
                           />
                           <span className="admin-prod-slider"></span>
                         </label>
                         <span className="admin-prod-toggle-label">
-                          {product.is_active ? 'Aktif' : 'Tidak aktif'}
+                          {product.is_active === true || product.is_active === 1 ? 'Aktif' : 'Tidak aktif'}
                         </span>
                       </div>
                     </td>
@@ -282,7 +289,8 @@ const ProductManagementPage = () => {
                       </div>
                     </td>
                   </motion.tr>
-                ))}
+                  );
+                })}
               </AnimatePresence>
             </tbody>
           </table>
@@ -290,7 +298,7 @@ const ProductManagementPage = () => {
           {/* Pagination */}
           <div className="admin-prod-pagination">
             <div className="admin-prod-pagination-info">
-              Memaparkan {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredProducts.length)} daripada {filteredProducts.length} produk
+              Memaparkan {filteredProducts.length === 0 ? 0 : indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredProducts.length)} daripada {filteredProducts.length} produk
             </div>
             <div className="admin-prod-pagination-controls">
               <button 
@@ -313,7 +321,7 @@ const ProductManagementPage = () => {
 
               <button 
                 className="admin-prod-page-btn" 
-                disabled={currentPage === totalPages}
+                disabled={totalPages === 0 || currentPage >= totalPages}
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               >
                 Seterusnya
@@ -325,7 +333,7 @@ const ProductManagementPage = () => {
 
         {/* Footer */}
         <motion.div className="admin-prod-footer" variants={cardVariants}>
-          <span>Data contoh ilustratif - Bukan data langsung</span>
+          <span>Data produk daripada API</span>
           <span>© 2026 ALL-BUY</span>
         </motion.div>
 

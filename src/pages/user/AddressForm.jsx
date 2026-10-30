@@ -6,6 +6,7 @@ import {useAddAddress,useEditAddress,useGetAddressById} from '../../hook/useAddr
 import {useAuth} from '../../context/authContext';
 import '../../css/user/AddressForm.css';
 import Navbar from '../../Components/Navbar';
+import { getDirtyValues } from '../../utils/form';
 
 // ==========================================
 // DUMMY DATA (Berdasarkan db.sql - Jadual addresses)
@@ -46,7 +47,7 @@ const {data:addressData,isLoading:isAddressLoad} = useGetAddressById(id);
   const isEdit = !!id; 
 
   // 3. Setup React Hook Form
-  const { register, handleSubmit,reset, formState: { errors } } = useForm({
+  const { register, handleSubmit,reset, formState: { errors, dirtyFields } } = useForm({
     defaultValues:  {
       label: '',
       recipient_name: '',
@@ -81,9 +82,9 @@ getAddressData()
   
 
   // Fungsi apabila borang dihantar
-  const onSubmit = (body) => {
+  const onSubmit = (allData) => {
     if(!isEdit){
-       newAddress(body,{
+       newAddress(allData,{
         onSuccess:(res)=>{
             navigate('/profile');
         }
@@ -91,7 +92,13 @@ getAddressData()
     }
 
     if(isEdit){
-      editAddress({body:body,id:id},{
+      const changed = getDirtyValues(allData, dirtyFields);
+      if (Object.keys(changed).length === 0) {
+        alert('Tiada perubahan');
+        return;
+      }
+
+      editAddress({body:changed,id:id},{
        onSuccess:(res)=>{
             navigate('/profile');
         }

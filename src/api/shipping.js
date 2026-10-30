@@ -3,21 +3,11 @@ import { get } from "../utils/apiHelper";
 
 export async function getAllCourier(){
 
-    try {
-        const res =  await get('/shipping');
+    const res = await get('/shipping');
 
-        if (res.status == false){
-            return res
-        } 
-        if(res.status == true){
-            return res.data;
-        }
-
-
-    } catch (error) {
-        return {
-            status: false,
-            message: "error"
-        }
+    if (res?.status === true && Array.isArray(res.data)) {
+        return res.data;
     }
+
+    throw new Error(res?.message || 'Format respons senarai kurier tidak sah.');
 }

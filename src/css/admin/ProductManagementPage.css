@@ -381,6 +381,11 @@
   background-color: var(--admin-prod-primary);
 }
 
+.admin-prod-toggle input:focus-visible + .admin-prod-slider {
+  outline: 2px solid var(--admin-prod-primary);
+  outline-offset: 3px;
+}
+
 .admin-prod-toggle input:checked + .admin-prod-slider:before {
   transform: translateX(18px);
 }

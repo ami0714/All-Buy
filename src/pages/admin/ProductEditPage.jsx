@@ -1,27 +1,14 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
+import {useGetProductDetail, useUpdateProduct,useAddProduct} from '../../hook/admin/useProduct';
+import {useGetcategory} from '../../hook/admin/useCategory'
 import { useParams, useNavigate } from 'react-router-dom';
 import '../../css/admin/ProductEditPage.css';
 import AdminSidebar from '../../components/AdminSidebar'; // Pastikan komponen ini wujud
+import { getDirtyValues } from '../../utils/form';
 
-// ==========================================
-// DUMMY DATA (Berdasarkan db.sql)
-// ==========================================
-// Menggabungkan data dari jadual `products` dan `product_variants`
-const dummyProduct = {
-  id: 1,
-  name: "Kemeja Lelaki Biru",
-  slug: "kemeja-lelaki-biru",
-  description: "Kemeja lelaki berlenan panjang dengan potongan santai. Fabrik ringan dan selesa untuk pemakaian harian. Tersedia dalam saiz S, M dan L.",
-  default_price: 20.00,
-  category: "Kemeja",
-  is_active: true,
-  image_url: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-  variants_count: 6,
-  total_stock: 84,
-  last_updated: "11 Okt 2026"
-};
+
 
 // Ikon SVG
 const ArrowLeftIcon = () => (
@@ -40,23 +27,65 @@ const ArrowRightIcon = () => (
 const ProductEditPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const {
+    data: categories = [],
+    isLoading: isCategoryLoad,
+    isError: isCategoryError,
+    error: categoryError,
+  } = useGetcategory()
+  const {
+    data: product,
+    isLoading: isProductLoad,
+    isError: isProductError,
+    error: productError,
+  } = useGetProductDetail(id)
+  const { mutate: updateProduct, isPending: isUpdatePending } = useUpdateProduct();
+  const {mutate:addProduct,isPending:isAddPending} = useAddProduct();
+
 
   // 1. Tentukan mod Edit atau Tambah
   // Jika ada 'id' dalam URL, maka isEdit = true
   const isEdit = !!id;
 
   // 2. Setup React Hook Form
-  const { register, handleSubmit, watch, setValue } = useForm({
-    defaultValues: isEdit ? dummyProduct : {
+  const { register, handleSubmit,reset, watch, setValue, formState: { dirtyFields } } = useForm({
+    defaultValues: {
       name: '',
       slug: '',
       description: '',
       default_price: '',
-      category: '',
+      category_id: '',
       is_active: true,
       image_url: ''
     }
   });
+
+  useEffect(() => {
+    if (!isEdit || !product) {
+      return;
+    }
+
+    
+
+    reset({
+      id: product.id ?? id,
+      name: product.name ?? '',
+      slug: product.slug ?? '',
+      description: product.description ?? '',
+      default_price: product.default_price ?? '',
+      category_id: product?.category_id === '' ? '' : String(product?.category),
+      is_active: product.is_active === true
+        || product.is_active === 1
+        || product.is_active === '1'
+        || product.is_active === 'true'
+        || product.is_active === 'active',
+      image_url: product.image_url ?? '',
+      variants_count: product.variants_count ?? product.variant_count ?? 0,
+      total_stock: product.total_stock ?? 0,
+      last_updated: product.last_updated ?? '',
+    });
+  }, [id, isEdit, product, reset]);
+  
 
   // Logik untuk auto-generate slug daripada nama produk
   const productName = watch('name');
@@ -69,14 +98,26 @@ const ProductEditPage = () => {
   }, [productName, setValue, isEdit]);
 
   // Fungsi apabila borang dihantar
-  const onSubmit = (data) => {
-    console.log("Data dihantar:", data);
-    console.log("Mod:", isEdit ? "EDIT" : "TAMBAH");
-    
-    // Di sini anda akan panggil API untuk simpan ke database
-    // Selepas berjaya, redirect kembali ke halaman pengurusan produk
-    alert(`Produk berjaya ${isEdit ? 'dikemaskini' : 'ditambah'}!`);
-    navigate('/admin/product-management');
+  const onSubmit = (allData) => {
+    if (!isEdit && !product) {
+      addProduct(allData,{
+      onSuccess: () => navigate('/admin/product-management'),
+    })
+    }
+
+    if (product && isEdit) {
+       const changed = getDirtyValues(allData, dirtyFields);
+    if (Object.keys(changed).length === 0) {
+      alert('Tiada perubahan');
+      return;
+    }
+
+    updateProduct({ productId: id, changed:changed }, {
+      onSuccess: () => navigate('/admin/product-management'),
+    });
+    }
+
+   
   };
 
   const handleCancel = () => {
@@ -98,7 +139,7 @@ const ProductEditPage = () => {
     <div className="admin-edit-prod-layout">
       {/* Sidebar Component */}
       <AdminSidebar activePage="products" />
-
+        
       {/* Main Content Area */}
       <motion.div 
         className="admin-edit-prod-main"
@@ -109,7 +150,7 @@ const ProductEditPage = () => {
         {/* Top Header */}
         <motion.div className="admin-edit-prod-top-header" variants={cardVariants}>
           <div className="admin-edit-prod-breadcrumbs">
-            Admin <span>›</span> <span>Produk</span> <span style={{ color: '#9ca3af', fontWeight: '400' }}>/admin/products/{isEdit ? `${dummyProduct.slug || 'PRD-001'}/edit` : 'add'}</span>
+            Admin <span>›</span> <span>Produk</span> <span style={{ color: '#9ca3af', fontWeight: '400' }}>/admin/products/{isEdit ? `${product?.slug || id}/edit` : 'add'}</span>
           </div>
           <div className="admin-edit-prod-header-right">
             <span className="admin-edit-prod-badge">Akses pentadbir</span>
@@ -129,7 +170,7 @@ const ProductEditPage = () => {
           </div>
           {isEdit && (
             <div className="admin-edit-prod-sku-badge">
-              PRD-001
+              ID: {product?.id ?? id}
             </div>
           )}
         </motion.div>
@@ -145,6 +186,23 @@ const ProductEditPage = () => {
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)}>
+              {isEdit && isProductLoad && (
+                <p role="status">Sedang memuatkan maklumat produk...</p>
+              )}
+              {isEdit && isProductError && (
+                <p role="alert">
+                  Gagal memuatkan produk: {productError?.message || 'Sila cuba lagi.'}
+                </p>
+              )}
+              {isEdit && !isProductLoad && !isProductError && !product && (
+                <p role="alert">
+                  Maklumat produk tidak tersedia. Pastikan sesi pentadbir masih aktif.
+                </p>
+              )}
+              <fieldset
+                disabled={isEdit && (isProductLoad || isProductError || !product)}
+                style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}
+              >
               <div className="admin-edit-prod-form-group">
                 <label>Nama produk <span>*</span></label>
                 <input 
@@ -192,13 +250,21 @@ const ProductEditPage = () => {
                   <label>Kategori <span>*</span></label>
                   <select 
                     className="admin-edit-prod-select"
-                    {...register("category", { required: true })}
+                    {...register("category_id", { required: true })}
+                    value={watch('category_id') ?? ''}
+                    disabled={isCategoryLoad || isCategoryError}
                   >
                     <option value="">Pilih kategori</option>
-                    <option value="Kemeja">Kemeja</option>
-                    <option value="Seluar">Seluar</option>
-                    <option value="Aksesori">Aksesori</option>
+                    {categories?.map((cat) => 
+                    <option key={cat.id} value={String(cat.id)}>{cat.name}</option>
+                    )}
                   </select>
+                  {isCategoryLoad && <span className="admin-edit-prod-input-hint">Sedang memuatkan kategori...</span>}
+                  {isCategoryError && (
+                    <span className="admin-edit-prod-input-hint" role="alert">
+                      Gagal memuatkan kategori: {categoryError?.message || 'Sila cuba lagi.'}
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -220,7 +286,7 @@ const ProductEditPage = () => {
               {/* Form Footer */}
               <div className="admin-edit-prod-form-footer">
                 <span className="admin-edit-prod-last-updated">
-                  {isEdit ? `Terakhir dikemas kini: ${dummyProduct.last_updated}` : ''}
+                  {isEdit && product?.last_updated ? `Terakhir dikemas kini: ${product.last_updated}` : ''}
                 </span>
                 <div className="admin-edit-prod-actions">
                   <button 
@@ -233,12 +299,14 @@ const ProductEditPage = () => {
                   <button 
                     type="submit" 
                     className="admin-edit-prod-btn-submit"
+                    disabled={isUpdatePending || (isEdit && (isProductLoad || isProductError || !product))}
                   >
                     <CheckIcon />
-                    {isEdit ? 'Simpan Produk' : 'Tambah Produk'}
+                    {isUpdatePending ? 'Menyimpan...' : isEdit ? 'Simpan Produk' : 'Tambah Produk'}
                   </button>
                 </div>
               </div>
+              </fieldset>
             </form>
           </motion.div>
 
@@ -250,7 +318,7 @@ const ProductEditPage = () => {
               
               <div className="admin-edit-prod-image-preview">
                 <img 
-                  src={watch('image_url') || dummyProduct.image_url} 
+                  src={watch('image_url') || product?.image_url || undefined}
                   alt="Pratonton Produk" 
                 />
               </div>
@@ -278,9 +346,9 @@ const ProductEditPage = () => {
               <motion.div className="admin-edit-prod-widget" variants={cardVariants}>
                 <h3 className="admin-edit-prod-widget-title">Variasi & stok</h3>
                 <p className="admin-edit-prod-widget-desc" style={{ marginBottom: '16px' }}>
-                  {dummyProduct.variants_count} variasi · {dummyProduct.total_stock} unit tersedia. Saiz, warna dan stok diurus secara berasingan.
+                  {product?.variants_count ?? product?.variant_count ?? 0} variasi · {product?.total_stock ?? 0} unit tersedia. Saiz, warna dan stok diurus secara berasingan.
                 </p>
-                <button className="admin-edit-prod-btn-variants" onClick={() => navigate(`/admin/product/${id || dummyProduct.id}/variant`)}>
+                <button className="admin-edit-prod-btn-variants" onClick={() => navigate(`/admin/product/${id || product?.id}/variant`)}>
                   Urus Variasi
                   <ArrowRightIcon />
                 </button>

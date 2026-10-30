@@ -2,31 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
+import {useGetvariants} from '../../hook/admin/useVariant';
+import {useGetProductDetail} from '../../hook/admin/useProduct';
 import '../../css/admin/ProductVariantsPage.css';
 import AdminSidebar from '../../components/AdminSidebar'; // Pastikan komponen ini wujud
+import { getDirtyValues } from '../../utils/form';
 
-// ==========================================
-// DUMMY DATA (Berdasarkan db.sql)
-// ==========================================
-// Menggabungkan data dari jadual `products` dan `product_variants`
-const dummyProduct = {
-  id: 1,
-  name: "Kemeja Lelaki Biru",
-  sku: "PRD-001",
-  category: "Kemeja",
-  default_price: 20.00,
-  is_active: true,
-  image_url: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
-};
-
-const initialVariants = [
-  { id: 1, size: "S", color: "Biru", sku: "KLB-BLU-S", price: 20.00, stock: 12 },
-  { id: 2, size: "M", color: "Biru", sku: "KLB-BLU-M", price: 20.00, stock: 24 },
-  { id: 3, size: "L", color: "Biru", sku: "KLB-BLU-L", price: 22.00, stock: 8, is_special_price: true },
-  { id: 4, size: "S", color: "Merah", sku: "KLB-RED-S", price: 20.00, stock: 10 },
-  { id: 5, size: "M", color: "Merah", sku: "KLB-RED-M", price: 20.00, stock: 18 },
-  { id: 6, size: "L", color: "Merah", sku: "KLB-RED-L", price: 22.00, stock: 12, is_special_price: true },
-];
 
 // Ikon SVG
 const ArrowLeftIcon = () => (
@@ -54,13 +35,33 @@ const WarningIcon = () => (
 const ProductVariantsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const {
+      data: product,
+      isLoading: isProductLoading,
+      isError: isProductError,
+      error: productError,
+    } = useGetProductDetail(id)
+  const {
+    data: products_variants = [],
+    isLoading: isProductVLoad,
+    isError: isProductVError,
+    error: productVError,
+  } = useGetvariants(id)
 
-  const [variants, setVariants] = useState(initialVariants);
+  const [variants, setVariants] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingVariant, setEditingVariant] = useState(null);
+  const [editingVariant, setEditingVariant] = useState(null);//nanti letak useQuery untuk dapatkan data one untuk variant
+
+  useEffect(() => {
+    setVariants(products_variants.map((variant) => ({
+      ...variant,
+      price: Number(variant.price),
+      stock: Number(variant.stock),
+    })));
+  }, [products_variants]);
 
   // Setup React Hook Form
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, formState: { errors, dirtyFields } } = useForm();
 
   // Buka borang untuk Tambah Variasi baru
   const handleAddNew = () => {
@@ -95,12 +96,26 @@ const ProductVariantsPage = () => {
   };
 
   // Simpan Variasi (Tambah atau Edit)
-  const onSubmit = (data) => {
+  const onSubmit = (allData) => {
     if (editingVariant) {
+      const changed = getDirtyValues(allData, dirtyFields);
+      if (Object.keys(changed).length === 0) {
+        alert('Tiada perubahan');
+        return;
+      }
+
+      if (dirtyFields.price) {
+        changed.price = parseFloat(changed.price) || dummyProduct.default_price;
+        changed.is_special_price = Boolean(allData.price);
+      }
+      if (dirtyFields.stock) {
+        changed.stock = parseInt(changed.stock, 10);
+      }
+
       // Logik Edit
       setVariants(variants.map(v => 
         v.id === editingVariant.id 
-          ? { ...v, ...data, price: parseFloat(data.price) || dummyProduct.default_price, stock: parseInt(data.stock) }
+          ? { ...v, ...changed }
           : v
       ));
       alert("Variasi berjaya dikemas kini!");
@@ -108,10 +123,10 @@ const ProductVariantsPage = () => {
       // Logik Tambah
       const newVariant = {
         id: variants.length + 1,
-        ...data,
-        price: parseFloat(data.price) || dummyProduct.default_price,
-        stock: parseInt(data.stock),
-        is_special_price: !!data.price
+        ...allData,
+        price: parseFloat(allData.price) || dummyProduct.default_price,
+        stock: parseInt(allData.stock, 10),
+        is_special_price: !!allData.price
       };
       setVariants([...variants, newVariant]);
       alert("Variasi baru berjaya ditambah!");
@@ -121,8 +136,8 @@ const ProductVariantsPage = () => {
 
   // Kiraan Statistik
   const totalVariants = variants.length;
-  const totalStock = variants.reduce((sum, v) => sum + v.stock, 0);
-  const lowStockVariants = variants.filter(v => v.stock < 10);
+  const totalStock = variants.reduce((sum, variant) => sum + Number(variant.stock || 0), 0);
+  const lowStockVariants = variants.filter((variant) => Number(variant.stock) < 10);
 
   // Animasi Framer Motion
   const containerVariants = {
@@ -186,15 +201,18 @@ const ProductVariantsPage = () => {
         </motion.div>
 
         {/* Product Summary Card */}
-        <motion.div className="admin-var-product-card" variants={cardVariants}>
+        {isProductLoading ? (
+          <p>loading product data</p>
+        ) : (
+          <motion.div className="admin-var-product-card" variants={cardVariants}>
           <div className="admin-var-product-info">
             <div className="admin-var-product-image">
-              <img src={dummyProduct.image_url} alt={dummyProduct.name} />
+              <img src={product?.image_url} alt={product?.name} />
             </div>
             <div className="admin-var-product-details">
-              <h2>{dummyProduct.name}</h2>
+              <h2>{product?.name}</h2>
               <p className="admin-var-product-meta">
-                {dummyProduct.sku} · {dummyProduct.category} · Harga asas RM{dummyProduct.default_price.toFixed(2)}
+                {product?.slug} · {product?.category} · Harga asas RM{product?.default_price.toFixed(2)}
               </p>
               <span className="admin-var-product-status">
                 Aktif
@@ -212,6 +230,9 @@ const ProductVariantsPage = () => {
             </div>
           </div>
         </motion.div>
+        )
+
+        }
 
         {/* Main Grid Layout */}
         <div className="admin-var-grid">
@@ -238,33 +259,42 @@ const ProductVariantsPage = () => {
               </thead>
               <tbody>
                 <AnimatePresence>
-                  {variants.map((variant) => (
+                  {isProductVLoad ? (
+                    <tr><td colSpan="6">Sedang memuatkan variasi...</td></tr>
+                  ) : isProductVError ? (
+                    <tr><td colSpan="6" role="alert">Gagal memuatkan variasi: {productVError?.message || 'Sila cuba lagi.'}</td></tr>
+                  ) : variants.length === 0 ? (
+                    <tr><td colSpan="6">Tiada variasi untuk produk ini.</td></tr>
+                  ) : variants.map((variant) => (
                     <motion.tr 
                       key={variant.id}
                       variants={rowVariants}
                       initial="hidden"
                       animate="visible"
                       exit="hidden"
-                      className={editingVariant?.id === variant.id ? 'selected' : ''}
+                      className={editingVariant?.id === variant?.id ? 'selected' : ''}
                     >
-                      <td>{variant.size}</td>
+                      <td>{variant?.size}</td>
                       <td>
-                        <span className={`admin-var-color-dot ${variant.color.toLowerCase() === 'biru' ? 'blue' : 'red'}`}></span>
-                        {variant.color}
+                        <span
+                          className={`admin-var-color-dot ${variant.color?.toLowerCase() || ''}`}
+                          style={{ backgroundColor: variant.color || 'transparent' }}
+                        ></span>
+                        {variant?.color}
                       </td>
-                      <td>{variant.sku}</td>
+                      <td>{variant?.sku}</td>
                       <td>
                         <div className="admin-var-price-wrapper">
-                          <span>RM{variant.price.toFixed(2)}</span>
-                          {variant.is_special_price && (
+                          <span>RM{Number(variant.price).toFixed(2)}</span>
+                          {variant?.is_special_price && (
                             <span className="admin-var-price-special">Harga khas</span>
                           )}
                         </div>
                       </td>
                       <td>
-                        <span className={`admin-var-stock-badge ${variant.stock < 10 ? 'low-stock' : ''}`}>
+                        <span className={`admin-var-stock-badge ${variant?.stock < 10 ? 'low-stock' : ''}`}>
                           <span className="admin-var-stock-dot"></span>
-                          {variant.stock}
+                          {variant?.stock}
                         </span>
                       </td>
                       <td>
@@ -284,7 +314,7 @@ const ProductVariantsPage = () => {
             </table>
 
             {/* Warning Box */}
-            {lowStockVariants.length > 0 && (
+            {lowStockVariants?.length > 0 && (
               <motion.div 
                 className="admin-var-warning-box"
                 initial={{ opacity: 0, y: 10 }}
@@ -356,10 +386,15 @@ const ProductVariantsPage = () => {
                         {...register("color", { required: true })}
                       >
                         <option value="">Pilih warna</option>
-                        <option value="Biru">Biru</option>
-                        <option value="Merah">Merah</option>
-                        <option value="Hitam">Hitam</option>
-                        <option value="Putih">Putih</option>
+                        {[...new Set([
+                          'Biru',
+                          'Merah',
+                          'Hitam',
+                          'Putih',
+                          ...(editingVariant?.color ? [editingVariant.color] : []),
+                        ])].map((color) => (
+                          <option key={color} value={color}>{color}</option>
+                        ))}
                       </select>
                     </div>
                   </div>

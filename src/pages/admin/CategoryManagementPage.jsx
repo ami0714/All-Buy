@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../../css/admin/CategoryManagementPage.css';
 import AdminSidebar from '../../components/AdminSidebar'; // Pastikan komponen ini wujud
+import { getDirtyValues } from '../../utils/form';
 
 // ==========================================
 // DUMMY DATA (Berdasarkan db.sql - Jadual categories)
@@ -52,7 +53,7 @@ const CategoryManagementPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   // Setup React Hook Form
-  const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm({
+  const { register, handleSubmit, reset, watch, setValue, formState: { errors, dirtyFields } } = useForm({
     defaultValues: {
       id: null,
       name: '',
@@ -69,7 +70,7 @@ const CategoryManagementPage = () => {
       const generatedSlug = categoryName
         .toLowerCase()
         .split(' ').join('-');
-      setValue('slug', generatedSlug);
+      setValue('slug', generatedSlug, { shouldDirty: true });
     }
   }, [categoryName, setValue]);
 
@@ -107,12 +108,18 @@ const CategoryManagementPage = () => {
   };
 
   // Simpan Kategori (Tambah atau Edit)
-  const onSubmit = (data) => {
+  const onSubmit = (allData) => {
     if (editingCategoryId) {
+      const changed = getDirtyValues(allData, dirtyFields);
+      if (Object.keys(changed).length === 0) {
+        alert('Tiada perubahan');
+        return;
+      }
+
       // Logik Edit
       setCategories(categories.map(c => 
         c.id === editingCategoryId 
-          ? { ...c, ...data }
+          ? { ...c, ...changed }
           : c
       ));
       alert("Kategori berjaya dikemas kini!");
@@ -120,7 +127,7 @@ const CategoryManagementPage = () => {
       // Logik Tambah
       const newCategory = {
         id: categories.length + 1,
-        ...data,
+        ...allData,
         product_count: 0
       };
       setCategories([...categories, newCategory]);

@@ -16,10 +16,10 @@ function getHeaders() {
 // Function to handle JSON responses and errors
 async function handleResponse(response) {
   const data = await response.json();
-  if (!response.ok) {
-    const error = new Error(data.message || 'Something went wrong');
+  if (!response.ok || data?.status === false) {
+    const error = new Error(data?.message || 'Something went wrong');
     error.status = response.status;
-    error.errors = data.errors || null;
+    error.errors = data?.errors || null;
     throw error;
   }
   return data;

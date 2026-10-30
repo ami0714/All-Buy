@@ -1,23 +1,18 @@
-import {get,patch,post } from '../utils/apiHelper';
+import {post } from '../utils/apiHelper';
 
 
 
 export async function createOrder(body){
 
     if(!body){
-        return {
-            status:false,
-            message: 'pastikan ade data'
-        }
+        throw new Error('Maklumat pesanan diperlukan.');
     }
 
     const response  = await post('/user/payment/hitpay',body)
 
-    if(response.status === false){
-        return response.message
+    if (response?.status === true && response.data) {
+        return response.data;
     }
 
-    if(response.status === true){
-        return response.data
-    }
+    throw new Error(response?.message || 'Gagal membuat pesanan.');
 }
