@@ -1,36 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { Icon } from '@iconify/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
-import {useGetvariants} from '../../hook/admin/useVariant';
+import {useGetvariants,useUpdateVariant,useAddVariant} from '../../hook/admin/useVariant';
 import {useGetProductDetail} from '../../hook/admin/useProduct';
 import '../../css/admin/ProductVariantsPage.css';
 import AdminSidebar from '../../components/AdminSidebar'; // Pastikan komponen ini wujud
 import { getDirtyValues } from '../../utils/form';
 
-
-// Ikon SVG
-const ArrowLeftIcon = () => (
-  <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-);
-const PlusIcon = () => (
-  <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-);
-const EditIcon = () => (
-  <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-);
-const TrashIcon = () => (
-  <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-);
-const CloseIcon = () => (
-  <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-);
-const CheckIcon = () => (
-  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-);
-const WarningIcon = () => (
-  <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-);
 
 const ProductVariantsPage = () => {
   const { id } = useParams();
@@ -96,11 +74,13 @@ const ProductVariantsPage = () => {
   };
 
   // Simpan Variasi (Tambah atau Edit)
+  const {mutate:updateVariant,isPending:isUpdatePending} = useUpdateVariant();
+  const {mutate:addVariant,isPending:isAddPending} = useAddVariant();
   const onSubmit = (allData) => {
     if (editingVariant) {
       const changed = getDirtyValues(allData, dirtyFields);
       if (Object.keys(changed).length === 0) {
-        alert('Tiada perubahan');
+        alert('No changes were made.');
         return;
       }
 
@@ -112,15 +92,19 @@ const ProductVariantsPage = () => {
         changed.stock = parseInt(changed.stock, 10);
       }
 
+      updateVariant({variant_id:editingVariant.id,data:changed});
+
       // Logik Edit
       setVariants(variants.map(v => 
         v.id === editingVariant.id 
           ? { ...v, ...changed }
           : v
       ));
-      alert("Variasi berjaya dikemas kini!");
+
     } else {
       // Logik Tambah
+      addVariant({product_id:id,data:allData});
+
       const newVariant = {
         id: variants.length + 1,
         ...allData,
@@ -129,7 +113,7 @@ const ProductVariantsPage = () => {
         is_special_price: !!allData.price
       };
       setVariants([...variants, newVariant]);
-      alert("Variasi baru berjaya ditambah!");
+      alert("New variant added successfully!");
     }
     handleCloseForm();
   };
@@ -167,44 +151,47 @@ const ProductVariantsPage = () => {
       <AdminSidebar activePage="products" />
 
       {/* Main Content Area */}
-      <motion.div 
+      <motion.main
         className="admin-var-main"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         {/* Top Header */}
-        <motion.div className="admin-var-top-header" variants={cardVariants}>
-          <div className="admin-var-breadcrumbs">
-            Admin <span>›</span> <span>Produk</span> <span style={{ color: '#9ca3af', fontWeight: '400' }}>/admin/products/PRD-001/variants</span>
-          </div>
+        <motion.header className="admin-var-top-header" variants={cardVariants}>
+          <nav className="admin-var-breadcrumbs" aria-label="Breadcrumb">
+            <span>Admin</span>
+            <span aria-hidden="true">›</span>
+            <span>Products</span>
+            <span aria-hidden="true">›</span>
+            <span aria-current="page">Product Variants</span>
+          </nav>
           <div className="admin-var-header-right">
-            <span className="admin-var-badge">Akses pentadbir</span>
-            <span className="admin-var-date">12 Okt 2026</span>
+            <span className="admin-var-badge">Admin Access</span>
           </div>
-        </motion.div>
+        </motion.header>
 
         {/* Page Title */}
-        <motion.div className="admin-var-title-section" variants={cardVariants}>
+        <motion.section className="admin-var-title-section" variants={cardVariants}>
           <div className="admin-var-title">
-            <button className="admin-var-back-btn" onClick={() => navigate('/admin/product-management')}>
-              <ArrowLeftIcon />
-              Kembali ke Pengurusan Produk
+            <button type="button" className="admin-var-back-btn" onClick={() => navigate('/admin/product-management')}>
+              <Icon icon="mdi:arrow-left" aria-hidden="true" />
+              Back to Product Management
             </button>
-            <h1>Variasi Produk</h1>
-            <p>Urus kombinasi saiz, warna, harga dan stok bagi setiap SKU.</p>
+            <h1>Product Variants</h1>
+            <p>Manage the size, color, price, and stock combinations for each SKU.</p>
           </div>
-          <button className="admin-var-btn-add" onClick={handleAddNew}>
-            <PlusIcon />
-            Tambah Variasi
+          <button type="button" className="admin-var-btn-add" onClick={handleAddNew}>
+            <Icon icon="mdi:plus" aria-hidden="true" />
+            Add Variant
           </button>
-        </motion.div>
+        </motion.section>
 
         {/* Product Summary Card */}
         {isProductLoading ? (
-          <p>loading product data</p>
+          <p role="status">Loading product information...</p>
         ) : (
-          <motion.div className="admin-var-product-card" variants={cardVariants}>
+          <motion.section className="admin-var-product-card" variants={cardVariants} aria-label="Product summary">
           <div className="admin-var-product-info">
             <div className="admin-var-product-image">
               <img src={product?.image_url} alt={product?.name} />
@@ -212,59 +199,61 @@ const ProductVariantsPage = () => {
             <div className="admin-var-product-details">
               <h2>{product?.name}</h2>
               <p className="admin-var-product-meta">
-                {product?.slug} · {product?.category} · Harga asas RM{product?.default_price.toFixed(2)}
+                {product?.slug} · {product?.category} · Base price RM{product?.default_price.toFixed(2)}
               </p>
               <span className="admin-var-product-status">
-                Aktif
+                Active
               </span>
             </div>
           </div>
           <div className="admin-var-product-stats">
             <div className="admin-var-stat-group">
-              <span className="admin-var-stat-label">Jumlah variasi</span>
+              <span className="admin-var-stat-label">Total Variants</span>
               <span className="admin-var-stat-value">{totalVariants}</span>
             </div>
             <div className="admin-var-stat-group">
-              <span className="admin-var-stat-label">Jumlah stok</span>
-              <span className="admin-var-stat-value">{totalStock} unit</span>
+              <span className="admin-var-stat-label">Total Stock</span>
+              <span className="admin-var-stat-value">{totalStock} units</span>
             </div>
           </div>
-        </motion.div>
+        </motion.section>
         )
 
         }
 
         {/* Main Grid Layout */}
-        <div className="admin-var-grid">
+        <section className="admin-var-grid" aria-label="Product variant management">
           
           {/* Left Column: Table */}
-          <motion.div className="admin-var-table-card" variants={cardVariants}>
+          <motion.section className="admin-var-table-card" variants={cardVariants} aria-labelledby="admin-var-table-title">
             <div className="admin-var-table-header">
-              <h3 className="admin-var-table-title">Senarai variasi</h3>
+              <h2 id="admin-var-table-title" className="admin-var-table-title">Variant List</h2>
               <span className="admin-var-table-badge">
-                {new Set(variants.map(v => v.size)).size} saiz · {new Set(variants.map(v => v.color)).size} warna
+                {new Set(variants.map(v => v.size)).size} sizes · {new Set(variants.map(v => v.color)).size} colors
               </span>
             </div>
-            
+
+            <div className="admin-var-table-scroll" role="region" aria-label="Product variant list" tabIndex="0">
             <table className="admin-var-table">
+              <caption className="admin-var-sr-only">Size, color, SKU, price, stock, and actions for each product variant.</caption>
               <thead>
                 <tr>
-                  <th>Saiz</th>
-                  <th>Warna</th>
-                  <th>SKU</th>
-                  <th>Harga</th>
-                  <th>Stok</th>
-                  <th>Tindakan</th>
+                  <th scope="col">Size</th>
+                  <th scope="col">Color</th>
+                  <th scope="col">SKU</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Stock</th>
+                  <th scope="col">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 <AnimatePresence>
                   {isProductVLoad ? (
-                    <tr><td colSpan="6">Sedang memuatkan variasi...</td></tr>
+                    <tr><td colSpan="6">Loading variants...</td></tr>
                   ) : isProductVError ? (
-                    <tr><td colSpan="6" role="alert">Gagal memuatkan variasi: {productVError?.message || 'Sila cuba lagi.'}</td></tr>
+                    <tr><td colSpan="6" role="alert">Failed to load variants: {productVError?.message || 'Please try again.'}</td></tr>
                   ) : variants.length === 0 ? (
-                    <tr><td colSpan="6">Tiada variasi untuk produk ini.</td></tr>
+                    <tr><td colSpan="6">This product has no variants.</td></tr>
                   ) : variants.map((variant) => (
                     <motion.tr 
                       key={variant.id}
@@ -279,6 +268,7 @@ const ProductVariantsPage = () => {
                         <span
                           className={`admin-var-color-dot ${variant.color?.toLowerCase() || ''}`}
                           style={{ backgroundColor: variant.color || 'transparent' }}
+                          aria-hidden="true"
                         ></span>
                         {variant?.color}
                       </td>
@@ -287,7 +277,7 @@ const ProductVariantsPage = () => {
                         <div className="admin-var-price-wrapper">
                           <span>RM{Number(variant.price).toFixed(2)}</span>
                           {variant?.is_special_price && (
-                            <span className="admin-var-price-special">Harga khas</span>
+                            <span className="admin-var-price-special">Special Price</span>
                           )}
                         </div>
                       </td>
@@ -299,11 +289,11 @@ const ProductVariantsPage = () => {
                       </td>
                       <td>
                         <div className="admin-var-actions">
-                          <button className="admin-var-action-btn" onClick={() => handleEdit(variant)}>
-                            <EditIcon />
+                          <button type="button" className="admin-var-action-btn" aria-label={`Edit variant ${variant.size} ${variant.color}`} onClick={() => handleEdit(variant)}>
+                            <Icon icon="mdi:pencil-outline" aria-hidden="true" />
                           </button>
-                          <button className="admin-var-action-btn delete">
-                            <TrashIcon />
+                          <button type="button" className="admin-var-action-btn delete" aria-label={`Delete variant ${variant.size} ${variant.color}`}>
+                            <Icon icon="mdi:trash-can-outline" aria-hidden="true" />
                           </button>
                         </div>
                       </td>
@@ -312,6 +302,7 @@ const ProductVariantsPage = () => {
                 </AnimatePresence>
               </tbody>
             </table>
+            </div>
 
             {/* Warning Box */}
             {lowStockVariants?.length > 0 && (
@@ -321,39 +312,40 @@ const ProductVariantsPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
               >
-                <WarningIcon />
+                <Icon icon="mdi:alert-outline" aria-hidden="true" />
                 <div className="admin-var-warning-content">
-                  <h4>{lowStockVariants.length} variasi mempunyai stok rendah</h4>
+                  <h4>{lowStockVariants.length} variants are low in stock</h4>
                   <p>
                     {lowStockVariants.map((v, i) => (
                       <span key={v.id}>
-                        Saiz {v.size} / {v.color} berbek {v.stock} unit. 
+                        Size {v.size} / {v.color}: {v.stock} units in stock.
                         {i < lowStockVariants.length - 1 ? ' ' : ''}
                       </span>
                     ))}
-                    Semak stok apabila kuantiti di bawah 10.
+                    Check stock when the quantity falls below 10.
                   </p>
                 </div>
               </motion.div>
             )}
-          </motion.div>
+          </motion.section>
 
           {/* Right Column: Form (Conditional Rendering) */}
           <AnimatePresence>
             {isFormOpen && (
-              <motion.div 
+              <motion.section
                 className="admin-var-form-card"
+                aria-labelledby="admin-var-form-title"
                 variants={formVariants}
                 initial="hidden"
                 animate="visible"
                 exit="exit"
               >
                 <div className="admin-var-form-header">
-                  <h3 className="admin-var-form-title">
-                    {editingVariant ? 'Edit variasi' : 'Tambah variasi'}
-                  </h3>
-                  <button className="admin-var-close-btn" onClick={handleCloseForm}>
-                    <CloseIcon />
+                  <h2 id="admin-var-form-title" className="admin-var-form-title">
+                    {editingVariant ? 'Edit Variant' : 'Add Variant'}
+                  </h2>
+                  <button type="button" className="admin-var-close-btn" aria-label="Close form" onClick={handleCloseForm}>
+                    <Icon icon="mdi:close" aria-hidden="true" />
                   </button>
                 </div>
 
@@ -366,106 +358,97 @@ const ProductVariantsPage = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="admin-var-row">
                     <div className="admin-var-form-group">
-                      <label>Saiz <span>*</span></label>
-                      <select 
-                        className="admin-var-select"
+                      <label htmlFor="admin-var-size">Size <span>*</span></label>
+                      <input
+                        id="admin-var-size"
+                        type="text"
+                        className="admin-var-input"
+                        placeholder="Example: S, M, L, XL"
                         {...register("size", { required: true })}
-                      >
-                        <option value="">Pilih saiz</option>
-                        <option value="S">S</option>
-                        <option value="M">M</option>
-                        <option value="L">L</option>
-                        <option value="XL">XL</option>
-                      </select>
+                      />
                     </div>
 
                     <div className="admin-var-form-group">
-                      <label>Warna <span>*</span></label>
-                      <select 
-                        className="admin-var-select"
+                      <label htmlFor="admin-var-color">Color <span>*</span></label>
+                      <input
+                        id="admin-var-color"
+                        type="text"
+                        className="admin-var-input"
+                        placeholder="Example: Blue"
                         {...register("color", { required: true })}
-                      >
-                        <option value="">Pilih warna</option>
-                        {[...new Set([
-                          'Biru',
-                          'Merah',
-                          'Hitam',
-                          'Putih',
-                          ...(editingVariant?.color ? [editingVariant.color] : []),
-                        ])].map((color) => (
-                          <option key={color} value={color}>{color}</option>
-                        ))}
-                      </select>
+                      />
                     </div>
                   </div>
 
                   <div className="admin-var-form-group">
-                    <label>SKU <span>*</span></label>
+                    <label htmlFor="admin-var-sku">SKU <span>*</span></label>
                     <input 
+                      id="admin-var-sku"
                       type="text" 
                       className="admin-var-input" 
-                      placeholder="Contoh: KLB-BLU-L"
+                      placeholder="Example: KLB-BLU-L"
                       {...register("sku", { required: true })} 
                     />
-                    <span className="admin-var-input-hint">SKU mesti unik bagi setiap variasi.</span>
+                    <span className="admin-var-input-hint">Each variant must have a unique SKU.</span>
                   </div>
 
                   <div className="admin-var-form-group">
-                    <label>Harga variasi (RM) · Pilihan</label>
+                    <label htmlFor="admin-var-price">Variant Price (RM) · Optional</label>
                     <input 
+                      id="admin-var-price"
                       type="number" 
                       step="0.01"
                       className="admin-var-input" 
-                      placeholder={`Kosongkan untuk guna harga asas RM${dummyProduct.default_price.toFixed(2)}.`}
+                      placeholder={`Leave blank to use the base price of RM${product?.default_price.toFixed(2)}.`}
                       {...register("price")} 
                     />
                   </div>
 
                   <div className="admin-var-form-group">
-                    <label>Kuantiti stok <span>*</span></label>
+                    <label htmlFor="admin-var-stock">Stock Quantity <span>*</span></label>
                     <input 
+                      id="admin-var-stock"
                       type="number" 
                       className="admin-var-input" 
-                      placeholder="Contoh: 10"
+                      placeholder="Example: 10"
                       {...register("stock", { required: true })} 
                     />
-                    <span className="admin-var-input-hint">Jumlah unit tersedia untuk dibeli.</span>
+                    <span className="admin-var-input-hint">Total units available for purchase.</span>
                   </div>
 
                   <div className="admin-var-form-actions">
-                    <button 
+                    <button
                       type="button" 
                       className="admin-var-btn-cancel" 
                       onClick={handleCloseForm}
                     >
-                      Batal
+                      Cancel
                     </button>
-                    <button 
+                    <button
                       type="submit" 
                       className="admin-var-btn-submit"
                     >
-                      <CheckIcon />
-                      {editingVariant ? 'Simpan Variasi' : 'Tambah Variasi'}
+                      <Icon icon="mdi:check" aria-hidden="true" />
+                      {editingVariant ? 'Save Variant' : 'Add Variant'}
                     </button>
                   </div>
                 </form>
 
                 <div className="admin-var-form-footer">
-                  Untuk kombinasi baru, pilih Tambah Variasi di atas.
+                  To add a new combination, select Add Variant above.
                 </div>
-              </motion.div>
+              </motion.section>
             )}
           </AnimatePresence>
 
-        </div>
+        </section>
 
         {/* Footer */}
-        <motion.div className="admin-var-footer" variants={cardVariants}>
-          <span>Data contoh ilustratif - Bukan data langsung</span>
+        <motion.footer className="admin-var-footer" variants={cardVariants}>
           <span>© 2026 ALL-BUY</span>
-        </motion.div>
+        </motion.footer>
 
-      </motion.div>
+      </motion.main>
     </div>
   );
 };

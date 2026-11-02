@@ -96,12 +96,12 @@ const AdminOrderDetailsPage = () => {
   const onSubmit = (allData) => {
     const changed = getDirtyValues(allData, dirtyFields);
     if (Object.keys(changed).length === 0) {
-      alert('Tiada perubahan');
+      alert('No changes were made.');
       return;
     }
 
     console.log("Status & Shipment disimpan:", changed);
-    alert("Status & Shipment berjaya dikemas kini!");
+    alert("Status and shipment updated successfully!");
   };
 
   // Animasi Framer Motion

@@ -10,7 +10,7 @@ export function useCreateOrder(){
           return res
         },
         onError:(err)=>{
-          alert('error create order')
+          alert('Unable to create the order.')
         }
        })
     }

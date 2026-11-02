@@ -131,23 +131,23 @@ const ProductManagementPage = () => {
         {/* Top Header */}
         <motion.div className="admin-prod-top-header" variants={cardVariants}>
           <div className="admin-prod-breadcrumbs">
-            Admin <span>›</span> <span>Produk</span> <span style={{ color: '#9ca3af', fontWeight: '400' }}>/admin/products</span>
+            Admin <span>›</span> <span>Products</span> <span style={{ color: '#9ca3af', fontWeight: '400' }}>/admin/products</span>
           </div>
           <div className="admin-prod-header-right">
-            <span className="admin-prod-badge">Akses pentadbir</span>
-            <span className="admin-prod-date">12 Okt 2026</span>
+            <span className="admin-prod-badge">Admin Access</span>
+            <span className="admin-prod-date">12 Oct 2026</span>
           </div>
         </motion.div>
 
         {/* Page Title */}
         <motion.div className="admin-prod-title-section" variants={cardVariants}>
           <div className="admin-prod-title">
-            <h1>Pengurusan Produk</h1>
-            <p>Urus katalog, harga dan ketersediaan produk ALL-BUY.</p>
+            <h1>Product Management</h1>
+            <p>Manage the ALL-BUY product catalog, pricing, and availability.</p>
           </div>
           <button className="admin-prod-btn-add" onClick={() => navigate('/admin/product/add')}>
             <PlusIcon />
-            Tambah Produk
+            Add Product
           </button>
         </motion.div>
 
@@ -156,21 +156,21 @@ const ProductManagementPage = () => {
           <div className="admin-prod-stat-card">
             <div className="admin-prod-stat-icon"><BoxIcon /></div>
             <div className="admin-prod-stat-info">
-              <span className="admin-prod-stat-label">Jumlah produk</span>
+              <span className="admin-prod-stat-label">Total Products</span>
               <span className="admin-prod-stat-value">{totalProducts}</span>
             </div>
           </div>
           <div className="admin-prod-stat-card">
             <div className="admin-prod-stat-icon"><CheckCircleIcon /></div>
             <div className="admin-prod-stat-info">
-              <span className="admin-prod-stat-label">Produk aktif</span>
+              <span className="admin-prod-stat-label">Active Products</span>
               <span className="admin-prod-stat-value">{activeProducts}</span>
             </div>
           </div>
           <div className="admin-prod-stat-card">
             <div className="admin-prod-stat-icon"><PauseCircleIcon /></div>
             <div className="admin-prod-stat-info">
-              <span className="admin-prod-stat-label">Tidak aktif</span>
+              <span className="admin-prod-stat-label">Inactive</span>
               <span className="admin-prod-stat-value">{inactiveProducts}</span>
             </div>
           </div>
@@ -185,19 +185,19 @@ const ProductManagementPage = () => {
               className={`admin-prod-tab ${activeTab === 'all' ? 'active' : ''}`}
               onClick={() => setActiveTab('all')}
             >
-              Semua produk 
+              All Products
             </div>
             <div 
               className={`admin-prod-tab ${activeTab === 'active' ? 'active' : ''}`}
               onClick={() => setActiveTab('active')}
             >
-              Aktif 
+              Active
             </div>
             <div 
               className={`admin-prod-tab ${activeTab === 'inactive' ? 'active' : ''}`}
               onClick={() => setActiveTab('inactive')}
             >
-              Tidak aktif 
+              Inactive
             </div>
           </div>
 
@@ -208,7 +208,7 @@ const ProductManagementPage = () => {
               <input 
                 type="text" 
                 className="admin-prod-search-input" 
-                placeholder="Cari nama produk atau ID..." 
+                placeholder="Search product name or ID..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -219,21 +219,21 @@ const ProductManagementPage = () => {
           <table className="admin-prod-table">
             <thead>
               <tr>
-                <th>Produk</th>
-                <th>Kategori</th>
-                <th>Harga asas</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Base Price</th>
                 <th>Status</th>
-                <th>Tindakan</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               <AnimatePresence>
                 {isLoading ? (
-                  <tr><td colSpan="5">Memuatkan produk...</td></tr>
+                  <tr><td colSpan="5">Loading products...</td></tr>
                 ) : isError ? (
                   <tr><td colSpan="5">{error.message}</td></tr>
                 ) : currentItems.length === 0 ? (
-                  <tr><td colSpan="5">Tiada produk ditemui.</td></tr>
+                  <tr><td colSpan="5">No products found.</td></tr>
                 ) : currentItems.map((product) => {
                   const price = Number(product.default_price ?? product.price);
 
@@ -252,7 +252,7 @@ const ProductManagementPage = () => {
                         </div>
                         <div className="admin-prod-item-details">
                           <span className="admin-prod-item-name">{product.name}</span>
-                          <span className="admin-prod-item-sku">ID: {product.id} · {product.variant_count ?? product.variants ?? 0} variasi</span>
+                          <span className="admin-prod-item-sku">ID: {product.id} · {product.variant_count ?? product.variants ?? 0} variants</span>
                         </div>
                       </div>
                     </td>
@@ -265,12 +265,12 @@ const ProductManagementPage = () => {
                             type="checkbox" 
                             checked={product.is_active === true || product.is_active === 1}
                             onChange={() => handleToggleStatus(product)}
-                            aria-label={`Status produk ${product.name}`}
+                            aria-label={`Product status for ${product.name}`}
                           />
                           <span className="admin-prod-slider"></span>
                         </label>
                         <span className="admin-prod-toggle-label">
-                          {product.is_active === true || product.is_active === 1 ? 'Aktif' : 'Tidak aktif'}
+                          {product.is_active === true || product.is_active === 1 ? 'Active' : 'Inactive'}
                         </span>
                       </div>
                     </td>
@@ -281,7 +281,7 @@ const ProductManagementPage = () => {
                           Edit
                         </button>
                         <button className="admin-prod-btn-variants" onClick={() => navigate(`/admin/product/${product.id}/variant`)}>
-                          Urus Variasi
+                          Manage Variants
                         </button>
                         <button className="admin-prod-action-delete">
                           <TrashIcon />
@@ -298,7 +298,7 @@ const ProductManagementPage = () => {
           {/* Pagination */}
           <div className="admin-prod-pagination">
             <div className="admin-prod-pagination-info">
-              Memaparkan {filteredProducts.length === 0 ? 0 : indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredProducts.length)} daripada {filteredProducts.length} produk
+              Showing {filteredProducts.length === 0 ? 0 : indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredProducts.length)} of {filteredProducts.length} products
             </div>
             <div className="admin-prod-pagination-controls">
               <button 
@@ -306,7 +306,7 @@ const ProductManagementPage = () => {
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               >
-                Sebelumnya
+                Previous
               </button>
               
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
@@ -324,7 +324,7 @@ const ProductManagementPage = () => {
                 disabled={totalPages === 0 || currentPage >= totalPages}
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               >
-                Seterusnya
+                Next
               </button>
             </div>
           </div>
@@ -333,7 +333,7 @@ const ProductManagementPage = () => {
 
         {/* Footer */}
         <motion.div className="admin-prod-footer" variants={cardVariants}>
-          <span>Data produk daripada API</span>
+          <span>Product data from API</span>
           <span>© 2026 ALL-BUY</span>
         </motion.div>
 

@@ -8,24 +8,24 @@ export async function getProductList(status) {
   }
 
   if (response?.status === false) {
-    throw new Error(response.message || 'Gagal mengambil daftar produk.');
+    throw new Error(response.message || 'Unable to retrieve the product list.');
   }
 
   if (Array.isArray(response?.data)) {
     return response.data;
   }
 
-  throw new Error('Format respons daftar produk tidak valid.');
+  throw new Error('Invalid product list response format.');
 }
 
 
 export async function updateStatus(currentValue, productId) {
   if (currentValue === null || currentValue === undefined) {
-    throw new Error('Status produk tidak sah.');
+    throw new Error('Invalid product status.');
   }
 
   if (productId === null || productId === undefined) {
-    throw new Error('ID produk tidak sah.');
+    throw new Error('Invalid product ID.');
   }
 
   const isActive = currentValue === true
@@ -37,11 +37,11 @@ export async function updateStatus(currentValue, productId) {
   });
 
   if (response?.status === false) {
-    throw new Error(response.message || 'Gagal mengemas kini status produk.');
+    throw new Error(response.message || 'Unable to update product status.');
   }
 
   if (!response || typeof response !== 'object') {
-    throw new Error('Format respons kemas kini status produk tidak sah.');
+    throw new Error('Invalid product status update response format.');
   }
 
   return response.message ?? response;
@@ -49,13 +49,13 @@ export async function updateStatus(currentValue, productId) {
 
 export async function getProductDetail(product_id) {
   if (product_id === null || product_id === undefined || product_id === '') {
-    throw new Error('ID produk tidak sah.');
+    throw new Error('Invalid product ID.');
   }
 
   const response = await get(`/admin/products/${encodeURIComponent(product_id)}`);
 
   if (response?.status === false) {
-    throw new Error(response.message || 'Gagal mengambil detail produk.');
+    throw new Error(response.message || 'Unable to retrieve product details.');
   }
 
   const productData = response && Object.hasOwn(response, 'data')
@@ -66,17 +66,17 @@ export async function getProductDetail(product_id) {
     return productData;
   }
 
-  throw new Error('Format respons detail produk tidak valid.');
+  throw new Error('Invalid product details response format.');
 }
 
 
 export async function updateProduct(productId, body) {
   if (productId === null || productId === undefined || productId === '') {
-    throw new Error('ID produk tidak sah.');
+    throw new Error('Invalid product ID.');
   }
 
   if (!body || Object.keys(body).length === 0) {
-    throw new Error('Tiada perubahan untuk dikemas kini.');
+    throw new Error('There are no changes to update.');
   }
 
   const response = await patch(`/admin/products/${encodeURIComponent(productId)}`, body);
@@ -85,13 +85,13 @@ export async function updateProduct(productId, body) {
     return response.message ?? response;
   }
 
-  throw new Error(response?.message || 'Gagal mengemas kini produk.');
+  throw new Error(response?.message || 'Unable to update product.');
 }
 
 export async function addProduct( body) {
 
   if (!body || Object.keys(body).length === 0) {
-    throw new Error('Tiada perubahan untuk dikemas kini.');
+    throw new Error('There are no changes to update.');
   }
 
   const response = await post('/admin/products', body);
@@ -100,5 +100,5 @@ export async function addProduct( body) {
     return response.message ?? response;
   }
 
-  throw new Error(response?.message || 'Gagal mengemas kini produk.');
+  throw new Error(response?.message || 'Unable to add product.');
 }

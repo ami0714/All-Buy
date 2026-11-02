@@ -11,7 +11,7 @@ import {useLogin,useRegister} from '../hook/useAuth'
 const Header = () => (
   <header className="auth-header">
     <div className="auth-logo">ALL-BUY</div>
-    <button className="btn-help">Bantuan</button>
+    <button className="btn-help">Help</button>
   </header>
 );
 
@@ -25,7 +25,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
 
   const onSubmit = (data) => {
      if(!data){
-      alert('error')
+      alert('An error occurred.')
      }
      try {
       mutate(data,{
@@ -53,9 +53,9 @@ const LoginForm = ({ onSwitchToRegister }) => {
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
     >
-      <h1 className="auth-title">Log masuk</h1>
+      <h1 className="auth-title">Log In</h1>
       <p className="auth-subtitle">
-        Log masuk ke akaun ALL-BUY anda untuk meneruskan pembelian dan mengurus pesanan.
+        Log in to your ALL-BUY account to continue shopping and manage your orders.
       </p>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -64,28 +64,28 @@ const LoginForm = ({ onSwitchToRegister }) => {
           <input 
             type="email" 
             className="form-input" 
-            placeholder="nama@example.com"
+            placeholder="name@example.com"
             {...register("email", { required: true })}
           />
-          {errors.email && <span style={{color: 'red', fontSize: '12px'}}>Email diperlukan</span>}
+          {errors.email && <span style={{color: 'red', fontSize: '12px'}}>Email is required</span>}
         </div>
 
         <div className="form-group">
-          <label className="form-label">Kata laluan</label>
+          <label className="form-label">Password</label>
           <input 
             type="password" 
             className="form-input" 
-            placeholder="Masukkan kata laluan"
+            placeholder="Enter your password"
             {...register("password", { required: true })}
           />
-          {errors.password && <span style={{color: 'red', fontSize: '12px'}}>Kata laluan diperlukan</span>}
+          {errors.password && <span style={{color: 'red', fontSize: '12px'}}>Password is required</span>}
         </div>
 
-        <button style={{cursor:isPending ? 'not-allowed':'pointer'}} type="submit" className="btn-submit">Log masuk</button>
+        <button style={{cursor:isPending ? 'not-allowed':'pointer'}} type="submit" className="btn-submit">Log In</button>
       </form>
 
       <div className="auth-footer">
-        Belum ada akaun? <span className="auth-link" onClick={onSwitchToRegister}>Daftar</span>
+        Don't have an account? <span className="auth-link" onClick={onSwitchToRegister}>Sign Up</span>
       </div>
 
       <div className="copyright">
@@ -106,7 +106,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
 
   const onSubmit = (data) => {
     if(!data){
-      alert('error')
+      alert('An error occurred.')
     }
     try {
       mutate(data,{
@@ -130,12 +130,12 @@ const RegisterForm = ({ onSwitchToLogin }) => {
       style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
       <div className="register-top-text">
-        Buat akaun untuk meneruskan pembelian, simpan alamat dan pantau status pesanan dengan lebih mudah.
+        Create an account to continue shopping, save addresses, and easily track your orders.
       </div>
 
       <div className="auth-card card-register">
-        <h1 className="auth-title">Daftar akaun</h1>
-        <p className="auth-subtitle">Isi maklumat di bawah untuk mula berbelanja.</p>
+        <h1 className="auth-title">Create an Account</h1>
+        <p className="auth-subtitle">Enter the details below to get started.</p>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
@@ -143,7 +143,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
             <input 
               type="email" 
               className="form-input" 
-              placeholder="nama@example.com"
+              placeholder="name@example.com"
               {...register("email", { required: true })}
             />
           </div>
@@ -153,17 +153,17 @@ const RegisterForm = ({ onSwitchToLogin }) => {
             <input 
               type="text" 
               className="form-input" 
-              placeholder="nama pengguna"
+              placeholder="Username"
               {...register("username", { required: true })}
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">phone</label>
+            <label className="form-label">Phone</label>
             <input 
               type="text" 
               className="form-input" 
-              placeholder="phone"
+              placeholder="Phone number"
               {...register("phone", { required: true })}
             />
           </div>
@@ -173,7 +173,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
             <input 
               type="password" 
               className="form-input" 
-              placeholder="buat kata laluan"
+              placeholder="Create a password"
               {...register("password", { required: true })}
             />
           </div>
@@ -183,20 +183,20 @@ const RegisterForm = ({ onSwitchToLogin }) => {
             <input 
               type="password" 
               className="form-input" 
-              placeholder="ulang kata laluan"
+              placeholder="Confirm your password"
               {...register("password_confirmation", { 
                 required: true,
-                validate: value => value === password || "Kata laluan tidak sepadan"
+                validate: value => value === password || "Passwords do not match"
               })}
             />
             {errors.confirmPassword && <span style={{color: 'red', fontSize: '12px'}}>{errors.confirmPassword.message}</span>}
           </div>
 
-          <button type="submit" className="btn-submit">Daftar</button>
+          <button type="submit" className="btn-submit">Sign Up</button>
         </form>
 
         <div className="auth-footer">
-          Sudah ada akaun? <span className="auth-link" onClick={onSwitchToLogin}>Log masuk</span>
+          Already have an account? <span className="auth-link" onClick={onSwitchToLogin}>Log In</span>
         </div>
       </div>
     </motion.div>

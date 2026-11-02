@@ -32,7 +32,7 @@ const ProductCard = ({ product }) => {
       <button
         className="home-product-card__add"
         type="button"
-        aria-label={`Lihat ${name}`}
+        aria-label={`View ${name}`}
         onClick={() => navigate(productPath, { state: { product } })}
       >
         +

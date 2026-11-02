@@ -25,10 +25,10 @@ export function useUpdateStatus(){
       return res
     },
     onSuccess:()=>{
-      alert('berjaya update status')
+      alert('Product status updated successfully.')
     },
     onError:(err)=>{
-      alert(err.message || 'error update status')
+      alert(err.message || 'Unable to update product status.')
     },
     onSettled:()=>{
       queryClient.invalidateQueries({queryKey: ['admin-all-product']})
@@ -53,12 +53,12 @@ export function useUpdateProduct() {
   return useMutation({
     mutationFn: ({ productId, changed }) => updateProduct(productId, changed),
     onSuccess: (_response, { productId }) => {
-      alert('Berjaya mengemas kini produk.');
+      alert('Product updated successfully.');
       queryClient.invalidateQueries({ queryKey: ['admin-detail-product', productId] });
       queryClient.invalidateQueries({ queryKey: ['admin-all-product'] });
     },
     onError: (error) => {
-      alert(error.message || 'Gagal mengemas kini produk.');
+      alert(error.message || 'Unable to update product.');
     },
   });
 }
@@ -69,12 +69,12 @@ export function useAddProduct() {
   return useMutation({
     mutationFn: ( body ) => addProduct(body),
     onSuccess: () => {
-      alert('Berjaya tambah kini produk.');
+      alert('Product added successfully.');
      
       queryClient.invalidateQueries({ queryKey: ['admin-all-product'] });
     },
     onError: (error) => {
-      alert(error.message || 'Gagal mengemas kini produk.');
+      alert(error.message || 'Unable to add product.');
     },
   });
 }

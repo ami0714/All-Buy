@@ -72,7 +72,7 @@ const CheckoutPage = () => {
   const handlePayment = () => {
   // 1. Validation — OR + return awal
   if (!selectedCourierId || !selectedMethod) {
-    alert('Sila pilih courier dan shipping method');
+    alert('Please select a courier and shipping method.');
     return;
   }
 
@@ -87,8 +87,8 @@ const CheckoutPage = () => {
       const checkoutUrl = data?.checkout_url?.replace(/\/+$/, '');
 
       if (!checkoutUrl) {
-        console.error('checkout_url tiada dalam response:', data);
-        alert('Ralat: URL pembayaran tidak diterima');
+        console.error('checkout_url is missing from the response:', data);
+        alert('Error: The payment URL was not received.');
         setIsLoading(false);
         return;
       }
@@ -98,8 +98,8 @@ const CheckoutPage = () => {
     },
     onError: (error) => {
       // 5. Handle error
-      console.error('createOrder gagal:', error);
-      alert('Gagal cipta order. Sila cuba lagi.');
+      console.error('Order creation failed:', error);
+      alert('Unable to create the order. Please try again.');
       setIsLoading(false);
     },
   });
@@ -171,7 +171,7 @@ const CheckoutPage = () => {
                   </span>
                 </>
               ) : (
-                <span>Tiada alamat default. Sila tambah alamat penghantaran.</span>
+                <span>No default address is set. Please add a shipping address.</span>
               )}
             </div>
           </div>
@@ -228,7 +228,7 @@ const CheckoutPage = () => {
                     {courier.name}
                   </button>
                 )) : (
-                  <span>{shipping_courier?.message || 'Courier tidak tersedia.'}</span>
+                  <span>{shipping_courier?.message || 'No couriers are available.'}</span>
                 )}
               </div>
             </div>
@@ -237,9 +237,9 @@ const CheckoutPage = () => {
             <div className="checkout-shipping-col">
               <h3 className="checkout-shipping-label">Shipping Method</h3>
               {!selectedCourier ? (
-                <span>Pilih courier untuk melihat pilihan shipping.</span>
+                <span>Select a courier to view shipping options.</span>
               ) : shippingMethods.length === 0 ? (
-                <span>Tiada pilihan shipping untuk courier ini.</span>
+                <span>No shipping options are available for this courier.</span>
               ) : (
                 <div className="checkout-method-list">
                   {shippingMethods.map((method) => (

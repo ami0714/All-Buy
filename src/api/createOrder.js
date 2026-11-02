@@ -5,7 +5,7 @@ import {post } from '../utils/apiHelper';
 export async function createOrder(body){
 
     if(!body){
-        throw new Error('Maklumat pesanan diperlukan.');
+        throw new Error('Order information is required.');
     }
 
     const response  = await post('/user/payment/hitpay',body)
@@ -14,5 +14,5 @@ export async function createOrder(body){
         return response.data;
     }
 
-    throw new Error(response?.message || 'Gagal membuat pesanan.');
+    throw new Error(response?.message || 'Unable to create the order.');
 }

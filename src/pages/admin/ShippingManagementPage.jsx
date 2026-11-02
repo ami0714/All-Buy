@@ -70,7 +70,7 @@ const ShippingManagementPage = () => {
     setCouriers([...couriers, newCourier]);
     setIsCourierFormOpen(false);
     resetCourier();
-    alert("Kurier berjaya ditambah!");
+    alert("Courier added successfully!");
   };
 
   // Fungsi Tambah Service
@@ -89,7 +89,7 @@ const ShippingManagementPage = () => {
     setServices([...services, newService]);
     setIsServiceFormOpen(false);
     resetService();
-    alert("Servis penghantaran berjaya ditambah!");
+    alert("Shipping service added successfully!");
   };
 
   // Fungsi Toggle Active State
@@ -337,7 +337,7 @@ const ShippingManagementPage = () => {
                       <input 
                         type="text" 
                         className="admin-ship-input" 
-                        placeholder="Contoh: DHL eCommerce"
+                        placeholder="Example: DHL eCommerce"
                         {...registerCourier("name", { required: true })} 
                       />
                       {errorsCourier.name && <span style={{color: 'red', fontSize: '12px'}}>Ruangan ini diperlukan</span>}
@@ -348,7 +348,7 @@ const ShippingManagementPage = () => {
                       <input 
                         type="text" 
                         className="admin-ship-input" 
-                        placeholder="Contoh: DHLE"
+                        placeholder="Example: DHLE"
                         {...registerCourier("code", { required: true })} 
                       />
                       <span className="admin-ship-input-hint">Use a unique, short code for this courier.</span>
@@ -421,12 +421,12 @@ const ShippingManagementPage = () => {
                         className="admin-ship-select"
                         {...registerService("courier_id", { required: true })}
                       >
-                        <option value="">Pilih kurier</option>
+                        <option value="">Select a courier</option>
                         {couriers.filter(c => c.is_active).map(c => (
                           <option key={c.id} value={c.id}>{c.name}</option>
                         ))}
                       </select>
-                      {errorsService.courier_id && <span style={{color: 'red', fontSize: '12px'}}>Sila pilih kurier</span>}
+                      {errorsService.courier_id && <span style={{color: 'red', fontSize: '12px'}}>Please select a courier</span>}
                     </div>
 
                     <div className="admin-ship-form-group">
@@ -434,7 +434,7 @@ const ShippingManagementPage = () => {
                       <input 
                         type="text" 
                         className="admin-ship-input" 
-                        placeholder="Contoh: Economy Delivery"
+                        placeholder="Example: Economy Delivery"
                         {...registerService("service_name", { required: true })} 
                       />
                       {errorsService.service_name && <span style={{color: 'red', fontSize: '12px'}}>Ruangan ini diperlukan</span>}
@@ -446,7 +446,7 @@ const ShippingManagementPage = () => {
                         type="number" 
                         step="0.01"
                         className="admin-ship-input" 
-                        placeholder="Contoh: 5.00"
+                        placeholder="Example: 5.00"
                         {...registerService("price", { required: true })} 
                       />
                       <span className="admin-ship-input-hint">Fixed delivery charge per order.</span>
@@ -457,7 +457,7 @@ const ShippingManagementPage = () => {
                       <input 
                         type="text" 
                         className="admin-ship-input" 
-                        placeholder="Contoh: 4-6"
+                        placeholder="Example: 4-6"
                         {...registerService("estimated_days", { required: true })} 
                       />
                       <span className="admin-ship-input-hint">Business days after dispatch, e.g. 2–4.</span>

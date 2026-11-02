@@ -105,7 +105,7 @@ const DashboardPage = () => {
         <motion.div className="admin-dash-title-section" variants={cardVariants}>
           <div className="admin-dash-title">
             <h1>Dashboard Utama</h1>
-            <p>Selamat kembali, {user?.username}. Ini ringkasan operasi kedai anda.</p>
+            <p>Welcome back, {user?.username}. Here is your store operations overview.</p>
           </div>
         </motion.div>
 
@@ -114,7 +114,7 @@ const DashboardPage = () => {
           {/* Card 1 */}
           <div className="admin-dash-stat-card">
             <div className="admin-dash-stat-header">
-              <span className="admin-dash-stat-label">Jumlah hasil</span>
+              <span className="admin-dash-stat-label">Total Revenue</span>
               <div className="admin-dash-stat-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg></div>
             </div>
             <div className="admin-dash-stat-value">RM{stats?.total_revenue ?? 'loading'}</div>
@@ -124,32 +124,32 @@ const DashboardPage = () => {
           {/* Card 2 */}
           <div className="admin-dash-stat-card">
             <div className="admin-dash-stat-header">
-              <span className="admin-dash-stat-label">Pesanan perlu tindakan</span>
+              <span className="admin-dash-stat-label">Orders Requiring Action</span>
               <div className="admin-dash-stat-icon"><svg viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
             </div>
             <div className="admin-dash-stat-value">{stats?.total_orders}</div>
-            <div className="admin-dash-stat-sub">{stats?.paid_orders} dibayar • {stats?.preparing_orders} sedang disediakan</div>
-            <div className="admin-dash-stat-sub" style={{ marginTop: '4px' }}><NavLink to="/admin/order-management">Sediakan pesanan untuk penghantaran</NavLink></div>
+            <div className="admin-dash-stat-sub">{stats?.paid_orders} paid • {stats?.preparing_orders} being prepared</div>
+            <div className="admin-dash-stat-sub" style={{ marginTop: '4px' }}><NavLink to="/admin/order-management">Prepare orders for shipping</NavLink></div>
           </div>
 
           {/* Card 3 */}
           <div className="admin-dash-stat-card">
             <div className="admin-dash-stat-header">
-              <span className="admin-dash-stat-label">Pengguna berdaftar</span>
+              <span className="admin-dash-stat-label">Registered Users</span>
               <div className="admin-dash-stat-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg></div>
             </div>
             <div className="admin-dash-stat-value">{stats?.registered_users}</div>
-            <div className="admin-dash-stat-sub">Jumlah akaun pelanggan</div>
+            <div className="admin-dash-stat-sub">Total customer accounts</div>
           </div>
 
           {/* Card 4 */}
           <div className="admin-dash-stat-card">
             <div className="admin-dash-stat-header">
-              <span className="admin-dash-stat-label">Produk aktif</span>
+              <span className="admin-dash-stat-label">Active Products</span>
               <div className="admin-dash-stat-icon"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg></div>
             </div>
             <div className="admin-dash-stat-value">{stats?.active_products}</div>
-            <div className="admin-dash-stat-sub">{stats?.inactive_products} produk tidak aktif</div>
+            <div className="admin-dash-stat-sub">{stats?.inactive_products} inactive products</div>
           </div>
         </motion.div>
 
@@ -213,7 +213,7 @@ const DashboardPage = () => {
           {/* Donut Chart: Status Pesanan */}
           <div className="admin-dash-chart-card">
             <div className="admin-dash-chart-header">
-              <span className="admin-dash-chart-title">Status pesanan</span>
+              <span className="admin-dash-chart-title">Order Status</span>
             </div>
             
             <div className="admin-dash-donut-wrapper">
@@ -238,7 +238,7 @@ const DashboardPage = () => {
               </ResponsiveContainer>
               <div className="admin-dash-donut-center">
                 <h3>{totalOrder}</h3>
-                <p>pesanan</p>
+                <p>orders</p>
               </div>
             </div>
 
@@ -256,7 +256,7 @@ const DashboardPage = () => {
 
             <div className="admin-dash-info-box">
               <svg viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-              <span>18 lagi sedang disediakan (prepare order). Jumlah keseluruhan: 258 pesanan.</span>
+              <span>18 more orders are being prepared. Total orders: 258.</span>
             </div>
           </div>
         </motion.div>
@@ -264,17 +264,17 @@ const DashboardPage = () => {
         {/* Recent Orders Table */}
         <motion.div className="admin-dash-table-card" variants={cardVariants}>
           <div className="admin-dash-table-header">
-            <span className="admin-dash-table-title">Pesanan terkini</span>
-            <span className="admin-dash-table-badge">{recentOrders?.length} pesanan</span>
+            <span className="admin-dash-table-title">Recent Orders</span>
+            <span className="admin-dash-table-badge">{recentOrders?.length} orders</span>
           </div>
           
           <table className="admin-dash-table">
             <thead>
               <tr>
-                <th>No. pesanan</th>
+                <th>Order No.</th>
                 <th>Pelanggan</th>
                 <th>Tarikh</th>
-                <th>Jumlah</th>
+                <th>Total</th>
                 <th>Status</th>
                 <th></th>
               </tr>
@@ -298,7 +298,7 @@ const DashboardPage = () => {
                     </span>
                   </td>
                   <td>
-                    <NavLink to={`/admin/order/detail/${encodeURIComponent(order?.order_number)}`} className="admin-dash-action-btn" aria-label={`Lihat pesanan ${order?.order_number}`}>
+                    <NavLink to={`/admin/order/detail/${encodeURIComponent(order?.order_number)}`} className="admin-dash-action-btn" aria-label={`View order ${order?.order_number}`}>
                       <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                     </NavLink>
                   </td>

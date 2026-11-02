@@ -233,7 +233,7 @@ const UserManagementPage = () => {
                 ) : (
                   <tr>
                     <td colSpan="5" style={{ textAlign: 'center', padding: '40px', color: '#6b7280' }}>
-                      Tiada pengguna dijumpai.
+                      No users found.
                     </td>
                   </tr>
                 )}

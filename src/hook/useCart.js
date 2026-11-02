@@ -12,10 +12,10 @@ export function useToCart(){
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['userCart'] });
-      alert('berjaya tambah ke dalam car')
+      alert('Item added to cart successfully.')
     },
     onError:(err)=>{
-      alert('err tambah cart')
+      alert('Unable to add item to cart.')
     }
    })
 }
@@ -29,10 +29,10 @@ export function useDeleteCart(){
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['userCart'] });
-      alert('berjaya delete item cart')
+      alert('Cart item removed successfully.')
     },
     onError:(err)=>{
-      alert('err delete cart'+err)
+      alert('Unable to remove cart item: ' + err)
     }
    })
 }
@@ -48,7 +48,7 @@ export function useChangeQuantityCart(){
       await queryClient.invalidateQueries({ queryKey: ['userCart'] });
     },
     onError:(err)=>{
-      alert('err tukar kuantiti cart')
+      alert('Unable to update cart item quantity.')
     }
    })
 }

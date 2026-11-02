@@ -15,10 +15,10 @@ export function useRegister(){
             return response
         },
         onSuccess:()=> {
-            alert('berjaya daftar')
+            alert('Registration successful.')
         },
         onError:(err) => {
-            alert('gagal kerana' + err.message);
+            alert('Registration failed: ' + err.message);
         }
     })
 }
@@ -44,7 +44,7 @@ export function useLogin() {
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (err) => {
-      console.error('error mutasi login:', err?.message || err);
+      console.error('Login mutation error:', err?.message || err);
     },
   });
 }

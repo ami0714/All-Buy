@@ -29,7 +29,7 @@ export async function getEmail(email){
         return res.status;
     }
 
-    throw new Error(res?.message || 'Gagal menghantar pautan tetapan semula kata laluan.');
+    throw new Error(res?.message || 'Unable to send the password reset link.');
 }
 
 
@@ -46,5 +46,5 @@ export async function SetNewPass(token,email, password,password_confirmation){
     if (res?.status === true) {
         return res.status;
     }
-    throw new Error(res?.message || 'Gagal menetapkan kata laluan baharu.');
+    throw new Error(res?.message || 'Unable to set the new password.');
 }

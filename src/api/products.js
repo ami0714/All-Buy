@@ -9,12 +9,12 @@ export async function getAllProduct(){
         return res.data;
     }
 
-    throw new Error(res?.message || 'Format respons senarai produk tidak sah.');
+    throw new Error(res?.message || 'Invalid product list response format.');
 }
 
 export async function getDetailProduct(slug){
     if (slug === null || slug === undefined || slug === '') {
-        throw new Error('Slug produk tidak sah.');
+        throw new Error('Invalid product slug.');
     }
 
     const res = await get(`/products/${encodeURIComponent(slug)}`);
@@ -23,5 +23,5 @@ export async function getDetailProduct(slug){
         return res.data;
     }
 
-    throw new Error(res?.message || 'Format respons detail produk tidak sah.');
+    throw new Error(res?.message || 'Invalid product details response format.');
 }

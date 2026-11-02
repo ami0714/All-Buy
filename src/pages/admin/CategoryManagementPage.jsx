@@ -112,7 +112,7 @@ const CategoryManagementPage = () => {
     if (editingCategoryId) {
       const changed = getDirtyValues(allData, dirtyFields);
       if (Object.keys(changed).length === 0) {
-        alert('Tiada perubahan');
+        alert('No changes were made.');
         return;
       }
 
@@ -122,7 +122,7 @@ const CategoryManagementPage = () => {
           ? { ...c, ...changed }
           : c
       ));
-      alert("Kategori berjaya dikemas kini!");
+      alert("Category updated successfully!");
     } else {
       // Logik Tambah
       const newCategory = {
@@ -131,7 +131,7 @@ const CategoryManagementPage = () => {
         product_count: 0
       };
       setCategories([...categories, newCategory]);
-      alert("Kategori baru berjaya ditambah!");
+      alert("New category added successfully!");
     }
     handleCloseForm();
   };
@@ -360,7 +360,7 @@ const CategoryManagementPage = () => {
                     <input 
                       type="text" 
                       className="admin-cat-input" 
-                      placeholder="Contoh: Pants"
+                      placeholder="Example: Pants"
                       {...register("name", { required: true })} 
                     />
                   </div>
@@ -380,7 +380,7 @@ const CategoryManagementPage = () => {
                     <label>Short Description</label>
                     <textarea 
                       className="admin-cat-textarea" 
-                      placeholder="Contoh: Casual pants for everyday wear."
+                      placeholder="Example: Casual pants for everyday wear."
                       {...register("description")} 
                     ></textarea>
                   </div>

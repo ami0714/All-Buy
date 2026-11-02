@@ -18,16 +18,16 @@ const Navbar = () => {
       transition={{ duration: 0.5 }}
     >
       <div className="navbar-top">
-        <NavLink to="/home" className="navbar-logo" aria-label="ALL-BUY, laman utama">ALL-BUY</NavLink>
+        <NavLink to="/home" className="navbar-logo" aria-label="ALL-BUY, home">ALL-BUY</NavLink>
         <div className="navbar-actions">
-          <NavLink to="/orders" className="icon-btn" title="Pesanan" aria-label="Pesanan">
+          <NavLink to="/orders" className="icon-btn" title="Orders" aria-label="Orders">
             <svg className="icon-svg" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
           </NavLink>
-          <NavLink to="/cart" className="icon-btn" title="Troli" aria-label="Troli">
+          <NavLink to="/cart" className="icon-btn" title="Cart" aria-label="Cart">
             <svg className="icon-svg" viewBox="0 0 24 24"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
           </NavLink>
           <NavLink to="/profile" className="user-btn">{isLoading ? 'user' : user?.username}</NavLink>
-          <NavLink to="/profile" className="icon-btn" title="Profil" aria-label="Profil">
+          <NavLink to="/profile" className="icon-btn" title="Profile" aria-label="Profile">
             <svg className="icon-svg" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
           </NavLink>
         </div>
@@ -41,7 +41,7 @@ const Navbar = () => {
         )}
       {isHomePage && (
            <div className="search-bar">
-          <input type="text" placeholder="Cari produk, brand, atau promo..." />
+          <input type="text" placeholder="Search products, brands, or promotions..." />
           <svg className="icon-svg" style={{ color: '#6b7280' }} viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         </div>
 

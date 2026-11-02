@@ -9,5 +9,5 @@ export async function getAllCourier(){
         return res.data;
     }
 
-    throw new Error(res?.message || 'Format respons senarai kurier tidak sah.');
+    throw new Error(res?.message || 'Invalid courier list response format.');
 }

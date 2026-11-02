@@ -8,12 +8,12 @@ export async function getCategory() {
   }
 
   if (response?.status === false) {
-    throw new Error(response.message || 'Gagal mengambil daftar produk.');
+    throw new Error(response.message || 'Unable to retrieve the category list.');
   }
 
   if (Array.isArray(response?.data)) {
     return response.data;
   }
 
-  throw new Error('Format respons daftar produk tidak valid.');
+  throw new Error('Invalid category list response format.');
 }

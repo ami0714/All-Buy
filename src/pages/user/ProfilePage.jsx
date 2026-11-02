@@ -59,7 +59,7 @@ const ProfilePage = () => {
        }
       const changed = getDirtyValues(allData, dirtyFields);
       if (Object.keys(changed).length === 0) {
-        alert('Tiada perubahan');
+        alert('No changes were made.');
         return;
       }
 
@@ -105,8 +105,8 @@ const ProfilePage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="profile-page-title">Profil Saya</h1>
-          <p className="profile-page-subtitle">Lihat dan ubah maklumat profil, serta uruskan alamat penghantaran.</p>
+          <h1 className="profile-page-title">My Profile</h1>
+          <p className="profile-page-subtitle">View and update your profile information and manage your shipping addresses.</p>
         </motion.div>
 
         {/* User Profile Card */}
@@ -121,13 +121,13 @@ const ProfilePage = () => {
             <div className="profile-user-left">
               <div className="profile-avatar">{isLoading ? 'U': user?.username?.split('')[0]}</div>
               <h2 className="profile-user-name">{isLoading ? 'U': user?.username}</h2>
-              <span className="profile-user-id">ID Akaun: #{isLoading ? '0000':user?.uid}</span>
+              <span className="profile-user-id">Account ID: #{isLoading ? '0000':user?.uid}</span>
             </div>
 
             {/* Right Side: Form */}
             <form className="profile-form-grid" onSubmit={handleSubmit(onSubmit)}>
               <div className="profile-input-group">
-                <label>Nama pengguna</label>
+                <label>Username</label>
                 <input 
                   type="text" 
                   className="profile-input" 
@@ -137,7 +137,7 @@ const ProfilePage = () => {
               </div>
 
               <div className="profile-input-group">
-                <label>Emel</label>
+                <label>Email</label>
                 <input 
                   type="email" 
                   className="profile-input" 
@@ -147,7 +147,7 @@ const ProfilePage = () => {
               </div>
 
               <div className="profile-input-group">
-                <label>Nombor telefon</label>
+                <label>Phone Number</label>
                 <input 
                   type="text" 
                   className="profile-input" 
@@ -157,7 +157,7 @@ const ProfilePage = () => {
               </div>
 
               <div className="profile-input-group">
-                <label>Dibuat pada</label>
+                <label>Created At</label>
                 <input 
                   type="text" 
                   className="profile-input" 
@@ -181,7 +181,7 @@ const ProfilePage = () => {
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.2 }}
                     >
-                      Edit Maklumat
+                      Edit Information
                     </motion.button>
                   ) : (
                     <motion.div 
@@ -197,13 +197,13 @@ const ProfilePage = () => {
                         className="profile-btn-cancel" 
                         onClick={handleCancel}
                       >
-                        Batal
+                        Cancel
                       </button>
                       <button 
                         type="submit" 
                         className="profile-btn-save"
                       >
-                        Simpan perubahan
+                        Save Changes
                       </button>
                     </motion.div>
                   )}
@@ -222,15 +222,15 @@ const ProfilePage = () => {
         >
           <div className="profile-address-header">
             <div className="profile-address-title">
-              <h2>Buku Alamat</h2>
-              <p>Tambah, edit dan tetapkan alamat sebagai lalai.</p>
+              <h2>Address Book</h2>
+              <p>Add, edit, and set a default address.</p>
             </div>
             <button onClick={()=> Navigate('/profile/address/add')} className="profile-btn-add">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
-              Tambah Alamat
+              Add Address
             </button>
           </div>
 
@@ -249,11 +249,11 @@ const ProfilePage = () => {
                 </div>
                 <div className="profile-address-right">
                   {address?.is_default ? (
-                    <span className="profile-badge-default">Lalai</span>
+                    <span className="profile-badge-default">Default</span>
                   ) : null}
                   <button onClick={()=> Navigate('/profile/address/edit/'+address?.id)}  className="profile-btn-address-edit">Edit</button>
                   {!address?.is_default && (
-                    <button className="profile-btn-address-default">Jadikan lalai</button>
+                    <button className="profile-btn-address-default">Set as Default</button>
                   )}
                 </div>
               </div>

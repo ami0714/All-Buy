@@ -13,7 +13,7 @@ import { getDirtyValues } from '../../utils/form';
 // ==========================================
 const dummyAddressData = {
   id: 1,
-  label: "Rumah",
+  label: "Home",
   recipient_name: "Aina Ahmad",
   phone: "+60 12-345 6789",
   address_line1: "No. 14, Jalan Meru 2",
@@ -94,7 +94,7 @@ getAddressData()
     if(isEdit){
       const changed = getDirtyValues(allData, dirtyFields);
       if (Object.keys(changed).length === 0) {
-        alert('Tiada perubahan');
+        alert('No changes were made.');
         return;
       }
 
@@ -136,16 +136,16 @@ getAddressData()
               <line x1="19" y1="12" x2="5" y2="12"></line>
               <polyline points="12 19 5 12 12 5"></polyline>
             </svg>
-            Kembali ke Profil Saya
+            Back to My Profile
           </button>
           
           <h1 className="address-form-title">
-            {isEdit ? "Edit Alamat" : "Tambah Alamat"}
+            {isEdit ? "Edit Address" : "Add Address"}
           </h1>
           <p className="address-form-subtitle">
             {isEdit 
-              ? "Kemas kini alamat penghantaran anda dan tetapan alamat lalai." 
-              : "Simpan alamat baru untuk memudahkan penghantaran pesanan anda."}
+              ? "Update your shipping address and default address settings."
+              : "Save a new address to make order delivery easier."}
           </p>
         </motion.div>
 
@@ -165,30 +165,30 @@ getAddressData()
             </div>
             
             <h2 className="address-form-sidebar-title">
-              {isEdit ? dummyAddressData.label : "Alamat penghantaran"}
+              {isEdit ? dummyAddressData.label : "Shipping Address"}
             </h2>
 
             {isEdit && dummyAddressData.is_default && (
-              <span className="address-form-badge">Lalai</span>
+              <span className="address-form-badge">Default</span>
             )}
 
             <p className="address-form-sidebar-desc">
               {isEdit 
-                ? "Pastikan maklumat penerima dan alamat masih tepat untuk pesanan seterusnya."
-                : "Masukkan alamat lengkap dan nombor telefon penerima supaya pesanan sampai dengan lancar."}
+                ? "Make sure the recipient and address details are accurate for your next order."
+                : "Enter the complete address and recipient's phone number to ensure smooth delivery."}
             </p>
 
             <div className="address-form-divider"></div>
 
             <div className="address-form-user-info">
-              <span>Buku alamat untuk</span>
+              <span>Address book for</span>
               <strong>{user?.name}</strong>
               <span>{user?.email}</span>
             </div>
 
             <div className="address-form-note">
-              <strong>Semak sebelum menyimpan</strong>
-              Sertakan nombor rumah atau unit, nama jalan dan poskod yang betul.
+              <strong>Check before saving</strong>
+              Include the correct house or unit number, street name, and postal code.
             </div>
           </div>
 
@@ -197,85 +197,85 @@ getAddressData()
             <form onSubmit={handleSubmit(onSubmit)}>
               
               {/* Section 1: Maklumat Penerima */}
-              <h3 className="address-form-section-title">Maklumat penerima</h3>
+              <h3 className="address-form-section-title">Recipient Information</h3>
               <div className="address-form-grid">
                 <div className="address-form-group">
-                  <label>Label alamat <small>(Pilihan)</small></label>
+                  <label>Address label <small>(Optional)</small></label>
                   <select 
-                  {...register("label", { required: "Label diperlukan" })}
+                  {...register("label", { required: "A label is required" })}
                   className='address-form-select' >
-                    <option value="">Pilih label</option>
-                    <option value="Rumah">Rumah</option>
-                    <option value="Pejabat">Pejabat</option>
-                    <option value="Lain-lain">Lain-lain</option>
+                    <option value="">Select a label</option>
+                    <option value="Rumah">Home</option>
+                    <option value="Pejabat">Office</option>
+                    <option value="Lain-lain">Other</option>
                   </select>
                 </div>
 
                 <div className="address-form-group">
-                  <label>Nama penerima <span>*</span></label>
+                  <label>Recipient Name <span>*</span></label>
                   <input 
                     type="text" 
                     className="address-form-input" 
-                    placeholder="Nama penuh penerima"
-                    {...register("recipient_name", { required: "Nama penerima diperlukan" })} 
+                    placeholder="Recipient's full name"
+                    {...register("recipient_name", { required: "Recipient name is required" })}
                   />
                   {errors.recipient_name && <span style={{color: 'red', fontSize: '12px'}}>{errors.recipient_name.message}</span>}
                 </div>
 
                 <div className="address-form-group full-width">
-                  <label>Nombor telefon <span>*</span></label>
+                  <label>Phone Number <span>*</span></label>
                   <input 
                     type="text" 
                     className="address-form-input" 
-                    placeholder="Contoh: +60 12-345 6789"
-                    {...register("phone", { required: "Nombor telefon diperlukan" })} 
+                    placeholder="Example: +60 12-345 6789"
+                    {...register("phone", { required: "Phone number is required" })}
                   />
                   {errors.phone && <span style={{color: 'red', fontSize: '12px'}}>{errors.phone.message}</span>}
                 </div>
               </div>
 
               {/* Section 2: Alamat Penghantaran */}
-              <h3 className="address-form-section-title">Alamat penghantaran</h3>
+              <h3 className="address-form-section-title">Shipping Address</h3>
               <div className="address-form-grid">
                 <div className="address-form-group full-width">
-                  <label>Alamat baris 1 <span>*</span></label>
+                  <label>Address Line 1 <span>*</span></label>
                   <input 
                     type="text" 
                     className="address-form-input" 
-                    placeholder="Nombor rumah / unit dan nama jalan"
-                    {...register("address_line1", { required: "Alamat baris 1 diperlukan" })} 
+                    placeholder="House/unit number and street name"
+                    {...register("address_line1", { required: "Address line 1 is required" })}
                   />
                   {errors.address_line1 && <span style={{color: 'red', fontSize: '12px'}}>{errors.address_line1.message}</span>}
                 </div>
 
                 <div className="address-form-group full-width">
-                  <label>Alamat baris 2 <small>(Pilihan)</small></label>
+                  <label>Address Line 2 <small>(Optional)</small></label>
                   <input 
                     type="text" 
                     className="address-form-input" 
-                    placeholder="Nama bangunan, taman atau kawasan"
+                    placeholder="Building, neighborhood, or area"
                     {...register("address_line2")} 
                   />
                 </div>
 
                 <div className="address-form-group">
-                  <label>Bandar <span>*</span></label>
+                  <label>City <span>*</span></label>
                   <input 
                     type="text" 
                     className="address-form-input" 
-                    placeholder="Contoh: Klang"
-                    {...register("city", { required: "Bandar diperlukan" })} 
+                    placeholder="Example: Klang"
+                    {...register("city", { required: "City is required" })}
                   />
                   {errors.city && <span style={{color: 'red', fontSize: '12px'}}>{errors.city.message}</span>}
                 </div>
 
                 <div className="address-form-group">
-                  <label>Negeri <span>*</span></label>
+                  <label>State <span>*</span></label>
                   <select 
                     className="address-form-select"
-                    {...register("state", { required: "Negeri diperlukan" })}
+                    {...register("state", { required: "State is required" })}
                   >
-                    <option value="">Pilih negeri</option>
+                    <option value="">Select a state</option>
                     <option value="Johor">Johor</option>
                     <option value="Kedah">Kedah</option>
                     <option value="Kelantan">Kelantan</option>
@@ -284,7 +284,7 @@ getAddressData()
                     <option value="Pahang">Pahang</option>
                     <option value="Perak">Perak</option>
                     <option value="Perlis">Perlis</option>
-                    <option value="Pulau Pinang">Pulau Pinang</option>
+                    <option value="Pulau Pinang">Penang</option>
                     <option value="Sabah">Sabah</option>
                     <option value="Sarawak">Sarawak</option>
                     <option value="Selangor">Selangor</option>
@@ -297,12 +297,12 @@ getAddressData()
                 </div>
 
                 <div className="address-form-group">
-                  <label>Poskod <span>*</span></label>
+                  <label>Postal Code <span>*</span></label>
                   <input 
                     type="text" 
                     className="address-form-input" 
-                    placeholder="Contoh: 41050"
-                    {...register("postcode", { required: "Poskod diperlukan" })} 
+                    placeholder="Example: 41050"
+                    {...register("postcode", { required: "Postal code is required" })}
                   />
                   {errors.postcode && <span style={{color: 'red', fontSize: '12px'}}>{errors.postcode.message}</span>}
                 </div>
@@ -310,8 +310,8 @@ getAddressData()
                 {/* Toggle Default Address */}
                 <div className="address-form-toggle-wrapper">
                   <div className="address-form-toggle-text">
-                    <h4>Tetapkan sebagai alamat lalai</h4>
-                    <p>Hanya satu alamat boleh menjadi lalai. Memilih alamat ini akan menggantikan alamat lalai sebelumnya.</p>
+                    <h4>Set as Default Address</h4>
+                    <p>Only one address can be set as the default. Selecting this address will replace the previous default address.</p>
                   </div>
                   <label className="address-form-toggle">
                     <input 
@@ -330,13 +330,13 @@ getAddressData()
                   className="address-form-btn-cancel" 
                   onClick={handleCancel}
                 >
-                  Batal
+                  Cancel
                 </button>
                 <button 
                   type="submit" 
                   className="address-form-btn-submit"
                 >
-                  {isEdit ? "Simpan Perubahan" : "Tambah Alamat"}
+                  {isEdit ? "Save Changes" : "Add Address"}
                 </button>
               </div>
 

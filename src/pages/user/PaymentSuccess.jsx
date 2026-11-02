@@ -19,9 +19,9 @@ const PaymentSuccess = () => {
           aria-live="polite"
         >
           <div className="payment-success-icon" aria-hidden="true">✓</div>
-          <h1 className="payment-success-title">Pembayaran Berjaya</h1>
+          <h1 className="payment-success-title">Payment Successful</h1>
           <p className="payment-success-message">
-            Terima kasih. Pembayaran anda telah berjaya diproses.
+            Thank you. Your payment has been processed successfully.
           </p>
           {reference && (
             <p className="payment-success-reference">
@@ -29,7 +29,7 @@ const PaymentSuccess = () => {
             </p>
           )}
           <Link className="payment-success-link" to="/orders" replace>
-            Lihat senarai pesanan
+            View your orders
           </Link>
         </motion.section>
       </div>

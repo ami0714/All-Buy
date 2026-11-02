@@ -1,5 +1,5 @@
 import React,{useEffect} from 'react';
-import { Navigate, useSearchParams } from 'react-router-dom';
+import {Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import '../../css/user/OrderPage.css';
 import {useGetAllOrder} from '../../hook/useOrder';
@@ -16,6 +16,7 @@ const formatStatus = (status) => {
 
 const OrderPage = () => {
   const queryclient = useQueryClient();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const {
     data: orders,
@@ -63,7 +64,7 @@ const OrderPage = () => {
           transition={{ duration: 0.5 }}
         >
           <h1 className="page-title">Order</h1>
-          <p className="page-subtitle">Senarai pesanan, status dan maklumat penghantaran.</p>
+          <p className="page-subtitle">Your orders, their status, and shipping information.</p>
         </motion.div>
 
         {/* Order List */}
@@ -76,16 +77,16 @@ const OrderPage = () => {
             <p className="order-message">Loading orders...</p>
           ) : isOrdersError ? (
             <p className="order-message order-message-error">
-              {ordersError?.message || 'Gagal mendapatkan senarai pesanan.'}
+              {ordersError?.message || 'Unable to retrieve your orders.'}
             </p>
           ) : typeof orders === 'string' ? (
             <p className="order-message order-message-error">{orders}</p>
           ) : orders?.status === false ? (
             <p className="order-message order-message-error">
-              {orders.message || 'Gagal mendapatkan senarai pesanan.'}
+              {orders.message || 'Unable to retrieve your orders.'}
             </p>
           ) : orderList.length === 0 ? (
-            <p className="order-message">Tiada pesanan untuk dipaparkan.</p>
+            <p className="order-message">There are no orders to display.</p>
           ) : orderList.map((order) => {
             const status = String(order?.order_status || 'unknown').toLowerCase();
             const items = Array.isArray(order?.product_item) ? order?.product_item : [];
@@ -93,6 +94,7 @@ const OrderPage = () => {
 
             return (
             <motion.div 
+             onClick={()=> navigate(`/order/detail/${order?.order_id }`)}
               key={order?.order_id}
               className="order-card"
               variants={cardVariants}
@@ -119,7 +121,7 @@ const OrderPage = () => {
                   </div>
                   <div className="tracking-details">
                     <span className="tracking-number">
-                      Tracking no: {order.tracking_number || 'Belum tersedia'}
+                      Tracking number: {order.tracking_number || 'Not available yet'}
                     </span>
                     {order.shipping_status && (
                       <span className="tracking-status">{formatStatus(order.shipping_status)}</span>
@@ -131,7 +133,7 @@ const OrderPage = () => {
               {/* Item List */}
               <div className="item-list">
                 {items?.map((item, index) => (
-                  <div key={`${order?.order_id}-${item?.variant_id}-${index}`} className="order-item">
+                  <div  key={`${order?.order_id}-${item?.variant_id}-${index}`} className="order-item">
                     <div className="item-bullet"></div>
                     <div className="item-info">
                       <span className="item-name">{item?.product_name}</span>

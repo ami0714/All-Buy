@@ -4,7 +4,7 @@ import { get, post,patch,del } from '../utils/apiHelper'
 export async function addToCart(body){
 
     if(!body){
-        throw new Error('Data produk diperlukan untuk menambah ke troli.');
+        throw new Error('Product data is required to add an item to the cart.');
     }
 
     const response  = await post('/user/cart/add',body);
@@ -13,7 +13,7 @@ export async function addToCart(body){
         return response.message ?? response;
     }
 
-    throw new Error(response?.message || 'Gagal menambah produk ke troli.');
+    throw new Error(response?.message || 'Unable to add product to cart.');
 }
 
 
@@ -24,15 +24,15 @@ export async function getUserCart() {
         return response.data
     }
 
-    throw new Error(response?.message || 'Format respons troli tidak sah.');
+    throw new Error(response?.message || 'Invalid cart response format.');
 }
 
 export async function changeQuantityeCartItem(cartId,payload){
     if (cartId === null || cartId === undefined || cartId === '') {
-        throw new Error('ID item troli tidak sah.');
+        throw new Error('Invalid cart item ID.');
     }
     if (!payload) {
-        throw new Error('Data kuantiti diperlukan.');
+        throw new Error('Quantity data is required.');
     }
 
      const response = await patch(`/user/cart/${encodeURIComponent(cartId)}`,payload)
@@ -41,12 +41,12 @@ export async function changeQuantityeCartItem(cartId,payload){
         return response.message ?? response;
     }
 
-    throw new Error(response?.message || 'Gagal mengemas kini kuantiti item troli.');
+    throw new Error(response?.message || 'Unable to update cart item quantity.');
 }
 
 export async function deleteCartItem(cartId){
     if (cartId === null || cartId === undefined || cartId === '') {
-        throw new Error('ID item troli tidak sah.');
+        throw new Error('Invalid cart item ID.');
     }
 
      const response = await del(`/user/cart/${encodeURIComponent(cartId)}`)
@@ -55,5 +55,5 @@ export async function deleteCartItem(cartId){
         return response.message ?? response;
     }
 
-    throw new Error(response?.message || 'Gagal memadam item troli.');
+    throw new Error(response?.message || 'Unable to remove cart item.');
 }

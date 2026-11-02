@@ -4,7 +4,7 @@ import {patch} from '../utils/apiHelper';
 export async function editUser(body){
 
     if(!body){
-        throw new Error('Data pengguna diperlukan.');
+        throw new Error('User data is required.');
     }
 
     const response  = await patch('/user',body)
@@ -13,5 +13,5 @@ export async function editUser(body){
         return response.message ?? response;
     }
 
-    throw new Error(response?.message || 'Gagal mengemas kini maklumat pengguna.');
+    throw new Error(response?.message || 'Unable to update user information.');
 }

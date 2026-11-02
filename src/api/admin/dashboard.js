@@ -9,12 +9,12 @@ export async function getAdminState() {
     return response.data;
   }
 
-  throw new Error(response?.message || 'Format respons statistik dashboard tidak sah.');
+  throw new Error(response?.message || 'Invalid dashboard statistics response format.');
 }
 
 export async function getAdminChart(period) {
   if (period === null || period === undefined || period === '') {
-    throw new Error('Tempoh carta tidak sah.');
+    throw new Error('Invalid chart period.');
   }
 
   const response = await get(`/admin/dashboard/chart?period=${encodeURIComponent(period)}`);
@@ -23,7 +23,7 @@ export async function getAdminChart(period) {
     return response.data;
   }
 
-  throw new Error(response?.message || 'Format respons carta dashboard tidak sah.');
+  throw new Error(response?.message || 'Invalid dashboard chart response format.');
 }
 
 export async function getAdminStatusOrder() {
@@ -33,7 +33,7 @@ export async function getAdminStatusOrder() {
     return response.data;
   }
 
-  throw new Error(response?.message || 'Format respons status pesanan tidak sah.');
+  throw new Error(response?.message || 'Invalid order status response format.');
 }
 
 export async function getRecentOrders() {
@@ -43,5 +43,5 @@ export async function getRecentOrders() {
     return response.data;
   }
 
-  throw new Error(response?.message || 'Format respons pesanan terkini tidak sah.');
+  throw new Error(response?.message || 'Invalid recent orders response format.');
 }

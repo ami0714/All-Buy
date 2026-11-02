@@ -43,7 +43,7 @@ function App() {
         <Route path="/profile/address/add" element={<AddressForm />} />
         <Route path="/profile/address/edit/:id" element={<AddressForm />} />
         <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path='order/detail/:id' element={<OrderDetailsPage />} />
+        <Route path='/order/detail/:id' element={<OrderDetailsPage />} />
      
 
 

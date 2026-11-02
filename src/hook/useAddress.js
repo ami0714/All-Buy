@@ -32,10 +32,10 @@ export  function useAddAddress(){
       return res
     },
     onSuccess:()=>{
-      alert('berjaya tambah alamat')
+      alert('Address added successfully.')
     },
     onError:(err)=>{
-      alert('error tambah alamat')
+      alert('Unable to add address.')
     }
    })
 }
@@ -49,10 +49,10 @@ export function useEditAddress(){
       return res
     },
     onSuccess:()=>{
-      alert('berjaya edit alamat')
+      alert('Address updated successfully.')
     },
     onError:(err)=>{
-      alert('error edit alamat')
+      alert('Unable to update address.')
     }
    })
 }

@@ -26,7 +26,7 @@ const ChangeQuantity = (cartId,currentQuantity,type) =>{
   // Fungsi untuk buang item
   const handleRemove = (id) => {
     if(!id){
-       alert("tak bole remove kerana tiada cart id")
+       alert("This cart item cannot be removed because its cart ID is missing.")
     }
 
     if(id){

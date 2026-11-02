@@ -36,7 +36,12 @@ const itemVariants = {
 };
 
 const Home = () => {
- const {data:products,isLoading:isProductsLoad} = useGetAllProduct()
+ const {
+   data: products,
+   isLoading: isProductsLoad,
+   isError: isProductsError,
+   error: productsError,
+ } = useGetAllProduct()
   return (
     <div className="home-container">
         <Navbar />
@@ -57,24 +62,31 @@ const Home = () => {
       <div className="section-container">
         <div className="section-header">
           <div className="section-title">
-            <h2>Produk Terkini</h2>
-            <p>Semua produk ALL-BUY</p>
+            <h2>Latest Products</h2>
+            <p>All ALL-BUY products</p>
           </div>
-          <button className="btn-view-all">Lihat Semua</button>
+          <button className="btn-view-all">View All</button>
         </div>
 
         <motion.div 
           className="product-grid"
           variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
+          initial={false}
+          animate="visible"
         >
-          {isProductsLoad ? <p>...loading</p> : products?.map((product) => (
+          {isProductsLoad ? (
+            <p className="product-grid-message" role="status">Loading products...</p>
+          ) : isProductsError ? (
+            <p className="product-grid-message product-grid-message--error" role="alert">
+              {productsError?.message || 'Unable to load products. Please try again.'}
+            </p>
+          ) : Array.isArray(products) && products.length > 0 ? products.map((product) => (
             <motion.div key={product.id} variants={itemVariants}>
               <ProductCard product={product} />
             </motion.div>
-          ))}
+          )) : (
+            <p className="product-grid-message">There are no products to display right now.</p>
+          )}
         </motion.div>
       </div>
 
@@ -82,10 +94,10 @@ const Home = () => {
       {/* <div className="section-container">
         <div className="section-header">
           <div className="section-title">
-            <h2>Produk Terkini</h2>
-            <p>Semua produk ALL-BUY</p>
+            <h2>Latest Products</h2>
+            <p>All ALL-BUY products</p>
           </div>
-          <button className="btn-view-all">Lihat Semua</button>
+          <button className="btn-view-all">View All</button>
         </div>
 
         <motion.div 

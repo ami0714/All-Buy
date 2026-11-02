@@ -8,44 +8,44 @@ const Footer = () => {
         <div className="footer-col">
           <div className="footer-logo">ALL-BUY</div>
           <p className="footer-desc">
-            Beli pakaian, aksesori, dan produk harian dengan harga terbaik. Dibuat untuk pengalaman belanja yang mudah, selamat, dan menyenangkan.
+            Shop clothing, accessories, and everyday products at great prices. Enjoy a convenient, safe, and pleasant shopping experience.
           </p>
           <div className="footer-links">
-            <a href="#">Laman Utama</a>
-            <a href="#">Kategori</a>
-            <a href="#">Keranjang</a>
-            <a href="#">Profil</a>
+            <a href="#">Home</a>
+            <a href="#">Categories</a>
+            <a href="#">Cart</a>
+            <a href="#">Profile</a>
           </div>
         </div>
 
         <div className="footer-col">
           <h4>Info</h4>
           <ul>
-            <li><a href="#">Bantuan</a></li>
-            <li><a href="#">Syarat & Privasi</a></li>
-            <li><a href="#">Hubungi Kami</a></li>
+            <li><a href="#">Help</a></li>
+            <li><a href="#">Terms & Privacy</a></li>
+            <li><a href="#">Contact Us</a></li>
             <li><a href="#">FAQ</a></li>
           </ul>
         </div>
 
         <div className="footer-col">
-          <h4>Sokongan</h4>
+          <h4>Support</h4>
           <ul>
-            <li><a href="#">Bayaran & Penghantaran</a></li>
-            <li><a href="#">Pulangan & Pertukaran</a></li>
-            <li><a href="#">Status Pesanan</a></li>
-            <li><a href="#">Akaun Saya</a></li>
+            <li><a href="#">Payment & Shipping</a></li>
+            <li><a href="#">Returns & Exchanges</a></li>
+            <li><a href="#">Order Status</a></li>
+            <li><a href="#">My Account</a></li>
           </ul>
         </div>
 
         <div className="footer-col">
-          <h4>Berita</h4>
+          <h4>Newsletter</h4>
           <p className="footer-desc" style={{ marginBottom: '16px' }}>
-            Dapatkan promo, kemas kini produk, dan tips belanja terbaru.
+            Get the latest promotions, product updates, and shopping tips.
           </p>
           <form className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
-            <input type="email" placeholder="Masukkan alamat e-mel" />
-            <button type="submit">Daftar</button>
+            <input type="email" placeholder="Enter your email address" />
+            <button type="submit">Subscribe</button>
           </form>
           <div className="social-icons">
             <a href="#" className="social-icon">f</a>
@@ -56,11 +56,11 @@ const Footer = () => {
       </div>
 
       <div className="footer-bottom">
-        <div>© 2026 ALL-BUY. Hak cipta terpelihara.</div>
+        <div>© 2026 ALL-BUY. All rights reserved.</div>
         <div className="footer-bottom-links">
-          <a href="#">Syarat Penggunaan</a>
-          <a href="#">Dasar Privasi</a>
-          <a href="#">Peta Laman</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Sitemap</a>
         </div>
       </div>
     </footer>

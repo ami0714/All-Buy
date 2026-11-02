@@ -41,7 +41,7 @@ const ProductDetail = () => {
     );
 
     if (!variant || (Number.isFinite(Number(variant.stock)) && formData.quantity > Number(variant.stock))) {
-      alert("Maaf, kombinasi saiz dan warna ini tiada stok.");
+      alert("Sorry, this size and color combination is out of stock.");
       return;
     }
 
@@ -140,7 +140,7 @@ const ProductDetail = () => {
     <div className="product-detail__quantity-control">
       <button
         type="button"
-        aria-label="Kurangkan kuantiti"
+        aria-label="Decrease quantity"
         onClick={() => changeQuantity(-1)}
         disabled={quantity <= 1}
       >
@@ -149,7 +149,7 @@ const ProductDetail = () => {
       <output aria-live="polite">{quantity}</output>
       <button
         type="button"
-        aria-label="Tambah kuantiti"
+        aria-label="Increase quantity"
         onClick={() => changeQuantity(1)}
         disabled={Boolean(selectedVariant) && quantity >= stock}
       >

@@ -11,10 +11,10 @@ const queryclient = useQueryClient();
     },
     onSuccess:()=>{
         queryclient.invalidateQueries({ queryKey:['user']})
-        alert("berjaya update data")
+        alert("Profile updated successfully.")
     },
     onError:(err)=>{
-        alert('error'+ err.message)
+        alert('Unable to update profile: ' + err.message)
     }
  })
 

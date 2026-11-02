@@ -31,8 +31,8 @@ const AdminSidebar = ({ activePage = 'dashboard' }) => {
   const {user,isLoading} = useAuth();
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', path: '/admin/dashboard', icon: <DashboardIcon /> },
-    { id: 'products', label: 'Produk', path: '/admin/product-management', icon: <ProductsIcon /> },
-    { id: 'categories', label: 'Kategori', path: '/admin/category', icon: <CategoriesIcon /> },
+    { id: 'products', label: 'Products', path: '/admin/product-management', icon: <ProductsIcon /> },
+    { id: 'categories', label: 'Categories', path: '/admin/category', icon: <CategoriesIcon /> },
     { id: 'orders', label: 'Orders', path: '/admin/order-management', icon: <OrdersIcon /> },
     { id: 'shipping', label: 'Shipping', path: '/admin/shipping-management', icon: <ShippingIcon /> },
     { id: 'users', label: 'Users', path: '/admin/user-management', icon: <UsersIcon /> },
@@ -44,11 +44,11 @@ const AdminSidebar = ({ activePage = 'dashboard' }) => {
         {/* Logo Section */}
         <div className="admin-sidebar-logo-section">
           <NavLink to="/admin/dashboard" className="admin-sidebar-logo">ALL-BUY</NavLink>
-          <div className="admin-sidebar-subtitle">Panel Pentadbir</div>
+          <div className="admin-sidebar-subtitle">Admin Panel</div>
         </div>
 
         {/* Menu Section */}
-        <div className="admin-sidebar-menu-label">Ruangan Kerja</div>
+        <div className="admin-sidebar-menu-label">Workspace</div>
         <div className="admin-sidebar-menu">
           {menuItems.map((item) => (
             <NavLink
@@ -72,7 +72,7 @@ const AdminSidebar = ({ activePage = 'dashboard' }) => {
             <span className="admin-sidebar-user-role">{user?.role}</span>
           </div>
         </div>
-        <button className="admin-sidebar-logout" aria-label="Log keluar" title="Log keluar" onClick={() => navigate('/')}>
+        <button className="admin-sidebar-logout" aria-label="Log out" title="Log out" onClick={() => navigate('/')}>
           <LogoutIcon />
         </button>
       </div>

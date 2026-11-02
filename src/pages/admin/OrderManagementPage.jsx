@@ -292,7 +292,7 @@ const OrderManagementPage = () => {
                 ) : (
                   <tr>
                     <td colSpan="6" style={{ textAlign: 'center', padding: '40px', color: '#6b7280' }}>
-                      Tiada pesanan dijumpai.
+                      No orders found.
                     </td>
                   </tr>
                 )}
