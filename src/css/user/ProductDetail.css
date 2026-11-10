@@ -213,6 +213,7 @@
   .product-detail__image-wrapper {
     width: 100%;
     aspect-ratio: 1 / 1;
+    border-radius: 30px;
   }
   .product-detail__add-to-cart {
     margin-top: 32px;

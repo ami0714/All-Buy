@@ -135,7 +135,6 @@ const ProductManagementPage = () => {
           </div>
           <div className="admin-prod-header-right">
             <span className="admin-prod-badge">Admin Access</span>
-            <span className="admin-prod-date">12 Oct 2026</span>
           </div>
         </motion.div>
 

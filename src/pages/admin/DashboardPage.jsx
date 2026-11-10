@@ -96,8 +96,7 @@ const DashboardPage = () => {
             Admin <span>›</span> <span>Dashboard</span> <span style={{ color: '#9ca3af', fontWeight: '400' }}>/admin/dashboard</span>
           </div>
           <div className="admin-dash-header-right">
-            <span className="admin-dash-badge">Akses pentadbir</span>
-            <span className="admin-dash-date">12 Okt 2026</span>
+            <span className="admin-dash-badge">Admin access</span>
           </div>
         </motion.div>
 

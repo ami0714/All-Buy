@@ -2,7 +2,7 @@ import React,{useEffect} from 'react';
 import {Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import '../../css/user/OrderPage.css';
-import {useGetAllOrder} from '../../hook/useOrder';
+import {useGetAllOrder,useReceiveOrder} from '../../hook/useOrder';
 import {useQueryClient} from '@tanstack/react-query';
 import Navbar from '../../Components/Navbar';
 
@@ -24,6 +24,7 @@ const OrderPage = () => {
     isError: isOrdersError,
     error: ordersError
   } = useGetAllOrder();
+  const { mutate: receiveOrder } = useReceiveOrder();
   const paymentStatus = searchParams.get('status')?.toLowerCase();
   const isPaymentCompleted = paymentStatus === 'completed';
   const orderList = Array.isArray(orders) ? orders : [];
@@ -43,6 +44,14 @@ const OrderPage = () => {
       transition: { staggerChildren: 0.15 }
     }
   };
+
+  const handleReceiveOrder = (order_id) => {
+    if (!order_id) {
+      alert('Invalid order ID.');
+      return;
+    }
+     receiveOrder(order_id)
+  }
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -153,7 +162,7 @@ const OrderPage = () => {
                     </a>
                   )}
                   {status === 'shipped' && (
-                    <button className="btn-received" type="button">
+                    <button onClick={()=> handleReceiveOrder(order?.order_id)} className="btn-received" type="button">
                       Received
                     </button>
                   )}

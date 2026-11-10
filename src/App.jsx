@@ -24,7 +24,7 @@ import OrderManagementPage from './pages/admin/OrderManagementPage';
 import AdminOrderDetailsPage from './pages/admin/orderDetailsPage'
 import ShippingManagementPage from './pages/admin/ShippingManagementPage';
 import UserManagementPage from './pages/admin/UserManagementPage';
-
+import ProtectedRoute from './protectedRoute';
 function App() {
   const queryclient = new QueryClient()
   return (
@@ -34,29 +34,32 @@ function App() {
       <Routes>
         
         <Route path="/" element={<Auth />} />
+        <Route element={<ProtectedRoute allowedRoles={['user']} />}>
+          <Route path="/orders" element={<OrderPage />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/profile/address/add" element={<AddressForm />} />
+          <Route path="/profile/address/edit/:id" element={<AddressForm />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/order/detail/:id" element={<OrderDetailsPage />} />
+        </Route>
+
+        <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+          <Route path="/admin/dashboard" element={<DashboardPage />} />
+          <Route path="/admin/product-management" element={<ProductManagementPage />} />
+          <Route path="/admin/product/add" element={<ProductEditPage />} />
+          <Route path="/admin/product/edit/:id" element={<ProductEditPage />} />
+          <Route path="/admin/product/:id/variant" element={<ProductVariantsPage />} />
+          <Route path="/admin/category" element={<CategoryManagementPage />} />
+          <Route path="/admin/order-management" element={<OrderManagementPage />} />
+          <Route path="/admin/order/detail/:id" element={<AdminOrderDetailsPage />} />
+          <Route path="/admin/shipping-management" element={<ShippingManagementPage />} />
+          <Route path="/admin/user-management" element={<UserManagementPage />} />
+        </Route>
+
         <Route path="/home" element={<Home />} />
         <Route path="/product/:slug" element={<ProductDetail />} />
-        <Route path="/orders" element={<OrderPage />} />
-        <Route path="/payment-success" element={<PaymentSuccess />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/profile/address/add" element={<AddressForm />} />
-        <Route path="/profile/address/edit/:id" element={<AddressForm />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path='/order/detail/:id' element={<OrderDetailsPage />} />
-     
-
-
-         <Route path='admin/dashboard' element={<DashboardPage />} />
-         <Route path='admin/product-management' element={<ProductManagementPage />} />
-         <Route path='admin/product/add' element={<ProductEditPage />} />
-         <Route path='admin/product/edit/:id' element={<ProductEditPage />} />
-         <Route path='admin/product/:id/variant' element={<ProductVariantsPage />} />
-         <Route path='admin/category'element={<CategoryManagementPage/>} />
-        <Route path='admin/order-management' element={<OrderManagementPage/>} />
-        <Route path='admin/order/detail/:id' element={<AdminOrderDetailsPage />} />
-        <Route path='admin/shipping-management' element={<ShippingManagementPage />} />
-        <Route path='admin/user-management' element={<UserManagementPage />} />
       </Routes>
     </Router>
     </AuthContextProvider>

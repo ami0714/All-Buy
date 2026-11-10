@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import {useGetOrders,useGetOrderState} from '../../hook/admin/useOrder'
 import '../../css/admin/OrderManagementPage.css';
 import AdminSidebar from '../../components/AdminSidebar'; // Pastikan komponen ini wujud
 
@@ -63,33 +64,30 @@ const InfoIcon = () => (
 
 const OrderManagementPage = () => {
   const navigate = useNavigate();
-  const [orders, setOrders] = useState(initialOrders);
   const [activeTab, setActiveTab] = useState('All');
+  const { data: ordersData, isLoading, isError } = useGetOrders(activeTab);
+  const { data: orderStateData,isLoading:isStateLoad } = useGetOrderState();
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemPerPage = 10;
 
   // Logik Penapisan (Filtering)
-  const filteredOrders = orders.filter(order => {
-    const matchesTab = activeTab === 'All' ? true : order.status === activeTab;
+  const filteredOrders = ordersData?.filter(order => {
     const matchesSearch =
-      order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.buyerName.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesTab && matchesSearch;
+      String(order?.id)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(order?.username)?.toLowerCase().includes(searchTerm.toLowerCase());
+    return  matchesSearch;
   });
 
-  // Kiraan Statistik
-  const totalOrders = orders.length;
-  const readyForFulfillment = orders.filter(o => o.status === 'Paid' || o.status === 'Prepare Order').length;
-  const onTheWay = orders.filter(o => o.status === 'Shipped').length;
+  
 
   // Logik Pagination
-  const totalPages = Math.ceil(filteredOrders.length / itemPerPage);
+  const totalPages = Math.ceil(filteredOrders?.length / itemPerPage);
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
-  const currentItems = filteredOrders.slice(indexOfFirstItem, indexOfLastItem);
-  const firstVisibleItem = filteredOrders.length === 0 ? 0 : indexOfFirstItem + 1;
-  const lastVisibleItem = Math.min(indexOfLastItem, filteredOrders.length);
+  const currentItems = filteredOrders?.slice(indexOfFirstItem, indexOfLastItem);
+  const firstVisibleItem = filteredOrders?.length === 0 ? 0 : indexOfFirstItem + 1;
+  const lastVisibleItem = Math.min(indexOfLastItem, filteredOrders?.length);
 
   // Animasi Framer Motion
   const containerVariants = {
@@ -138,7 +136,6 @@ const OrderManagementPage = () => {
           </div>
           <div className="admin-order-header-right">
             <span className="admin-order-badge">Admin access</span>
-            <span className="admin-order-date">12 Oct 2026</span>
           </div>
         </motion.div>
 
@@ -161,7 +158,7 @@ const OrderManagementPage = () => {
               <span className="admin-order-stat-label">Total orders</span>
               <div className="admin-order-stat-icon"><InboxIcon /></div>
             </div>
-            <div className="admin-order-stat-value">{totalOrders}</div>
+            <div className="admin-order-stat-value">{orderStateData?.total_orders}</div>
             <div className="admin-order-stat-sub">8–12 Oct 2026 · All statuses</div>
           </div>
           <div className="admin-order-stat-card">
@@ -169,15 +166,15 @@ const OrderManagementPage = () => {
               <span className="admin-order-stat-label">Ready for fulfillment</span>
               <div className="admin-order-stat-icon"><BoxIcon /></div>
             </div>
-            <div className="admin-order-stat-value">{readyForFulfillment}</div>
-            <div className="admin-order-stat-sub">2 paid · 2 preparing</div>
+            <div className="admin-order-stat-value">{isStateLoad ? 'Loading...' : orderStateData?.paid_orders + orderStateData?.prepare_order}</div>
+            <div className="admin-order-stat-sub">{orderStateData?.paid_orders} paid · {orderStateData?.prepare_order} preparing</div>
           </div>
           <div className="admin-order-stat-card">
             <div className="admin-order-stat-header">
               <span className="admin-order-stat-label">On the way</span>
               <div className="admin-order-stat-icon"><TruckIcon /></div>
             </div>
-            <div className="admin-order-stat-value">{onTheWay}</div>
+            <div className="admin-order-stat-value">{orderStateData?.shipped_orders}</div>
             <div className="admin-order-stat-sub">Shipped and awaiting delivery</div>
           </div>
         </motion.div>
@@ -187,13 +184,12 @@ const OrderManagementPage = () => {
           
           <div className="admin-order-table-header">
             <h3 className="admin-order-table-title">Order List</h3>
-            <span className="admin-order-table-badge">{totalOrders} orders</span>
+            <span className="admin-order-table-badge">{orderStateData?.total_orders} orders</span>
           </div>
 
           {/* Tabs */}
           <div className="admin-order-tabs">
             {['All', 'Pending', 'Paid', 'Prepare Order', 'Shipped', 'Completed'].map((tab) => {
-              const count = tab === 'All' ? totalOrders : orders.filter(o => o.status === tab).length;
               return (
                 <div 
                   key={tab}
@@ -203,7 +199,7 @@ const OrderManagementPage = () => {
                     setCurrentPage(1);
                   }}
                 >
-                  {tab} {count}
+                  {tab}
                 </div>
               );
             })}
@@ -224,13 +220,7 @@ const OrderManagementPage = () => {
                 }}
               />
             </div>
-            <button className="admin-order-filter-btn">
-              <CalendarIcon />
-              8–12 Oct 2026
-            </button>
-            <button className="admin-order-filter-btn" onClick={() => { setSearchTerm(''); setActiveTab('All'); setCurrentPage(1); }}>
-              Reset filters
-            </button>
+
           </div>
 
           {/* Table */}
@@ -247,45 +237,45 @@ const OrderManagementPage = () => {
             </thead>
             <tbody>
               <AnimatePresence>
-                {currentItems.length > 0 ? (
-                  currentItems.map((order) => (
+                {currentItems?.length > 0 ? (
+                  currentItems?.map((order) => (
                     <motion.tr 
-                      key={order.id}
+                      key={order?.id}
                       variants={rowVariants}
                       initial="hidden"
                       animate="visible"
                       exit="hidden"
-                      className={order.highlighted ? 'highlighted' : ''}
+                      
                     >
                       <td>
-                        <NavLink to={`/admin/order/detail/${encodeURIComponent(order.id)}`} className="admin-order-id">
-                          {order.id}
-                          {order.highlighted && <span>Sample order details →</span>}
+                        <NavLink to={`/admin/order/detail/${encodeURIComponent(order?.id)}`} className="admin-order-id">
+                          {order.order_number}
+                        
                         </NavLink>
                       </td>
                       <td>
                         <div className="admin-order-buyer">
-                          <span className="admin-order-buyer-name">{order.buyerName}</span>
-                          <span className="admin-order-buyer-handle">{order.buyerHandle}</span>
+                          <span className="admin-order-buyer-name">{order?.username}</span>
+                          <span className="admin-order-buyer-handle">{order?.email}</span>
                         </div>
                       </td>
                       <td>
                         <div className="admin-order-date">
-                          {order.date}
-                          <span>{order.time}</span>
+                          {order?.order_date}
+                          
                         </div>
                       </td>
                       <td>
-                        <span className="admin-order-amount">RM {order.amount.toFixed(2)}</span>
+                        <span className="admin-order-amount">RM {order?.total_amount}</span>
                       </td>
                       <td>
-                        <span className={`admin-order-status ${getStatusClass(order.status)}`}>
+                        <span className={`admin-order-status ${getStatusClass(order?.status)}`}>
                           <span className="admin-order-status-dot"></span>
-                          {order.status}
+                          {order?.status}
                         </span>
                       </td>
                       <td>
-                        <button className="admin-order-action-btn" onClick={() => navigate(`/admin/order/detail/${encodeURIComponent(order.id)}`)}>View details</button>
+                        <button className="admin-order-action-btn" onClick={() => navigate(`/admin/order/detail/${encodeURIComponent(order?.id)}`)}>View details</button>
                       </td>
                     </motion.tr>
                   ))
@@ -303,7 +293,7 @@ const OrderManagementPage = () => {
           {/* Table Footer */}
           <div className="admin-order-table-footer">
             <span className="admin-order-table-info">
-              Showing {firstVisibleItem}–{lastVisibleItem} of {filteredOrders.length} orders · Amounts include shipping · Times in MYT
+              Showing {firstVisibleItem}–{lastVisibleItem} of {filteredOrders?.length} orders · Amounts include shipping · Times in MYT
             </span>
             <div className="admin-order-pagination">
               <button

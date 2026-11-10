@@ -2,24 +2,10 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../../css/admin/ShippingManagementPage.css';
-import AdminSidebar from '../../components/AdminSidebar'; // Pastikan komponen ini wujud
-
-// ==========================================
-// DUMMY DATA (Berdasarkan db.sql)
-// ==========================================
-const initialCouriers = [
-  { id: 1, name: "J&T", code: "JNT", tracking_url_template: "https://www.jtexpress.my/tracking?billcode={tracking_number}", is_active: true },
-  { id: 2, name: "PosLaju", code: "POSLAJU", tracking_url_template: "https://tracking.pos.com.my/tracking/{tracking_number}", is_active: true },
-  { id: 3, name: "NinjaVan", code: "NINJAVAN", tracking_url_template: "https://www.ninjavan.co/en-my/tracking?id={tracking_number}", is_active: false },
-];
-
-const initialServices = [
-  { id: 1, courier_id: 1, courier_name: "J&T", courier_code: "JNT", service_name: "Standard Delivery", price: 6.00, estimated_days: "2–4 days", is_active: true },
-  { id: 2, courier_id: 1, courier_name: "J&T", courier_code: "JNT", service_name: "Express", price: 12.00, estimated_days: "1–2 days", is_active: true },
-  { id: 3, courier_id: 2, courier_name: "PosLaju", courier_code: "POSLAJU", service_name: "Standard Delivery", price: 7.00, estimated_days: "2–5 days", is_active: true },
-  { id: 4, courier_id: 2, courier_name: "PosLaju", courier_code: "POSLAJU", service_name: "Express", price: 14.00, estimated_days: "1–2 days", is_active: true },
-  { id: 5, courier_id: 3, courier_name: "NinjaVan", courier_code: "NINJAVAN", service_name: "Standard Delivery", price: 5.50, estimated_days: "3–5 days", is_active: false },
-];
+import { useGetAllCourierAdmin, useGetAllShippingMethodAdmin,useAddNewCourierAdmin,useAddShipMethod
+        ,useUpdateStatus
+ } from '../../hook/admin/useShipping';
+import AdminSidebar from '../../components/AdminSidebar'; 
 
 // Ikon SVG
 const TruckIcon = () => (
@@ -45,70 +31,72 @@ const InfoIcon = () => (
 );
 
 const ShippingManagementPage = () => {
-  const [couriers, setCouriers] = useState(initialCouriers);
-  const [services, setServices] = useState(initialServices);
+
   
   // State untuk kawalan borang
   const [isCourierFormOpen, setIsCourierFormOpen] = useState(false);
+  const {mutate: addNewCourierAdmin,isPending:isAddPending} = useAddNewCourierAdmin();
+  const {mutate:addNewMethod,isPending:isMethodPending} = useAddShipMethod()
   const [isServiceFormOpen, setIsServiceFormOpen] = useState(false);
-
+  
+  const { data: courierData = [], isLoading: isCourierLoading } = useGetAllCourierAdmin();
+  const { data: serviceData, isLoading: isServiceLoading } = useGetAllShippingMethodAdmin();
+  const { mutate:updateStatus} = useUpdateStatus();
   // Setup React Hook Form untuk Courier
   const { register: registerCourier, handleSubmit: handleSubmitCourier, reset: resetCourier, formState: { errors: errorsCourier } } = useForm();
 
   // Setup React Hook Form untuk Service
   const { register: registerService, handleSubmit: handleSubmitService, reset: resetService, formState: { errors: errorsService } } = useForm();
-
+    
   // Fungsi Tambah Courier
   const onSubmitCourier = (data) => {
-    const newCourier = {
-      id: couriers.length + 1,
-      name: data.name,
-      code: data.code,
-      tracking_url_template: data.tracking_url_template,
-      is_active: data.is_active
-    };
-    setCouriers([...couriers, newCourier]);
+     if(!data){
+      alert("error")
+     }
+      addNewCourierAdmin(data,{
+        onSuccess:()=>{
+          alert("successfuly add new courier")
+        },
+        onError:(err)=>{
+          alert('error:'+ err)
+        }
+      })
     setIsCourierFormOpen(false);
     resetCourier();
-    alert("Courier added successfully!");
+   
   };
 
   // Fungsi Tambah Service
   const onSubmitService = (data) => {
-    const selectedCourier = couriers.find(c => c.id === parseInt(data.courier_id));
-    const newService = {
-      id: services.length + 1,
-      courier_id: parseInt(data.courier_id),
-      courier_name: selectedCourier ? selectedCourier.name : "Unknown",
-      courier_code: selectedCourier ? selectedCourier.code : "UNK",
-      service_name: data.service_name,
-      price: parseFloat(data.price),
-      estimated_days: data.estimated_days,
-      is_active: true
-    };
-    setServices([...services, newService]);
+    
+    addNewMethod(data,{
+      onSuccess:()=>{
+        alert("successfuly added shipping method")
+      }
+    })
     setIsServiceFormOpen(false);
     resetService();
-    alert("Shipping service added successfully!");
+    
   };
 
   // Fungsi Toggle Active State
-  const handleToggleCourier = (id) => {
-    setCouriers(couriers.map(c => c.id === id ? { ...c, is_active: !c.is_active } : c));
+  const handleToggleCourier = (courier) => {
+    updateStatus({statusVal:courier?.is_active,courier_id:courier?.id})
+    // setCouriers(courierData?.map(c => c.id === id ? { ...c, is_active: !c.is_active } : c));
   };
 
   // Kiraan Statistik
-  const totalCouriers = couriers.length;
-  const activeCouriers = couriers.filter(c => c.is_active).length;
+  const totalCouriers = courierData?.length ?? 0;
+  const activeCouriers = courierData?.filter(c => c?.is_active)?.length ?? 0;
   const inactiveCouriers = totalCouriers - activeCouriers;
-  const totalServices = services.length;
-  const availableServices = services.filter(s => s.is_active).length;
-  
-  // Cari standard delivery termurah yang aktif
-  const standardServices = services.filter(s => s.service_name === "Standard Delivery" && s.is_active);
-  const cheapestStandard = standardServices.length > 0 
-    ? standardServices.reduce((min, s) => s.price < min.price ? s : min, standardServices[0]) 
-    : null;
+  const totalServices = serviceData?.length ?? 0;
+  const availableServices = serviceData?.filter(s => s.is_active).length ?? 0;
+
+  // // Cari standard delivery termurah yang aktif
+  // const standardServices = services.filter(s => s.service_name === "Standard Delivery" && s.is_active);
+  // const cheapestStandard = standardServices.length > 0 
+  //   ? standardServices.reduce((min, s) => s.price < min.price ? s : min, standardServices[0]) 
+  //   : null;
 
   // Animasi Framer Motion
   const containerVariants = {
@@ -146,7 +134,6 @@ const ShippingManagementPage = () => {
           </div>
           <div className="admin-ship-header-right">
             <span className="admin-ship-badge">Admin access</span>
-            <span className="admin-ship-date">12 Oct 2026</span>
           </div>
         </motion.div>
 
@@ -176,18 +163,7 @@ const ShippingManagementPage = () => {
             <div className="admin-ship-stat-value">{totalServices}</div>
             <div className="admin-ship-stat-sub">{availableServices} available at checkout</div>
           </div>
-          <div className="admin-ship-stat-card">
-            <div className="admin-ship-stat-header">
-              <span className="admin-ship-stat-label">Standard delivery from</span>
-              <div className="admin-ship-stat-icon"><TagIcon /></div>
-            </div>
-            <div className="admin-ship-stat-value">
-              {cheapestStandard ? `RM ${cheapestStandard.price.toFixed(2)}` : 'N/A'}
-            </div>
-            <div className="admin-ship-stat-sub">
-              {cheapestStandard ? `Lowest active standard service · ${cheapestStandard.courier_name}` : 'No active standard service'}
-            </div>
-          </div>
+          
         </motion.div>
 
         {/* Main Grid Layout */}
@@ -222,23 +198,23 @@ const ShippingManagementPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {couriers.map((courier) => (
+                  {courierData?.map((courier) => (
                     <tr key={courier.id}>
-                      <td><span className="admin-ship-courier-name">{courier.name}</span></td>
-                      <td><span className="admin-ship-code">{courier.code}</span></td>
-                      <td><span className="admin-ship-url">{courier.tracking_url_template}</span></td>
+                      <td><span className="admin-ship-courier-name">{courier?.name}</span></td>
+                      <td><span className="admin-ship-code">{courier?.code}</span></td>
+                      <td><span className="admin-ship-url">{courier?.tracking_url_template}</span></td>
                       <td>
                         <label className="admin-ship-toggle">
                           <input 
                             type="checkbox" 
-                            checked={courier.is_active}
-                            onChange={() => handleToggleCourier(courier.id)}
+                            checked={courier?.is_active}
+                            onChange={() => handleToggleCourier(courier)}
                           />
                           <span className="admin-ship-slider"></span>
                         </label>
-                        <span className={`admin-ship-status ${courier.is_active ? 'active' : 'inactive'}`} style={{ marginLeft: '8px' }}>
+                        <span className={`admin-ship-status ${courier?.is_active ? 'active' : 'inactive'}`} style={{ marginLeft: '8px' }}>
                           <span className="admin-ship-status-dot"></span>
-                          {courier.is_active ? 'Active' : 'Inactive'}
+                          {courier?.is_active ? 'Active' : 'Inactive'}
                         </span>
                       </td>
                     </tr>
@@ -247,7 +223,7 @@ const ShippingManagementPage = () => {
               </table>
 
               <div className="admin-ship-table-footer">
-                Replace {"{tracking_number}"} with the saved shipment number. These example URL templates should be verified before use.
+                Replace {"{tracking_number]"} with the saved shipment number. These example URL templates should be verified before use.
               </div>
 
               <div className="admin-ship-info-box">
@@ -285,18 +261,18 @@ const ShippingManagementPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {services.map((service) => (
-                    <tr key={service.id}>
+                  {serviceData?.map((service) => (
+                    <tr key={service?.id}>
                       <td>
-                        <div className="admin-ship-courier-name">{service.courier_name}</div>
-                        <div className="admin-ship-code">{service.courier_code}</div>
+                        <div className="admin-ship-courier-name">{service?.courier_name}</div>
+                        <div className="admin-ship-code">{service?.courier_code}</div>
                       </td>
                       <td>
-                        <div className="admin-ship-courier-name" style={{ fontWeight: '500' }}>{service.service_name}</div>
-                        {!service.is_active && <span style={{ fontSize: '12px', color: '#ef4444' }}>Unavailable · Courier inactive</span>}
+                        <div className="admin-ship-courier-name" style={{ fontWeight: '500' }}>{service?.service_name}</div>
+                        {!service?.is_active && <span style={{ fontSize: '12px', color: '#ef4444' }}>Unavailable · Courier inactive</span>}
                       </td>
-                      <td><span className="admin-ship-courier-name">RM {service.price.toFixed(2)}</span></td>
-                      <td>{service.estimated_days}</td>
+                      <td><span className="admin-ship-courier-name">RM {service?.price}</span></td>
+                      <td>{service?.estimated_days}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -340,7 +316,7 @@ const ShippingManagementPage = () => {
                         placeholder="Example: DHL eCommerce"
                         {...registerCourier("name", { required: true })} 
                       />
-                      {errorsCourier.name && <span style={{color: 'red', fontSize: '12px'}}>Ruangan ini diperlukan</span>}
+                      {errorsCourier.name && <span style={{color: 'red', fontSize: '12px'}}>This field is required</span>}
                     </div>
 
                     <div className="admin-ship-form-group">
@@ -422,8 +398,8 @@ const ShippingManagementPage = () => {
                         {...registerService("courier_id", { required: true })}
                       >
                         <option value="">Select a courier</option>
-                        {couriers.filter(c => c.is_active).map(c => (
-                          <option key={c.id} value={c.id}>{c.name}</option>
+                        {courierData?.filter(c => c?.is_active)?.map(c => (
+                          <option key={c?.id} value={c?.id}>{c?.name}</option>
                         ))}
                       </select>
                       {errorsService.courier_id && <span style={{color: 'red', fontSize: '12px'}}>Please select a courier</span>}
@@ -437,7 +413,7 @@ const ShippingManagementPage = () => {
                         placeholder="Example: Economy Delivery"
                         {...registerService("service_name", { required: true })} 
                       />
-                      {errorsService.service_name && <span style={{color: 'red', fontSize: '12px'}}>Ruangan ini diperlukan</span>}
+                      {errorsService.service_name && <span style={{color: 'red', fontSize: '12px'}}>This field is required</span>}
                     </div>
 
                     <div className="admin-ship-form-group">
@@ -488,11 +464,7 @@ const ShippingManagementPage = () => {
 
         </div>
 
-        {/* Footer */}
-        <motion.div className="admin-ship-footer" variants={cardVariants}>
-          <span>Illustrative sample data only - Not live data</span>
-          <span>© 2026 ALL-BUY</span>
-        </motion.div>
+        
 
       </motion.div>
     </div>

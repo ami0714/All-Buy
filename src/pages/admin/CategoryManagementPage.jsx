@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../../css/admin/CategoryManagementPage.css';
+import {useGetcategory,useAddCategory,useUpdateCategory} from '../../hook/admin/useCategory';
 import AdminSidebar from '../../components/AdminSidebar'; // Pastikan komponen ini wujud
 import { getDirtyValues } from '../../utils/form';
 
@@ -51,7 +52,9 @@ const CategoryManagementPage = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingCategoryId, setEditingCategoryId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-
+  const { data: categoryData, isLoading: isCategoryLoad, isError: isCategoryError } = useGetcategory();
+  const { mutate: addCategory,isPending:isAddPending } = useAddCategory();
+  const { mutate: updateCategory,isPending:isUpdatePending } = useUpdateCategory();
   // Setup React Hook Form
   const { register, handleSubmit, reset, watch, setValue, formState: { errors, dirtyFields } } = useForm({
     defaultValues: {
@@ -122,7 +125,14 @@ const CategoryManagementPage = () => {
           ? { ...c, ...changed }
           : c
       ));
-      alert("Category updated successfully!");
+      updateCategory({body:changed,category_id:editingCategoryId},{
+        onSuccess:(res)=>{
+          alert(res)
+        },
+        onError:(res)=>{
+          alert(res)
+        }
+      });
     } else {
       // Logik Tambah
       const newCategory = {
@@ -130,22 +140,35 @@ const CategoryManagementPage = () => {
         ...allData,
         product_count: 0
       };
-      setCategories([...categories, newCategory]);
-      alert("New category added successfully!");
+      addCategory(allData);
     }
     handleCloseForm();
   };
 
   // Logik Carian
-  const filteredCategories = categories.filter(cat => 
+  const filteredCategories = categoryData?.filter(cat => 
     cat.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     cat.slug.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Kiraan Statistik
+  // Category status values from the API may be booleans, integers, or strings.
+  const isCategoryActive = (category) => (
+    category?.is_active === true
+    || category?.is_active === 1
+    || category?.is_active === '1'
+    || category?.is_active === 'true'
+    || category?.is_active === 'active'
+  );
   const totalCategories = categories.length;
-  const totalCategorizedProducts = categories.reduce((sum, cat) => sum + cat.product_count, 0);
-  const largestCategory = categories.reduce((max, cat) => cat.product_count > max.product_count ? cat : max, categories[0]);
+  const totalCategorizedProducts = Array.isArray(categoryData)
+    ? categoryData.reduce((sum, category) => sum + (Number(category?.product_count) || 0), 0)
+    : 0;
+  const activeCategoryCount = Array.isArray(categoryData)
+    ? categoryData.filter(isCategoryActive).length
+    : 0;
+  const inactiveCategoryCount = Array.isArray(categoryData)
+    ? categoryData.filter((category) => !isCategoryActive(category)).length
+    : 0;
 
   // Animasi Framer Motion
   const containerVariants = {
@@ -188,7 +211,6 @@ const CategoryManagementPage = () => {
           </div>
           <div className="admin-cat-header-right">
             <span className="admin-cat-badge">Admin access</span>
-            <span className="admin-cat-date">12 Oct 2026</span>
           </div>
         </motion.div>
 
@@ -216,20 +238,30 @@ const CategoryManagementPage = () => {
           </div>
           <div className="admin-cat-stat-card">
             <div className="admin-cat-stat-header">
-              <span className="admin-cat-stat-label">Categorized Products</span>
+              <span className="admin-cat-stat-label">Active Categories</span>
               <div className="admin-cat-stat-icon"><BoxIcon /></div>
             </div>
-            <div className="admin-cat-stat-value">{totalCategorizedProducts}</div>
-            <div className="admin-cat-stat-sub">All products have a category</div>
+            <div className="admin-cat-stat-value">{activeCategoryCount}</div>
+            <div className="admin-cat-stat-sub">
+              {isCategoryLoad
+                ? 'Loading categories...'
+                : isCategoryError
+                  ? 'Unable to load category status'
+                  : 'Available in the store'}
+            </div>
           </div>
           <div className="admin-cat-stat-card">
             <div className="admin-cat-stat-header">
-              <span className="admin-cat-stat-label">Largest Category</span>
+              <span className="admin-cat-stat-label">Inactive Categories</span>
               <div className="admin-cat-stat-icon"><TshirtIcon /></div>
             </div>
-            <div className="admin-cat-stat-value">{largestCategory ? largestCategory.name : '-'}</div>
+            <div className="admin-cat-stat-value">{inactiveCategoryCount}</div>
             <div className="admin-cat-stat-sub">
-              {largestCategory ? `${largestCategory.product_count} products · ${Math.round((largestCategory.product_count / totalCategorizedProducts) * 100)}% of the catalog` : '-'}
+              {isCategoryLoad
+                ? 'Loading categories...'
+                : isCategoryError
+                  ? 'Unable to load category status'
+                  : 'Hidden from the store'}
             </div>
           </div>
         </motion.div>
@@ -267,27 +299,27 @@ const CategoryManagementPage = () => {
               </thead>
               <tbody>
                 <AnimatePresence>
-                  {filteredCategories.map((category) => (
+                  {filteredCategories?.map((category) => (
                     <motion.tr 
-                      key={category.id}
+                      key={category?.id}
                       variants={rowVariants}
                       initial="hidden"
                       animate="visible"
                       exit="hidden"
-                      className={editingCategoryId === category.id ? 'selected' : ''}
+                      className={editingCategoryId === category?.id ? 'selected' : ''}
                     >
                       <td>
                         <div className="admin-cat-name-wrapper">
-                          <span className="admin-cat-name">{category.name}</span>
-                          <span className="admin-cat-sku">CAT-{String(category.id).padStart(3, '0')}</span>
+                          <span className="admin-cat-name">{category?.name}</span>
+                          <span className="admin-cat-sku">CAT-{String(category?.id).padStart(3, '0')}</span>
                         </div>
                       </td>
-                      <td>{category.slug}</td>
-                      <td><div className="admin-cat-desc">{category.description}</div></td>
+                      <td>{category?.slug}</td>
+                      <td><div className="admin-cat-desc">{category?.description}</div></td>
                       <td>
-                        <span className={`admin-cat-status ${category.is_active ? 'active' : 'inactive'}`}>
+                        <span className={`admin-cat-status ${category?.is_active ? 'active' : 'inactive'}`}>
                           <span className="admin-cat-status-dot"></span>
-                          {category.is_active ? 'Active' : 'Inactive'}
+                          {category?.is_active ? 'Active' : 'Inactive'}
                         </span>
                       </td>
                       <td>
@@ -308,7 +340,7 @@ const CategoryManagementPage = () => {
             </table>
 
             <div className="admin-cat-table-footer">
-              Showing all {filteredCategories.length} categories · {totalCategorizedProducts} products
+              Showing all {filteredCategories?.length} categories · {totalCategorizedProducts} products
             </div>
 
             {/* Info Box */}
@@ -426,11 +458,7 @@ const CategoryManagementPage = () => {
 
         </div>
 
-        {/* Footer */}
-        <motion.div className="admin-cat-footer" variants={cardVariants}>
-          <span>Sample data only - Not live data</span>
-          <span>© 2026 ALL-BUY</span>
-        </motion.div>
+        
 
       </motion.div>
     </div>

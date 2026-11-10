@@ -24,7 +24,7 @@
 }
 
 .home-product-card__image-container {
-  background-color: #e5e7eb;
+ 
   width: 100%;
   aspect-ratio: 4 / 3;
   height: auto;
@@ -39,8 +39,9 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
+  border-radius:10px ;
 }
 
 .home-product-card__title {

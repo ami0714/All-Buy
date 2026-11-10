@@ -73,7 +73,7 @@ const ProductEditPage = () => {
       slug: product.slug ?? '',
       description: product.description ?? '',
       default_price: product.default_price ?? '',
-      category_id: product?.category_id === '' ? '' : String(product?.category),
+      category_id: String(product.category_id ?? ''),
       is_active: product.is_active === true
         || product.is_active === 1
         || product.is_active === '1'
@@ -84,7 +84,7 @@ const ProductEditPage = () => {
       total_stock: product.total_stock ?? 0,
       last_updated: product.last_updated ?? '',
     });
-  }, [id, isEdit, product, reset]);
+  }, [id, isEdit, product, reset,categories]);
   
 
   // Logik untuk auto-generate slug daripada nama produk
@@ -153,8 +153,7 @@ const ProductEditPage = () => {
             Admin <span>›</span> <span>Products</span> <span style={{ color: '#9ca3af', fontWeight: '400' }}>/admin/products/{isEdit ? `${product?.slug || id}/edit` : 'add'}</span>
           </div>
           <div className="admin-edit-prod-header-right">
-            <span className="admin-edit-prod-badge">Akses pentadbir</span>
-            <span className="admin-edit-prod-date">12 Okt 2026</span>
+            <span className="admin-edit-prod-badge">Admin access</span>
           </div>
         </motion.div>
 
@@ -251,7 +250,6 @@ const ProductEditPage = () => {
                   <select 
                     className="admin-edit-prod-select"
                     {...register("category_id", { required: true })}
-                    value={watch('category_id') ?? ''}
                     disabled={isCategoryLoad || isCategoryError}
                   >
                     <option value="">Select a category</option>
@@ -286,7 +284,7 @@ const ProductEditPage = () => {
               {/* Form Footer */}
               <div className="admin-edit-prod-form-footer">
                 <span className="admin-edit-prod-last-updated">
-                  {isEdit && product?.last_updated ? `Terakhir dikemas kini: ${product.last_updated}` : ''}
+                  {isEdit && product?.last_updated ? `Last updated: ${product.last_updated}` : ''}
                 </span>
                 <div className="admin-edit-prod-actions">
                   <button 

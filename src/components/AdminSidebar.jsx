@@ -28,7 +28,7 @@ const LogoutIcon = () => (
 
 const AdminSidebar = ({ activePage = 'dashboard' }) => {
   const navigate = useNavigate();
-  const {user,isLoading} = useAuth();
+  const { user, logout } = useAuth();
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', path: '/admin/dashboard', icon: <DashboardIcon /> },
     { id: 'products', label: 'Products', path: '/admin/product-management', icon: <ProductsIcon /> },
@@ -37,6 +37,11 @@ const AdminSidebar = ({ activePage = 'dashboard' }) => {
     { id: 'shipping', label: 'Shipping', path: '/admin/shipping-management', icon: <ShippingIcon /> },
     { id: 'users', label: 'Users', path: '/admin/user-management', icon: <UsersIcon /> },
   ];
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/', { replace: true });
+  };
 
   return (
     <div className="admin-sidebar-container">
@@ -72,7 +77,7 @@ const AdminSidebar = ({ activePage = 'dashboard' }) => {
             <span className="admin-sidebar-user-role">{user?.role}</span>
           </div>
         </div>
-        <button className="admin-sidebar-logout" aria-label="Log out" title="Log out" onClick={() => navigate('/')}>
+        <button className="admin-sidebar-logout" aria-label="Log out" title="Log out" onClick={handleLogout}>
           <LogoutIcon />
         </button>
       </div>

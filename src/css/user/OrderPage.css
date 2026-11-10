@@ -287,6 +287,61 @@
 }
 
 @media (max-width: 640px) {
+  .order-content {
+    padding: 0 12px;
+  }
+
+  .page-title {
+    font-size: 34px;
+  }
+
+  .page-subtitle {
+    font-size: 14px;
+  }
+
+  .order-card {
+    padding: 16px;
+  }
+
+  .card-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .header-left {
+    flex-wrap: wrap;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .order-number {
+    font-size: 15px;
+    overflow-wrap: anywhere;
+  }
+
+  .status-badge {
+    max-width: 100%;
+    padding: 4px 10px;
+    font-size: 11px;
+    line-height: 1.4;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    flex-shrink: 0;
+  }
+
+  .order-total {
+    font-size: 16px;
+  }
+
+  .item-name {
+    font-size: 13px;
+  }
+
+  .item-variant {
+    font-size: 11px;
+  }
+
   .payment-success-card {
     margin: 40px 16px;
     padding: 32px 20px;

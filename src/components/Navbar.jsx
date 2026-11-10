@@ -1,13 +1,19 @@
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import './Navbar.css';
 import {useAuth} from '../context/authContext'
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isHomePage = location.pathname === '/home';
-  const {user,isLoading} = useAuth()
+  const { user, isLoading, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/', { replace: true });
+  };
 
   
   return (
@@ -30,6 +36,13 @@ const Navbar = () => {
           <NavLink to="/profile" className="icon-btn" title="Profile" aria-label="Profile">
             <svg className="icon-svg" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
           </NavLink>
+          <button className="icon-btn navbar-logout" type="button" title="Log out" aria-label="Log out" onClick={handleLogout}>
+            <svg className="icon-svg" viewBox="0 0 24 24">
+              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </button>
         </div>
       </div>
       <div className="navbar-bottom">

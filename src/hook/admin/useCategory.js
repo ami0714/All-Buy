@@ -1,5 +1,5 @@
-import {getCategory} from '../../api/admin/category';
-import {useQuery} from '@tanstack/react-query';
+import {getCategory,addCategory,updateCategory} from '../../api/admin/category';
+import {useQuery,useMutation,useQueryClient} from '@tanstack/react-query';
 export function useGetcategory(){
 
     return useQuery({
@@ -8,5 +8,33 @@ export function useGetcategory(){
     enabled: !!localStorage.getItem('token'),
     staleTime: 60000,
 
+  });
+}
+
+export function useAddCategory() {
+    const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (body) => addCategory(body),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['admin-category']);
+    },
+    onError: (error) => {
+      alert(error || 'Unable to add category.');
+    }
+  });
+}
+
+export function useUpdateCategory() {
+    const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({body,category_id}) => updateCategory(category_id, body),
+    onSuccess: () => {
+
+      queryClient.invalidateQueries(['admin-category']);
+    },
+    onError: (error) => {
+      alert(error || 'Unable to update category.');
+    }
   });
 }

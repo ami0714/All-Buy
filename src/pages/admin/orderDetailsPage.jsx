@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import '../../css/admin/OrderDetailsPage.css';
 import AdminSidebar from '../../components/AdminSidebar'; 
+import {useGetUserOrder} from '../../hook/useOrder'
+import {useUpdateOrderStatus} from '../../hook/admin/useOrder'
+import { useGetCourier } from '../../hook/useShipping';
 import { getDirtyValues } from '../../utils/form';
 
 // ==========================================
@@ -84,24 +87,46 @@ const ExternalLinkIcon = () => (
 
 const AdminOrderDetailsPage = () => {
   const navigate = useNavigate();
+  const {id} = useParams();
+  const { mutate: updateOrderStatus,isPending:isUpdatePending } = useUpdateOrderStatus();
+  const { data: orderDetails } = useGetUserOrder(id);
+  const { data: courierData, isLoading: isCourierLoading, isError: isCourierError, error: courierError } = useGetCourier();
+  const couriers = Array.isArray(courierData) ? courierData : [];
   // Setup React Hook Form untuk Status & Shipment
-  const { register, handleSubmit, formState: { dirtyFields } } = useForm({
+  const { register, handleSubmit, formState: { dirtyFields },reset } = useForm({
     defaultValues: {
-      orderStatus: dummyOrderDetails.order_status,
-      courier: dummyOrderDetails.shipment.courier,
-      trackingNumber: dummyOrderDetails.shipment.tracking_number
+      orderStatus: '',
+      courier_id: '',
+      tracking_number: null
     }
   });
 
-  const onSubmit = (allData) => {
-    const changed = getDirtyValues(allData, dirtyFields);
-    if (Object.keys(changed).length === 0) {
-      alert('No changes were made.');
-      return;
+  useEffect(() => {
+    if (orderDetails) {
+      reset({
+        orderStatus: orderDetails?.order_status || '',
+        courier_id: String(orderDetails?.courier_id ?? ''),
+        tracking_number: orderDetails?.tracking_number || ''
+      });
     }
+  }, [orderDetails, reset]);
 
-    console.log("Status & Shipment disimpan:", changed);
-    alert("Status and shipment updated successfully!");
+  const onSubmit = (allData) => {
+    // const changed = getDirtyValues(allData, dirtyFields);
+    // if (Object.keys(changed).length === 0) {
+    //   alert('No changes were made.');
+    //   return;
+    // }
+
+    updateOrderStatus({orderId: id, body: allData}, {
+      onSuccess: (res) => {
+        navigate('/admin/order-management');
+        
+    }
+    }
+  )
+      
+  
   };
 
   // Animasi Framer Motion
@@ -134,7 +159,6 @@ const AdminOrderDetailsPage = () => {
           </div>
           <div className="admin-od-header-right">
             <span className="admin-od-badge">Admin access</span>
-            <span className="admin-od-date">12 Oct 2026</span>
           </div>
         </motion.div>
 
@@ -142,7 +166,7 @@ const AdminOrderDetailsPage = () => {
         <motion.div className="admin-od-title-section" variants={cardVariants}>
           <div className="admin-od-title">
             <h1>Order Details</h1>
-            <p>{dummyOrderDetails.order_number} · Placed {dummyOrderDetails.order_date}</p>
+            <p>{orderDetails?.order_number} · Placed {orderDetails?.order_date}</p>
           </div>
           <button className="admin-od-btn-back" onClick={() => navigate('/admin/order-management')}>
             <ArrowLeftIcon />
@@ -153,53 +177,43 @@ const AdminOrderDetailsPage = () => {
         {/* Summary Header Card */}
         <motion.div className="admin-od-summary-card" variants={cardVariants}>
           <div className="admin-od-summary-left">
-            <h2>{dummyOrderDetails.order_number}</h2>
-            <p>{dummyOrderDetails.items_count} units · {dummyOrderDetails.variants_count} purchased variants</p>
+            <h2>{orderDetails?.order_number}</h2>
           </div>
           <div className="admin-od-summary-stats">
             <div className="admin-od-stat-group">
               <span className="admin-od-stat-label">Payment status</span>
-              <span className={`admin-od-status status-${dummyOrderDetails.payment_status.toLowerCase()}`}>
+              <span className={`admin-od-status status-${orderDetails?.payment_status}`}>
                 <span className="admin-od-status-dot"></span>
-                {dummyOrderDetails.payment_status}
+                {orderDetails?.payment_status}
               </span>
             </div>
             <div className="admin-od-stat-group">
               <span className="admin-od-stat-label">Order status</span>
-              <span className={`admin-od-status status-${dummyOrderDetails.order_status.toLowerCase()}`}>
+              <span className={`admin-od-status status-${orderDetails?.order_status}`}>
                 <span className="admin-od-status-dot"></span>
-                {dummyOrderDetails.order_status}
+                {orderDetails?.order_status}
               </span>
             </div>
             <div className="admin-od-stat-group">
               <span className="admin-od-stat-label">Total paid</span>
-              <span className="admin-od-stat-value admin-od-total-paid">RM {dummyOrderDetails.total_amount.toFixed(2)}</span>
+              <span className="admin-od-stat-value admin-od-total-paid">RM {orderDetails?.total_amount}</span>
             </div>
           </div>
         </motion.div>
 
         {/* Top Grid Layout */}
         <div className="admin-od-top-grid">
-          {/* Buyer Info */}
-          <motion.div className="admin-od-card" variants={cardVariants}>
-            <h3 className="admin-od-card-title">Buyer Information</h3>
-            <div className="admin-od-info-text">
-              <strong>{dummyOrderDetails.buyer.name}</strong>
-              <span>{dummyOrderDetails.buyer.handle}</span>
-              <span>{dummyOrderDetails.buyer.email}</span>
-              <span>{dummyOrderDetails.buyer.phone}</span>
-            </div>
-          </motion.div>
+    
 
           {/* Checkout Address */}
           <motion.div className="admin-od-card" variants={cardVariants}>
             <h3 className="admin-od-card-title">Checkout Address</h3>
             <div className="admin-od-info-text">
-              <strong>{dummyOrderDetails.address.recipient_name}</strong>
-              <span>{dummyOrderDetails.address.address_line1}</span>
-              <span>{dummyOrderDetails.address.postcode} {dummyOrderDetails.address.city}</span>
-              <span>{dummyOrderDetails.address.state}, {dummyOrderDetails.address.country}</span>
-              <span>{dummyOrderDetails.address.phone}</span>
+              <strong>{orderDetails?.address_snapshot?.recipient_name}</strong>
+              <span>{orderDetails?.address_snapshot?.address_line1}</span>
+              <span>{orderDetails?.address_snapshot?.postcode} {orderDetails?.address_snapshot?.city}</span>
+              <span>{orderDetails?.address_snapshot?.state}, {orderDetails?.address_snapshot?.country}</span>
+              <span>{orderDetails?.address_snapshot?.phone}</span>
             </div>
             <p className="admin-od-note">Saved at checkout. Profile changes do not alter this address.</p>
           </motion.div>
@@ -216,11 +230,11 @@ const AdminOrderDetailsPage = () => {
               <div className="admin-od-form-group">
                 <label>Order status</label>
                 <select className="admin-od-select" {...register("orderStatus")}>
-                  <option value="Pending">Pending</option>
-                  <option value="Paid">Paid</option>
-                  <option value="Prepare Order">Prepare Order</option>
-                  <option value="Shipped">Shipped</option>
-                  <option value="Completed">Completed</option>
+                  <option value="pending">Pending</option>
+                  <option value="paid">Paid</option>
+                  <option value="prepare order">Prepare Order</option>
+                  <option value="shipped">Shipped</option>
+                  <option value="completed">Completed</option>
                 </select>
                 <span className="admin-od-input-hint">Workflow: Pending → Paid → Prepare Order → Shipped → Completed.</span>
               </div>
@@ -229,37 +243,47 @@ const AdminOrderDetailsPage = () => {
                 <h4 style={{ fontSize: '14px', fontWeight: '600', marginBottom: '12px' }}>Shipment information</h4>
                 
                 <label>Courier <span>*</span></label>
-                <select className="admin-od-select" {...register("courier")}>
-                  <option value="J&T">J&T</option>
-                  <option value="Pos Laju">Pos Laju</option>
-                  <option value="Ninja Van">Ninja Van</option>
+                <select className="admin-od-select" {...register("courier_id")}>
+                  <option value="">
+                    {isCourierLoading ? 'Loading couriers...' : 'Select a courier'}
+                  </option>
+                  {couriers.map((courier) => (
+                    <option key={courier.id} value={String(courier.id)}>{courier.name}</option>
+                  ))}
                 </select>
+                {isCourierError && (
+                  <span className="admin-od-input-hint" role="alert">
+                    {courierError?.message || 'Unable to load couriers.'}
+                  </span>
+                )}
+                {!isCourierLoading && !isCourierError && couriers.length === 0 && (
+                  <span className="admin-od-input-hint">No couriers are available.</span>
+                )}
               </div>
 
               <div className="admin-od-form-group">
                 <label>Tracking number <span>*</span></label>
-                <input type="text" className="admin-od-input" {...register("trackingNumber")} />
-                <span className="admin-od-input-hint">Illustrative tracking number · Saved 11 Oct 2026</span>
+                <input type="text" className="admin-od-input" {...register("tracking_number")} />
               </div>
 
               <div className="admin-od-shipping-details">
                 <div className="admin-od-shipping-row">
                   <span>Service</span>
-                  <span>{dummyOrderDetails.shipment.service}</span>
+                  <span>{orderDetails?.shipping_method}</span>
                 </div>
                 <div className="admin-od-shipping-row">
                   <span>Shipping price</span>
-                  <span>RM {dummyOrderDetails.shipment.price.toFixed(2)}</span>
+                  <span>RM {orderDetails?.shipping_fee}</span>
                 </div>
                 <div className="admin-od-shipping-row">
                   <span>Estimated delivery</span>
-                  <span>{dummyOrderDetails.shipment.estimated_days}</span>
+                  <span>{orderDetails?.estimated_delivery_days}</span>
                 </div>
               </div>
 
               <a href="#" className="admin-od-track-link">
               
-                Track with {dummyOrderDetails.shipment.courier}
+                Track with {orderDetails?.courier_name}
               </a>
               <button type="submit" className="admin-od-btn-save">
                 Save status & shipment
@@ -293,18 +317,18 @@ const AdminOrderDetailsPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {dummyOrderDetails.items.map((item) => (
-                    <tr key={item.id}>
+                  {orderDetails?.product_item?.map((item,index) => (
+                    <tr key={index}>
                       <td>
                         <div className="admin-od-product-info">
-                          <span className="admin-od-product-name">{item.product_name}</span>
-                          <span className="admin-od-product-variant">{item.variant}</span>
-                          <span className="admin-od-product-sku">{item.sku}</span>
+                          <span className="admin-od-product-name">{item?.product_name}</span>
+                          <span className="admin-od-product-variant">{item?.variant_info}</span>
+                          <span className="admin-od-product-sku">{item?.sku}</span>
                         </div>
                       </td>
-                      <td>{item.qty}</td>
-                      <td>RM {item.price.toFixed(2)}</td>
-                      <td>RM {item.subtotal.toFixed(2)}</td>
+                      <td>{item?.quantity}</td>
+                      <td>RM {item?.unit_price}</td>
+                      <td>RM {item?.subtotal}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -317,15 +341,15 @@ const AdminOrderDetailsPage = () => {
               <div className="admin-od-totals">
                 <div className="admin-od-total-row">
                   <span>Items subtotal</span>
-                  <span>RM 158.00</span>
+                  <span>RM {orderDetails?.subtotal}</span>
                 </div>
                 <div className="admin-od-total-row">
-                  <span>Shipping · {dummyOrderDetails.shipment.courier} Standard Delivery</span>
-                  <span>RM {dummyOrderDetails.shipment.price.toFixed(2)}</span>
+                  <span>Shipping · {orderDetails?.courier_name} {orderDetails?.shipping_method}</span>
+                  
                 </div>
                 <div className="admin-od-total-row grand-total">
                   <span>Total paid</span>
-                  <span>RM {dummyOrderDetails.total_amount.toFixed(2)}</span>
+                  <span>RM {orderDetails?.total_amount}</span>
                 </div>
               </div>
             </motion.div>
@@ -336,23 +360,23 @@ const AdminOrderDetailsPage = () => {
               
               <div className="admin-od-payment-row">
                 <span className="admin-od-payment-label">Payment gateway</span>
-                <span className="admin-od-payment-value">{dummyOrderDetails.payment.gateway}</span>
+                <span className="admin-od-payment-value">{orderDetails?.payment_gateway}</span>
               </div>
               <div className="admin-od-payment-row">
                 <span className="admin-od-payment-label">Billcode</span>
-                <span className="admin-od-payment-value">{dummyOrderDetails.payment.billcode}</span>
+                <span className="admin-od-payment-value">{orderDetails?.payment_bill}</span>
               </div>
               <div className="admin-od-payment-row">
                 <span className="admin-od-payment-label">Reference number</span>
-                <span className="admin-od-payment-value">{dummyOrderDetails.payment.reference_no}</span>
+                <span className="admin-od-payment-value">{orderDetails?.payment_reference}</span>
               </div>
               <div className="admin-od-payment-row">
                 <span className="admin-od-payment-label">Confirmed at</span>
-                <span className="admin-od-payment-value">{dummyOrderDetails.payment.confirmed_at}</span>
+                <span className="admin-od-payment-value">{orderDetails?.payment_paid_at}</span>
               </div>
               <div className="admin-od-payment-row">
                 <span className="admin-od-payment-label">Amount received</span>
-                <span className="admin-od-payment-value">RM {dummyOrderDetails.payment.amount_received.toFixed(2)}</span>
+                <span className="admin-od-payment-value">RM {orderDetails?.payment_amount}</span>
               </div>
 
               <div style={{ marginTop: '24px' }}>
@@ -361,7 +385,7 @@ const AdminOrderDetailsPage = () => {
                   Illustrative gateway callback - Received 10 Oct 2026, 09:45 AM MYT
                 </p>
                 <div className="admin-od-json-box">
-                  <pre>{dummyOrderDetails.payment.raw_response}</pre>
+                  <pre>{JSON.stringify(orderDetails?.payment_raw_response)}</pre>
                 </div>
               </div>
             </motion.div>
@@ -376,16 +400,15 @@ const AdminOrderDetailsPage = () => {
               </p>
 
               <div className="admin-od-timeline">
-                {dummyOrderDetails.status_history.map((history) => (
-                  <div key={history.id} className="admin-od-timeline-item">
-                    <div className={`admin-od-timeline-dot ${history.is_current ? 'active' : ''}`}></div>
+                {orderDetails?.order_history_status?.map((history,index) => (
+                  <div key={index} className="admin-od-timeline-item">
+                    <div className={`admin-od-timeline-dot ${orderDetails?.order_history_status[0] ? 'active' : ''}`}></div>
                     <div className="admin-od-timeline-header">
-                      <span className="admin-od-timeline-title">{history.status}</span>
-                      <span className="admin-od-timeline-date">{history.date}</span>
+                      <span className="admin-od-timeline-title">{history?.status}</span>
+                      <span className="admin-od-timeline-date">{history?.changed_at}</span>
                     </div>
-                    <span className="admin-od-timeline-author">{history.author}</span>
-                    <p className="admin-od-timeline-note">{history.note}</p>
-                    {history.is_current && (
+                    <p className="admin-od-timeline-note">{history?.note}</p>
+                    {orderDetails?.order_history_status[0] && (
                       <span className="admin-od-timeline-current">Current</span>
                     )}
                   </div>

@@ -1,15 +1,35 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Icon } from '@iconify/react';
 import '../../css/user/OrderDetailsPage.css';
 import Navbar from '../../Components/Navbar';
 import Footer from '../../Components/Footer';
 import { useParams } from 'react-router-dom';
 import { useGetUserOrder } from '../../hook/useOrder';
 
+const orderTrackingStages = [
+  { status: 'pending', label: 'Order placed', icon: 'mdi:clipboard-check-outline' },
+  { status: 'paid', label: 'Payment confirmed', icon: 'mdi:credit-card-check-outline' },
+  { status: 'prepare order', label: 'Preparing order', icon: 'mdi:package-variant-closed-check' },
+  { status: 'shipped', label: 'On the way', icon: 'mdi:truck-fast-outline' },
+  { status: 'completed', label: 'Delivered', icon: 'mdi:check-circle-outline' },
+];
+
+const normalizeOrderStatus = (status) => String(status ?? '')
+  .trim()
+  .toLowerCase()
+  .replace(/[_-]+/g, ' ')
+  .replace(/\s+/g, ' ');
+
 
 const OrderDetailsPage = () => {
   const { id } = useParams();
   const { data: orderDetails, isLoading, isError } = useGetUserOrder(id);
+  const orderHistory = Array.isArray(orderDetails?.order_history_status)
+    ? orderDetails.order_history_status
+    : [];
+  const currentStatus = normalizeOrderStatus(orderDetails?.order_status);
+  const currentStageIndex = orderTrackingStages.findIndex((stage) => stage.status === currentStatus);
 
   // Animasi Framer Motion
   const containerVariants = {
@@ -53,6 +73,11 @@ const OrderDetailsPage = () => {
             Loading order details...
           </p>
         )}
+        {isError && (
+          <p className="order-details-error" role="alert">
+            Unable to load order details. Please try again.
+          </p>
+        )}
 
         {/* Delivery Address Card */}
         <motion.div className="order-details-address-card" variants={cardVariants}>
@@ -68,6 +93,49 @@ const OrderDetailsPage = () => {
             <p><strong>{orderDetails?.address_snapshot?.phone}</strong></p>
           </div>
         </motion.div>
+
+        {/* Order Tracking */}
+        {!isLoading && !isError && (
+          <motion.section className="order-tracking-card" variants={cardVariants} aria-label="Order tracking">
+            <div className="order-tracking-heading">
+              <div>
+                <h2>Order tracking</h2>
+                <p>Follow your order from placement to delivery.</p>
+              </div>
+              {orderDetails?.order_status && (
+                <span className="order-tracking-current-status">{orderDetails.order_status}</span>
+              )}
+            </div>
+            <ol className="order-tracking-steps">
+              {orderTrackingStages.map((stage, index) => {
+                const historyEntry = orderHistory.find(
+                  (entry) => normalizeOrderStatus(entry?.status) === stage.status
+                );
+                const isCurrent = currentStageIndex === index;
+                const isComplete = currentStageIndex >= 0 && index < currentStageIndex;
+
+                return (
+                  <li
+                    key={stage.status}
+                    className={`order-tracking-step${isComplete ? ' is-complete' : ''}${isCurrent ? ' is-current' : ''}`}
+                    aria-current={isCurrent ? 'step' : undefined}
+                  >
+                    <div className="order-tracking-step-marker">
+                      <Icon icon={stage.icon} aria-hidden="true" />
+                    </div>
+                    <div className="order-tracking-step-content">
+                      <h3>{stage.label}</h3>
+                      <p className="order-tracking-step-date">
+                        {historyEntry?.changed_at || (isCurrent ? 'Current status' : 'Not reached')}
+                      </p>
+                      {historyEntry?.note && <p className="order-tracking-step-note">{historyEntry.note}</p>}
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </motion.section>
+        )}
 
         {/* Main Layout Grid */}
         <div className="order-details-main-layout">

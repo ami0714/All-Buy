@@ -126,6 +126,127 @@
   font-weight: 600;
 }
 
+/* Order tracking */
+.order-tracking-card {
+  width: 100%;
+  padding: 24px;
+  background: var(--order-details-card-bg);
+  border: 1px solid #f3f4f6;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.order-tracking-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.order-tracking-heading h2 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.order-tracking-heading p {
+  margin: 0;
+  color: var(--order-details-text-muted);
+  font-size: 13px;
+}
+
+.order-tracking-current-status {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: #f3f0fa;
+  color: var(--order-details-primary);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.order-tracking-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.order-tracking-step {
+  position: relative;
+  min-width: 0;
+  padding-right: 12px;
+}
+
+.order-tracking-step:not(:last-child)::after {
+  position: absolute;
+  top: 20px;
+  left: 48px;
+  right: 0;
+  height: 2px;
+  background: var(--order-details-border);
+  content: '';
+}
+
+.order-tracking-step.is-complete:not(:last-child)::after {
+  background: var(--order-details-primary);
+}
+
+.order-tracking-step-marker {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  border: 1px solid var(--order-details-border);
+  border-radius: 50%;
+  background: #fff;
+  color: #9ca3af;
+  font-size: 21px;
+}
+
+.order-tracking-step.is-complete .order-tracking-step-marker,
+.order-tracking-step.is-current .order-tracking-step-marker {
+  border-color: var(--order-details-primary);
+  background: var(--order-details-primary);
+  color: #fff;
+}
+
+.order-tracking-step-content h3 {
+  margin: 0 0 6px;
+  color: var(--order-details-text-main);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.order-tracking-step-date,
+.order-tracking-step-note {
+  margin: 0;
+  color: var(--order-details-text-muted);
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.order-tracking-step.is-current .order-tracking-step-content h3 {
+  color: var(--order-details-primary);
+}
+
+.order-details-error {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #fecdca;
+  border-radius: 8px;
+  background: #fef3f2;
+  color: #b42318;
+}
+
 /* Main Layout (Grid) */
 .order-details-main-layout {
   display: grid;
@@ -330,5 +451,29 @@
     width: 100%;
     justify-content: space-between;
     text-align: left;
+  }
+
+  .order-tracking-card {
+    padding: 20px 16px;
+  }
+
+  .order-tracking-heading {
+    margin-bottom: 22px;
+  }
+
+  .order-tracking-steps {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 0 10px;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+  }
+
+  .order-tracking-step {
+    flex: 0 0 150px;
+  }
+
+  .order-tracking-step:not(:last-child)::after {
+    right: 10px;
   }
 }

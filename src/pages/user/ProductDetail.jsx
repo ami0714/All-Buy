@@ -56,7 +56,6 @@ const ProductDetail = () => {
      if(payload){
       addTocart(payload,{
         onSuccess:(res)=>{
-          alert(res)
           navigate('/cart')
         },
         onError:(res)=>{
