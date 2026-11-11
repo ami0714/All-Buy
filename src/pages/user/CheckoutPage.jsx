@@ -6,7 +6,7 @@ import {useGetCourier} from '../../hook/useShipping';
 import {useGetCart} from '../../hook/useCart';
 import {useGetAddress} from '../../hook/useAddress';
 import {useCreateOrder} from '../../hook/useCreateOrder';
-import Navbar from '../../Components/Navbar';
+import Navbar from '../../components/Navbar';
 
 const dummyOrderItems = [
   {

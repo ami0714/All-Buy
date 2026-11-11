@@ -1,7 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import '../../css/user/OrderPage.css';
-import Navbar from '../../Components/Navbar';
+import Navbar from '../../components/Navbar';
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();

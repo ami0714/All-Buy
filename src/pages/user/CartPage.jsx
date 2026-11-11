@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../../css/user/CartPage.css';
-import Navbar from '../../Components/Navbar';
+import Navbar from '../../components/Navbar';
 import {useGetCart,useDeleteCart,useChangeQuantityCart} from '../../hook/useCart'
 
 

@@ -2,8 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Icon } from '@iconify/react';
 import '../../css/user/OrderDetailsPage.css';
-import Navbar from '../../Components/Navbar';
-import Footer from '../../Components/Footer';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 import { useParams } from 'react-router-dom';
 import { useGetUserOrder } from '../../hook/useOrder';
 

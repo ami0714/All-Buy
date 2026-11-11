@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import ProductCard from '../../components/ProductCard';
-import Navbar from '../../Components/Navbar';
-import Footer from '../../Components/Footer';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 import '../../css/user/Home.css';
 import {useGetAllProduct} from '../../hook/useProducts'
 

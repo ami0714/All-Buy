@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import {useNavigate} from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion';
-import Navbar from '../../Components/Navbar';
+import Navbar from '../../components/Navbar';
 import '../../css/user/ProfilePage.css';
 import {useGetAddress} from '../../hook/useAddress'
 import {useEditUser} from '../../hook/useUser'

@@ -5,7 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {useAddAddress,useEditAddress,useGetAddressById} from '../../hook/useAddress';
 import {useAuth} from '../../context/authContext';
 import '../../css/user/AddressForm.css';
-import Navbar from '../../Components/Navbar';
+import Navbar from '../../components/Navbar';
 import { getDirtyValues } from '../../utils/form';
 
 // ==========================================

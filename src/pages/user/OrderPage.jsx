@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import '../../css/user/OrderPage.css';
 import {useGetAllOrder,useReceiveOrder} from '../../hook/useOrder';
 import {useQueryClient} from '@tanstack/react-query';
-import Navbar from '../../Components/Navbar';
+import Navbar from '../../components/Navbar';
 
 // Helper untuk format status badge
 const formatStatus = (status) => {

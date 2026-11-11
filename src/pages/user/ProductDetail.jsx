@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import {useGetDetailProduct} from '../../hook/useProducts';
 import {useToCart} from '../../hook/useCart'
 import '../../css/user/ProductDetail.css';
-import Navbar from '../../Components/Navbar';
+import Navbar from '../../components/Navbar';
 
 
 const ProductDetail = () => {
