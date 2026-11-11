@@ -39,14 +39,7 @@ const Footer = () => {
         </div>
 
         <div className="footer-col">
-          <h4>Newsletter</h4>
-          <p className="footer-desc" style={{ marginBottom: '16px' }}>
-            Get the latest promotions, product updates, and shopping tips.
-          </p>
-          <form className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
-            <input type="email" placeholder="Enter your email address" />
-            <button type="submit">Subscribe</button>
-          </form>
+    
           <div className="social-icons">
             <a href="#" className="social-icon">f</a>
             <a href="#" className="social-icon">i</a>

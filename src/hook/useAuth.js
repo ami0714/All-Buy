@@ -6,6 +6,7 @@ import {useAuth} from '../context/authContext';
 
 
 export function useRegister(){
+    const navigate = useNavigate();
     return useMutation({
         mutationFn: async (registerData) => {
             const response = await registerUser(registerData)
@@ -16,6 +17,7 @@ export function useRegister(){
         },
         onSuccess:()=> {
             alert('Registration successful.')
+            navigate('/')
         },
         onError:(err) => {
             alert('Registration failed: ' + err.message);

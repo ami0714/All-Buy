@@ -14,6 +14,8 @@
   position: relative;
   background-color: var(--bg-color);
   min-height: 100vh;
+  height: auto;
+  overflow: visible;
   padding: 40px 20px;
   font-family: 'Inter', sans-serif;
   color: var(--text-main);
@@ -25,6 +27,8 @@
 .cart-content {
   max-width: 1100px;
   width: 100%;
+  min-height: 0;
+  padding-bottom: 180px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -224,6 +228,10 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .cart-content {
+    padding-bottom: 200px;
+  }
+
   .cart-item-card {
     flex-direction: column;
     align-items: flex-start;
@@ -238,7 +246,9 @@
     gap: 10px;
     padding: 15px;
     align-items: flex-start;
-    width: 40vh;
+    width: min(94vw, 420px);
+    left: 0;
+    right: 0;
   }
   .checkout-btn {
     width: 100%;

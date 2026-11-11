@@ -143,7 +143,7 @@
 .admin-var-product-card {
   background-color: var(--admin-var-card-bg);
   border-radius: 12px;
-  padding: 24px;
+  padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
   border: 1px solid #f3f4f6;
   display: flex;
@@ -234,8 +234,8 @@
 /* Main Grid Layout */
 .admin-var-grid {
   display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 24px;
+  grid-template-rows: 1fr 380px;
+  gap: 10px;
   align-items: start;
 }
 
@@ -250,7 +250,7 @@
 }
 
 .admin-var-table-header {
-  padding: 20px 24px;
+  padding: 20px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
