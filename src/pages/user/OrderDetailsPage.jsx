@@ -61,9 +61,7 @@ const OrderDetailsPage = () => {
             <p>Review the order, shipping address, items, and payment summary.</p>
           </div>
           <button className="order-details-copy-btn">
-            <svg viewBox="0 0 24 24">
-              <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-            </svg>
+            <Icon icon="mdi:content-copy" width="18" height="18" aria-hidden="true" />
             Copy order number
           </button>
         </motion.div>
@@ -82,9 +80,7 @@ const OrderDetailsPage = () => {
         {/* Delivery Address Card */}
         <motion.div className="order-details-address-card" variants={cardVariants}>
           <div className="order-details-address-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-            </svg>
+            <Icon icon="mdi:map-marker-outline" width="24" height="24" aria-hidden="true" />
           </div>
           <div className="order-details-address-info">
             <h2>Delivery Address</h2>
@@ -188,9 +184,7 @@ const OrderDetailsPage = () => {
               <div className="order-details-tracking-wrapper">
                 <span className="order-details-summary-value">{orderDetails?.tracking_number == "" ? "" : orderDetails?.tracking_number}</span>
                 <span className="order-details-tracking-link">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
-                  </svg>
+                  <Icon icon="mdi:open-in-new" width="16" height="16" aria-hidden="true" />
                 </span>
               </div>
             </div>

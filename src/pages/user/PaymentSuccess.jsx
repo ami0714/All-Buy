@@ -1,4 +1,5 @@
 import { Link, useSearchParams } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 import { motion } from 'framer-motion';
 import '../../css/user/OrderPage.css';
 import Navbar from '../../components/Navbar';
@@ -18,7 +19,9 @@ const PaymentSuccess = () => {
           transition={{ duration: 0.4 }}
           aria-live="polite"
         >
-          <div className="payment-success-icon" aria-hidden="true">✓</div>
+          <div className="payment-success-icon" aria-hidden="true">
+            <Icon icon="mdi:check" width="36" height="36" />
+          </div>
           <h1 className="payment-success-title">Payment Successful</h1>
           <p className="payment-success-message">
             Thank you. Your payment has been processed successfully.

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { Icon } from '@iconify/react';
 import { motion } from 'framer-motion';
 import {useGetProductDetail, useUpdateProduct,useAddProduct} from '../../hook/admin/useProduct';
 import {useGetcategory} from '../../hook/admin/useCategory'
@@ -10,19 +11,10 @@ import { getDirtyValues } from '../../utils/form';
 
 
 
-// Ikon SVG
-const ArrowLeftIcon = () => (
-  <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-);
-const CheckIcon = () => (
-  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-);
-const InfoIcon = () => (
-  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-);
-const ArrowRightIcon = () => (
-  <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-);
+const ArrowLeftIcon = () => <Icon icon="mdi:arrow-left" width="18" height="18" aria-hidden="true" />;
+const CheckIcon = () => <Icon icon="mdi:check" width="18" height="18" aria-hidden="true" />;
+const InfoIcon = () => <Icon icon="mdi:information-outline" width="18" height="18" aria-hidden="true" />;
+const ArrowRightIcon = () => <Icon icon="mdi:arrow-right" width="18" height="18" aria-hidden="true" />;
 
 const ProductEditPage = () => {
   const { id } = useParams();

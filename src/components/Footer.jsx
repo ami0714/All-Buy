@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from '@iconify/react';
 import './Footer.css';
 
 const Footer = () => {
@@ -41,9 +42,9 @@ const Footer = () => {
         <div className="footer-col">
     
           <div className="social-icons">
-            <a href="#" className="social-icon">f</a>
-            <a href="#" className="social-icon">i</a>
-            <a href="#" className="social-icon">x</a>
+            <a href="#" className="social-icon" aria-label="Facebook"><Icon icon="simple-icons:facebook" width="16" height="16" aria-hidden="true" /></a>
+            <a href="#" className="social-icon" aria-label="Instagram"><Icon icon="simple-icons:instagram" width="16" height="16" aria-hidden="true" /></a>
+            <a href="#" className="social-icon" aria-label="X"><Icon icon="simple-icons:x" width="16" height="16" aria-hidden="true" /></a>
           </div>
         </div>
       </div>

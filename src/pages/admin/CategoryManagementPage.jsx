@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { Icon } from '@iconify/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../../css/admin/CategoryManagementPage.css';
 import {useGetcategory,useAddCategory,useUpdateCategory} from '../../hook/admin/useCategory';
@@ -15,37 +16,16 @@ const initialCategories = [
   { id: 3, name: "Accessories", slug: "accessories", description: "Style complements and daily essentials.", is_active: false, product_count: 0 },
 ];
 
-// Ikon SVG
-const LayersIcon = () => (
-  <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-);
-const BoxIcon = () => (
-  <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-);
-const TshirtIcon = () => (
-  <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"></path><path d="M4 9h16"></path><path d="M9 4v16"></path></svg>
-);
-const SearchIcon = () => (
-  <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-);
-const EditIcon = () => (
-  <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-);
-const TrashIcon = () => (
-  <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-);
-const PlusIcon = () => (
-  <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-);
-const CloseIcon = () => (
-  <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-);
-const CheckIcon = () => (
-  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-);
-const InfoIcon = () => (
-  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-);
+const LayersIcon = () => <Icon icon="mdi:layers-outline" width="18" height="18" aria-hidden="true" />;
+const BoxIcon = () => <Icon icon="mdi:cube-outline" width="18" height="18" aria-hidden="true" />;
+const TshirtIcon = () => <Icon icon="mdi:tshirt-crew-outline" width="18" height="18" aria-hidden="true" />;
+const SearchIcon = () => <Icon icon="mdi:magnify" width="18" height="18" aria-hidden="true" />;
+const EditIcon = () => <Icon icon="mdi:pencil-outline" width="18" height="18" aria-hidden="true" />;
+const TrashIcon = () => <Icon icon="mdi:trash-can-outline" width="18" height="18" aria-hidden="true" />;
+const PlusIcon = () => <Icon icon="mdi:plus" width="18" height="18" aria-hidden="true" />;
+const CloseIcon = () => <Icon icon="mdi:close" width="18" height="18" aria-hidden="true" />;
+const CheckIcon = () => <Icon icon="mdi:check" width="18" height="18" aria-hidden="true" />;
+const InfoIcon = () => <Icon icon="mdi:information-outline" width="20" height="20" aria-hidden="true" />;
 
 const CategoryManagementPage = () => {
   const [categories, setCategories] = useState(initialCategories);

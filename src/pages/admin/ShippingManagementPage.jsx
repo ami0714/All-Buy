@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { Icon } from '@iconify/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../../css/admin/ShippingManagementPage.css';
 import { useGetAllCourierAdmin, useGetAllShippingMethodAdmin,useAddNewCourierAdmin,useAddShipMethod
@@ -7,28 +8,13 @@ import { useGetAllCourierAdmin, useGetAllShippingMethodAdmin,useAddNewCourierAdm
  } from '../../hook/admin/useShipping';
 import AdminSidebar from '../../components/AdminSidebar'; 
 
-// Ikon SVG
-const TruckIcon = () => (
-  <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-);
-const BoxIcon = () => (
-  <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-);
-const TagIcon = () => (
-  <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-);
-const PlusIcon = () => (
-  <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-);
-const CloseIcon = () => (
-  <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-);
-const CheckIcon = () => (
-  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-);
-const InfoIcon = () => (
-  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-);
+const TruckIcon = () => <Icon icon="mdi:truck-fast-outline" width="18" height="18" aria-hidden="true" />;
+const BoxIcon = () => <Icon icon="mdi:cube-outline" width="18" height="18" aria-hidden="true" />;
+const TagIcon = () => <Icon icon="mdi:tag-outline" width="18" height="18" aria-hidden="true" />;
+const PlusIcon = () => <Icon icon="mdi:plus" width="18" height="18" aria-hidden="true" />;
+const CloseIcon = () => <Icon icon="mdi:close" width="18" height="18" aria-hidden="true" />;
+const CheckIcon = () => <Icon icon="mdi:check" width="18" height="18" aria-hidden="true" />;
+const InfoIcon = () => <Icon icon="mdi:information-outline" width="18" height="18" aria-hidden="true" />;
 
 const ShippingManagementPage = () => {
 

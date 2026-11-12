@@ -1,5 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { Icon } from '@iconify/react';
 import {useNavigate} from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../../components/Navbar';
@@ -11,14 +12,8 @@ import { getDirtyValues } from '../../utils/form';
 
 
 
-// Ikon SVG
-const HomeIcon = () => (
-  <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>
-);
-
-const OfficeIcon = () => (
-  <svg viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>
-);
+const HomeIcon = () => <Icon icon="mdi:home-outline" width="20" height="20" aria-hidden="true" />;
+const OfficeIcon = () => <Icon icon="mdi:office-building-outline" width="20" height="20" aria-hidden="true" />;
 
 const ProfilePage = () => {
   const Navigate = useNavigate()
@@ -226,10 +221,7 @@ const ProfilePage = () => {
               <p>Add, edit, and set a default address.</p>
             </div>
             <button onClick={()=> Navigate('/profile/address/add')} className="profile-btn-add">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
+              <Icon icon="mdi:plus" width="16" height="16" aria-hidden="true" />
               Add Address
             </button>
           </div>

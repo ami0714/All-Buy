@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { Icon } from '@iconify/react';
 import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 import {useAddAddress,useEditAddress,useGetAddressById} from '../../hook/useAddress';
@@ -132,10 +133,7 @@ getAddressData()
           transition={{ duration: 0.4 }}
         >
           <button className="address-form-back-btn" onClick={handleCancel}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="19" y1="12" x2="5" y2="12"></line>
-              <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
+            <Icon icon="mdi:arrow-left" width="16" height="16" aria-hidden="true" />
             Back to My Profile
           </button>
           
@@ -159,9 +157,7 @@ getAddressData()
           {/* Left Sidebar */}
           <div className="address-form-sidebar">
             <div className="address-form-sidebar-icon">
-              <svg viewBox="0 0 24 24">
-                <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-              </svg>
+              <Icon icon="mdi:home-outline" width="24" height="24" aria-hidden="true" />
             </div>
             
             <h2 className="address-form-sidebar-title">

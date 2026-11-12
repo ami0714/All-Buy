@@ -124,9 +124,7 @@
 .admin-order-btn-export svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 /* Stats Grid */
@@ -173,9 +171,7 @@
 .admin-order-stat-icon svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 .admin-order-stat-value {
@@ -271,9 +267,7 @@
   transform: translateY(-50%);
   width: 18px;
   height: 18px;
-  fill: none;
-  stroke: var(--admin-order-text-muted);
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 .admin-order-search-input {
@@ -315,9 +309,7 @@
 .admin-order-filter-btn svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 /* Table */
@@ -525,9 +517,7 @@
 .admin-order-info-box svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 /* Footer */

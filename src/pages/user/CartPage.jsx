@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../../css/user/CartPage.css';
 import Navbar from '../../components/Navbar';
@@ -106,9 +107,7 @@ const ChangeQuantity = (cartId,currentQuantity,type) =>{
                     <button className="qty-btn" onClick={() => ChangeQuantity(item?.cart_id,item?.quantity,'increase')}>+</button>
                   </div>
                   <button className="remove-btn" onClick={() => handleRemove(item?.cart_id)}>
-                    <svg className="trash-icon" viewBox="0 0 24 24">
-                      <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                    </svg>
+                    <Icon className="trash-icon" icon="mdi:trash-can-outline" width="14" height="14" aria-hidden="true" />
                     Remove
                   </button>
                 </div>

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate,useParams } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 import { motion } from 'framer-motion';
 import '../../css/admin/OrderDetailsPage.css';
 import AdminSidebar from '../../components/AdminSidebar'; 
@@ -77,13 +78,8 @@ const dummyOrderDetails = {
   ]
 };
 
-// Ikon SVG
-const ArrowLeftIcon = () => (
-  <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-);
-const ExternalLinkIcon = () => (
-  <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-);
+const ArrowLeftIcon = () => <Icon icon="mdi:arrow-left" width="18" height="18" aria-hidden="true" />;
+const ExternalLinkIcon = () => <Icon icon="mdi:open-in-new" width="18" height="18" aria-hidden="true" />;
 
 const AdminOrderDetailsPage = () => {
   const navigate = useNavigate();

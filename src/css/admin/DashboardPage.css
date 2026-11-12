@@ -147,9 +147,7 @@
 .admin-dash-stat-icon svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 .admin-dash-stat-value {
@@ -428,9 +426,7 @@
 .admin-dash-action-btn svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 /* Responsive */

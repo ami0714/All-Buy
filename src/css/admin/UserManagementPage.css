@@ -116,9 +116,7 @@
 .admin-users-btn-export svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 /* Stats Grid */
@@ -165,9 +163,7 @@
 .admin-users-stat-icon svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 .admin-users-stat-value {
@@ -233,9 +229,7 @@
   transform: translateY(-50%);
   width: 18px;
   height: 18px;
-  fill: none;
-  stroke: var(--admin-users-text-muted);
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 .admin-users-search-input {
@@ -277,9 +271,7 @@
 .admin-users-filter-btn svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 /* Table */

@@ -112,9 +112,7 @@
 .admin-prod-btn-add svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 /* Stats Grid */
@@ -150,9 +148,7 @@
 .admin-prod-stat-icon svg {
   width: 24px;
   height: 24px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 .admin-prod-stat-info {
@@ -228,9 +224,7 @@
   transform: translateY(-50%);
   width: 18px;
   height: 18px;
-  fill: none;
-  stroke: var(--admin-prod-text-muted);
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 .admin-prod-search-input {
@@ -419,9 +413,7 @@
 .admin-prod-action-btn svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 .admin-prod-btn-variants {
@@ -452,9 +444,7 @@
 .admin-prod-action-delete svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 /* Pagination */

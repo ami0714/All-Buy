@@ -116,9 +116,7 @@
 .admin-cat-btn-add svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 /* Stats Grid */
@@ -165,9 +163,7 @@
 .admin-cat-stat-icon svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 .admin-cat-stat-value {
@@ -233,9 +229,7 @@
   transform: translateY(-50%);
   width: 18px;
   height: 18px;
-  fill: none;
-  stroke: var(--admin-cat-text-muted);
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 .admin-cat-search-input {
@@ -365,9 +359,7 @@
 .admin-cat-action-btn svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 .admin-cat-table-footer {
@@ -392,9 +384,7 @@
 .admin-cat-info-box svg {
   width: 20px;
   height: 20px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -444,9 +434,7 @@
 .admin-cat-close-btn svg {
   width: 20px;
   height: 20px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 .admin-cat-form-subtitle {
@@ -625,9 +613,7 @@
 .admin-cat-btn-submit svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 .admin-cat-form-footer {

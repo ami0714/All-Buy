@@ -75,9 +75,7 @@
 .checkout-address-icon svg {
   width: 24px;
   height: 24px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 .checkout-address-details {

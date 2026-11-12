@@ -96,9 +96,7 @@
 .admin-edit-prod-back-btn svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 .admin-edit-prod-title h1 {
@@ -356,9 +354,7 @@
 .admin-edit-prod-btn-submit svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 /* Right Sidebar Widgets */
@@ -420,9 +416,7 @@
 .admin-edit-prod-widget-desc svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -451,9 +445,7 @@
 .admin-edit-prod-btn-variants svg {
   width: 16px;
   height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor;
 }
 
 /* Footer */
